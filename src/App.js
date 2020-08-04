@@ -1,8 +1,16 @@
 import React from "react";
 import "fontsource-roboto";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-import Home from "./pages/home/home.page";
+import Dashboard from "./pages/dashboard/dashboard.page";
+import EntradasSalidas from "./pages/entradas&salidas/entrada&salidas.page";
+import Clientes from "./pages/clientes/clientes.page";
+import Productos from "./pages/productos/productos.page";
+import Consultas from "./pages/consultas/consultas.page";
 import Login from "./pages/login/login.page";
+import Pais from "./pages/pais/pais.page";
+import Provincias from "./pages/provincias/provincias.page";
+import Corregimientos from "./pages/corregimientos/corregimientos.page";
+import Distritos from "./pages/distritos/distritos.page";
 import "moment/locale/es.js";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
@@ -13,8 +21,16 @@ function App() {
       <BrowserRouter>
         {localStorage.token_key === undefined && <Redirect to="/login" />}
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={Dashboard} />
+          <Route exact path="/entradas-salidas" component={EntradasSalidas} />
+          <Route exact path="/clientes" component={Clientes} />
+          <Route exact path="/productos" component={Productos} />
+          <Route exact path="/consultas" component={Consultas} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/pais" component={Pais} />
+          <Route exact path="/provincias" component={Provincias} />
+          <Route exact path="/corregimientos" component={Corregimientos} />
+          <Route exact path="/distritos" component={Distritos} />
         </Switch>
       </BrowserRouter>
     </div>
