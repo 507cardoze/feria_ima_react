@@ -26,11 +26,11 @@ function App() {
           <Route exact path="/clientes" component={Clientes} />
           <Route exact path="/productos" component={Productos} />
           <Route exact path="/consultas" component={Consultas} />
-          <Route exact path="/login" component={Login} />
           <Route exact path="/pais" component={Pais} />
           <Route exact path="/provincias" component={Provincias} />
           <Route exact path="/corregimientos" component={Corregimientos} />
           <Route exact path="/distritos" component={Distritos} />
+          <Route exact path="/login" component={Login} />
         </Switch>
       </BrowserRouter>
     </div>
