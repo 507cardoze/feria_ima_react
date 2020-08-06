@@ -7,7 +7,15 @@
   align-items: center;
   padding: 15px;
   .pais-inputs {
-    margin: 10px;
-    min-width: 300px;
+    margin-left: 10px;
+    margin-bottom: 15px;
+  }
+}
+a {
+  color: rgba(0, 0, 0, 0.534);
+  text-decoration: none;
+  cursor: pointer;
+  &:active {
+    color: black;
   }
 }

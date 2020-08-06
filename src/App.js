@@ -8,6 +8,7 @@ import Productos from "./pages/productos/productos.page";
 import Consultas from "./pages/consultas/consultas.page";
 import Login from "./pages/login/login.page";
 import Pais from "./pages/pais/pais.page";
+import PaisModify from "./pages/pais/pais-modify/pais-modify.page";
 import Provincias from "./pages/provincias/provincias.page";
 import Corregimientos from "./pages/corregimientos/corregimientos.page";
 import Distritos from "./pages/distritos/distritos.page";
@@ -27,6 +28,7 @@ function App() {
           <Route exact path="/productos" component={Productos} />
           <Route exact path="/consultas" component={Consultas} />
           <Route exact path="/pais" component={Pais} />
+          <Route path="/pais/:id" component={PaisModify} />
           <Route exact path="/provincias" component={Provincias} />
           <Route exact path="/corregimientos" component={Corregimientos} />
           <Route exact path="/distritos" component={Distritos} />

@@ -11,11 +11,11 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { Link } from "react-router-dom";
 import "./pais.styles.scss";
 import moment from "moment";
 import { toast } from "react-toastify";
-import SaveIcon from "@material-ui/icons/Save";
-import CloseIcon from "@material-ui/icons/Close";
 
 function Pais() {
   toast.configure({
@@ -23,6 +23,7 @@ function Pais() {
     draggable: true,
   });
   const msgError = (msj) => toast.error(msj);
+  const msgSuccess = (msj) => toast.success(msj);
   const columns = [
     { tittle: "Nomenclatura" },
     { tittle: "Pais" },
@@ -39,7 +40,15 @@ function Pais() {
   const [isLoading, setisLoading] = useState(true);
   const [rows, setRows] = useState([]);
 
-  const [edit, setEdit] = useState(false);
+  const urlPais = `${process.env.REACT_APP_BACK_END}/api/pais`;
+  const urlPaisCrear = `${process.env.REACT_APP_BACK_END}/api/pais/crear`;
+
+  const UnauthorizedRedirect = (data) => {
+    if (data === "No esta autorizado") {
+      localStorage.clear();
+      window.location.replace("/login");
+    }
+  };
 
   const header = {
     method: "GET",
@@ -50,28 +59,22 @@ function Pais() {
     mode: "cors",
     cache: "default",
   };
+  const fetchData = async () => {
+    setisLoading(false);
+    try {
+      const data_pais = await fetch(urlPais, header);
+      const pa = await data_pais.json();
+      UnauthorizedRedirect(pa);
+      setRows(pa);
+      setisLoading(true);
+    } catch (error) {
+      msgError(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setisLoading(false);
-      try {
-        const data_pais = await fetch(
-          `${process.env.REACT_APP_BACK_END}/api/pais`,
-          header
-        );
-        const pa = await data_pais.json();
-        if (pa === "No esta autorizado") {
-          localStorage.clear();
-          window.location.replace("/login");
-        }
-        setRows(pa);
-        setisLoading(true);
-      } catch (error) {
-        msgError(error);
-      }
-    };
     fetchData();
-  }, []);
+  }, [localStorage.token_key]);
 
   const onchangeNomesclatura = (e) => {
     setNomesclatura(e.target.value);
@@ -89,36 +92,38 @@ function Pais() {
     setEstado(e.target.checked);
   };
 
+  const bodyRequest = {
+    nomesclatura: nomesclatura,
+    pais: pais,
+    nacionalidad: nacionalidad,
+    estado: estado,
+  };
+
   const headerPost = {
     method: "POST",
     headers: {
       "content-Type": "application/json",
       Authorization: `Bearer ${localStorage.token_key}`,
     },
-    body: JSON.stringify({
-      nomesclatura: nomesclatura,
-      pais: pais,
-      nacionalidad: nacionalidad,
-      estado: estado,
-    }),
+    body: JSON.stringify(bodyRequest),
   };
 
-  const onClickGuardar = () => {
-    fetch(`${process.env.REACT_APP_BACK_END}/api/pais/crear`, headerPost)
+  const onClickGuardar = (e) => {
+    e.preventDefault();
+    fetch(urlPaisCrear, headerPost)
       .then((response) => response.json())
       .then((data) => {
-        if (data === "No esta autorizado") {
-          localStorage.clear();
-          window.location.replace("/login");
+        UnauthorizedRedirect(data);
+        if (data === "success") {
+          fetchData();
+          msgSuccess("Registro Exitoso.");
         } else {
-          if (data === "success") {
-            window.location.replace("/pais");
-          } else {
-            msgError(data);
-          }
+          msgError(data);
         }
       });
   };
+
+  console.log(rows);
 
   return (
     <MainLayout Tittle="Pais">
@@ -127,79 +132,57 @@ function Pais() {
       ) : (
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
-            <Paper className="pais-inputs-container">
-              <TextField
-                label="Nomenclatura"
-                variant="outlined"
-                className="pais-inputs"
-                onChange={(e) => onchangeNomesclatura(e)}
-              />
-              <TextField
-                label="Pais"
-                variant="outlined"
-                className="pais-inputs"
-                onChange={(e) => onchangePais(e)}
-              />
-              <TextField
-                label="Nacionalidad"
-                variant="outlined"
-                className="pais-inputs"
-                onChange={(e) => onchangeNacionalidad(e)}
-              />
-              <Switch
-                checked={estado}
-                color="primary"
-                inputProps={{ "aria-label": "primary checkbox" }}
-                onChange={(e) => onchangeEstado(e)}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={onClickGuardar}
-              >
-                Guardar
-              </Button>
+            <Paper>
+              <form onSubmit={onClickGuardar} className="pais-inputs-container">
+                <TextField
+                  label="Nomenclatura"
+                  variant="outlined"
+                  className="pais-inputs"
+                  onChange={(e) => onchangeNomesclatura(e)}
+                />
+                <TextField
+                  label="Pais"
+                  variant="outlined"
+                  className="pais-inputs"
+                  onChange={(e) => onchangePais(e)}
+                />
+                <TextField
+                  label="Nacionalidad"
+                  variant="outlined"
+                  className="pais-inputs"
+                  onChange={(e) => onchangeNacionalidad(e)}
+                />
+                <FormControlLabel
+                  label={estado ? "Activo" : "Inactivo"}
+                  control={
+                    <Switch
+                      checked={estado}
+                      color="primary"
+                      className="pais-modify-switch"
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                      onChange={(e) => onchangeEstado(e)}
+                    />
+                  }
+                />
+                <Button variant="contained" color="primary" type="submit">
+                  Crear Nuevo Pais
+                </Button>
+              </form>
             </Paper>
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             <DataTable columns={columns}>
               {rows.map((row, i) => {
                 return (
-                  <TableRow>
+                  <TableRow key={i}>
                     <TableCell align="center">
-                      {edit ? (
-                        <IconButton
-                          aria-label="close"
-                          onClick={() => setEdit(false)}
-                        >
-                          <CloseIcon />
-                        </IconButton>
-                      ) : (
-                        <IconButton
-                          aria-label="edit"
-                          onClick={() => setEdit(true)}
-                        >
+                      <Link to={`/pais/${row.id_pais}`}>
+                        <IconButton aria-label="edit">
                           <EditIcon />
                         </IconButton>
-                      )}
-                      {edit && (
-                        <IconButton aria-label="save">
-                          <SaveIcon />
-                        </IconButton>
-                      )}
+                      </Link>
                     </TableCell>
-                    <TableCell align="center">
-                      {!edit ? (
-                        row.id_pais
-                      ) : (
-                        <TextField
-                          label="Nomenclatura"
-                          variant="outlined"
-                          defaultValue={row.id_pais}
-                          size="small"
-                        />
-                      )}
-                    </TableCell>
+                    <TableCell align="center">{row.id_pais}</TableCell>
                     <TableCell align="center">{row.nombre_pais}</TableCell>
                     <TableCell align="center">
                       {row.nombre_nacionalidad}

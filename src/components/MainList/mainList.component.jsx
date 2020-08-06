@@ -21,7 +21,7 @@ import HouseIcon from "@material-ui/icons/House";
 import "./mainList.styles.scss";
 
 function MainList() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(!open);
@@ -48,9 +48,9 @@ function MainList() {
     <div>
       <Link to="/" className={classes.links}>
         <ListItem button className="list-fix-padding">
-          <Link to="/"></Link>
           <ListItemIcon>
             <DashboardIcon />
+            <Link to="/"></Link>
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItem>
