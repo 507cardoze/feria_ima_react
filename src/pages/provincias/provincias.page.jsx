@@ -127,6 +127,13 @@ function Provincias() {
                 onSubmit={onClickGuardar}
                 className="provincias-inputs-container"
               >
+                <TextField
+                  label="Provincia"
+                  variant="outlined"
+                  value={provincia}
+                  className="provincias-inputs"
+                  onChange={(e) => onChange(e, setProvincia)}
+                />
                 <div className="select-form">
                   <InputLabel id="demo-simple-select-label">Pais</InputLabel>
                   <Select
@@ -144,13 +151,6 @@ function Provincias() {
                     })}
                   </Select>
                 </div>
-                <TextField
-                  label="Provincia"
-                  variant="outlined"
-                  value={provincia}
-                  className="provincias-inputs"
-                  onChange={(e) => onChange(e, setProvincia)}
-                />
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
                   className="provincias-inputs"
@@ -181,14 +181,17 @@ function Provincias() {
                 return (
                   <TableRow key={i}>
                     <TableCell align="center">
-                      <Link to={`/provincia/${row.id_provincia}`}>
+                      <Link
+                        to={`/provincias/${row.id_provincia}/${row.nombre_provincia}`}
+                      >
                         <IconButton aria-label="edit">
                           <EditIcon />
                         </IconButton>
                       </Link>
                     </TableCell>
-                    <TableCell align="center">{row.id_pais}</TableCell>
+
                     <TableCell align="center">{row.nombre_provincia}</TableCell>
+                    <TableCell align="center">{row.id_pais}</TableCell>
                     <TableCell align="center">
                       {row.estado === 1 ? "Activo" : "Inactivo"}
                     </TableCell>

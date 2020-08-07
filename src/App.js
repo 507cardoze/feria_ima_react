@@ -10,6 +10,7 @@ import Login from "./pages/login/login.page";
 import Pais from "./pages/pais/pais.page";
 import PaisModify from "./pages/pais/pais-modify/pais-modify.page";
 import Provincias from "./pages/provincias/provincias.page";
+import ProvinciaModify from "./pages/provincias/provincias-modify/provincia-modify.page";
 import Corregimientos from "./pages/corregimientos/corregimientos.page";
 import Distritos from "./pages/distritos/distritos.page";
 import "moment/locale/es.js";
@@ -30,6 +31,7 @@ function App() {
           <Route exact path="/pais" component={Pais} />
           <Route path="/pais/:id" component={PaisModify} />
           <Route exact path="/provincias" component={Provincias} />
+          <Route path="/provincias/:id" component={ProvinciaModify} />
           <Route exact path="/corregimientos" component={Corregimientos} />
           <Route exact path="/distritos" component={Distritos} />
           <Route exact path="/login" component={Login} />
