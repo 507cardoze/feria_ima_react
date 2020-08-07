@@ -12,6 +12,7 @@ import PaisModify from "./pages/pais/pais-modify/pais-modify.page";
 import Provincias from "./pages/provincias/provincias.page";
 import ProvinciaModify from "./pages/provincias/provincias-modify/provincia-modify.page";
 import Corregimientos from "./pages/corregimientos/corregimientos.page";
+import CorregimientoModify from "./pages/corregimientos/corregimiento-modify/corregimiento-modify.page";
 import Distritos from "./pages/distritos/distritos.page";
 import DistritoModify from "./pages/distritos/distrito-modify/distrito-modify.page";
 import "moment/locale/es.js";
@@ -34,6 +35,7 @@ function App() {
           <Route exact path="/provincias" component={Provincias} />
           <Route path="/provincias/:id" component={ProvinciaModify} />
           <Route exact path="/corregimientos" component={Corregimientos} />
+          <Route path="/corregimientos/:id" component={CorregimientoModify} />
           <Route exact path="/distritos" component={Distritos} />
           <Route path="/distritos/:id" component={DistritoModify} />
           <Route exact path="/login" component={Login} />

@@ -136,7 +136,6 @@ function Corregimientos() {
                   variant="outlined"
                   value={nombre_corregimiento}
                   className="inputs"
-                  type="text"
                   onChange={(e) => onChange(e, setNombreCorregimiento)}
                 />
                 <div className="select-form">
@@ -209,7 +208,7 @@ function Corregimientos() {
                 return (
                   <TableRow key={i}>
                     <TableCell align="center">
-                      <Link to={`/provincias/${row.id_corregimiento}`}>
+                      <Link to={`/corregimientos/${row.id_corregimiento}`}>
                         <IconButton aria-label="edit">
                           <EditIcon />
                         </IconButton>
