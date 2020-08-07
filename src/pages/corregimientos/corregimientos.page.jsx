@@ -34,17 +34,20 @@ function Corregimientos() {
     }
   };
 
-  const [provincia, setProvincia] = useState("");
-  const [id_pais, setId_pais] = useState("");
+  const [id_provincia, setIdProvincia] = useState("");
+  const [id_distrito, setIdDistrito] = useState("");
+  const [nombre_corregimiento, setNombreCorregimiento] = useState("");
 
   const [estado, setEstado] = useState(true);
   const [isLoading, setisLoading] = useState(true);
   const [rows, setRows] = useState([]);
-  const [pais, setPais] = useState([]);
+  const [provincias, setProvincias] = useState([]);
+  const [distritos, setDistritos] = useState([]);
 
-  const urlPais = `${process.env.REACT_APP_BACK_END}/api/pais`;
+  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos`;
   const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
-  const urlProvinciaCrear = `${process.env.REACT_APP_BACK_END}/api/provincias/crear`;
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
+  const urlCorregimientoCrear = `${process.env.REACT_APP_BACK_END}/api/corregimientos/crear`;
 
   const header = {
     method: "GET",
@@ -71,8 +74,8 @@ function Corregimientos() {
 
   const columns = [
     { tittle: "Corregimientos" },
-    { tittle: "Provincias" },
     { tittle: "Distritos" },
+    { tittle: "Provincias" },
     { tittle: "Estado" },
   ];
 
@@ -81,8 +84,9 @@ function Corregimientos() {
   };
 
   const bodyRequest = {
-    id_pais: id_pais,
-    nombre_provincia: provincia,
+    id_provincia: id_provincia,
+    id_distrito: id_distrito,
+    nombre_corregimiento: nombre_corregimiento,
     estado: estado,
   };
 
@@ -97,13 +101,14 @@ function Corregimientos() {
 
   const onClickGuardar = (e) => {
     e.preventDefault();
-    fetch(urlProvinciaCrear, headerPost)
+    fetch(urlCorregimientoCrear, headerPost)
       .then((response) => response.json())
       .then((data) => {
         UnauthorizedRedirect(data);
         if (data === "success") {
-          fetchdata(urlPais, header, setPais);
-          fetchdata(urlProvincia, header, setRows);
+          fetchdata(urlCorregimientos, header, setRows);
+          fetchdata(urlProvincia, header, setProvincias);
+          fetchdata(urlDistrito, header, setDistritos);
           msgSuccess("Registro Exitoso.");
         } else {
           msgError(data);
@@ -112,9 +117,10 @@ function Corregimientos() {
   };
 
   useEffect(() => {
-    fetchdata(urlPais, header, setPais);
-    fetchdata(urlProvincia, header, setRows);
-  }, [localStorage.token_key, urlPais, urlProvincia]);
+    fetchdata(urlCorregimientos, header, setRows);
+    fetchdata(urlProvincia, header, setProvincias);
+    fetchdata(urlDistrito, header, setDistritos);
+  }, []);
 
   return (
     <MainLayout Tittle="Corregimientos">
@@ -126,25 +132,49 @@ function Corregimientos() {
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
                 <TextField
-                  label="Provincia"
+                  label="Corregimiento"
                   variant="outlined"
-                  value={provincia}
+                  value={nombre_corregimiento}
                   className="inputs"
-                  onChange={(e) => onChange(e, setProvincia)}
+                  type="text"
+                  onChange={(e) => onChange(e, setNombreCorregimiento)}
                 />
                 <div className="select-form">
-                  <InputLabel id="demo-simple-select-label">Pais</InputLabel>
+                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
+                    labelId="distrito-select-label"
+                    id="distrito-simple-select"
                     className="inputs"
-                    onChange={(e) => onChange(e, setId_pais)}
+                    onChange={(e) => onChange(e, setIdDistrito)}
                     autoWidth
-                    defaultValue={id_pais}
+                    defaultValue={id_distrito}
                   >
-                    {pais.map((pa, i) => {
+                    {distritos.map((pa, i) => {
                       return (
-                        <MenuItem value={pa.id_pais}>{pa.nombre_pais}</MenuItem>
+                        <MenuItem key={i} value={pa.id_distrito}>
+                          {pa.nombre_distrito}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
+                <div className="select-form">
+                  <InputLabel id="provincias-select-label">
+                    Provincias
+                  </InputLabel>
+                  <Select
+                    labelId="provincias-select-label"
+                    id="provincias-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChange(e, setIdProvincia)}
+                    autoWidth
+                    defaultValue={id_provincia}
+                  >
+                    {provincias.map((pa, i) => {
+                      return (
+                        <MenuItem key={i} value={pa.id_provincia}>
+                          {pa.nombre_provincia}
+                        </MenuItem>
                       );
                     })}
                   </Select>
@@ -168,7 +198,7 @@ function Corregimientos() {
                   color="primary"
                   type="submit"
                 >
-                  Crear Nueva Provincia
+                  Crear Nuevo Corregimiento
                 </Button>
               </form>
             </Paper>
@@ -179,17 +209,18 @@ function Corregimientos() {
                 return (
                   <TableRow key={i}>
                     <TableCell align="center">
-                      <Link
-                        to={`/provincias/${row.id_provincia}/${row.nombre_provincia}`}
-                      >
+                      <Link to={`/provincias/${row.id_corregimiento}`}>
                         <IconButton aria-label="edit">
                           <EditIcon />
                         </IconButton>
                       </Link>
                     </TableCell>
 
+                    <TableCell align="center">
+                      {row.nombre_corregimiento}
+                    </TableCell>
+                    <TableCell align="center">{row.nombre_distrito}</TableCell>
                     <TableCell align="center">{row.nombre_provincia}</TableCell>
-                    <TableCell align="center">{row.id_pais}</TableCell>
                     <TableCell align="center">
                       {row.estado === 1 ? "Activo" : "Inactivo"}
                     </TableCell>
