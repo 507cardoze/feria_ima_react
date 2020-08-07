@@ -112,20 +112,20 @@ function MainList() {
               <ListItemText primary="Provincias" />
             </ListItem>
           </Link>
-          <Link to="/corregimientos" className={classes.links}>
+          <Link to="/distritos" className={classes.links}>
             <ListItem button className={`${classes.nested} list-fix-padding`}>
               <ListItemIcon>
                 <HomeWorkIcon />
               </ListItemIcon>
-              <ListItemText primary="Corregimientos" />
+              <ListItemText primary="Distritos" />
             </ListItem>
           </Link>
-          <Link to="/distritos" className={classes.links}>
+          <Link to="/corregimientos" className={classes.links}>
             <ListItem button className={`${classes.nested} list-fix-padding`}>
               <ListItemIcon>
                 <HouseIcon />
               </ListItemIcon>
-              <ListItemText primary="Distritos" />
+              <ListItemText primary="Corregimientos" />
             </ListItem>
           </Link>
           {/* <Link to="/" className={classes.links}><ListItem button className={`${classes.nested} list-fix-padding`}>

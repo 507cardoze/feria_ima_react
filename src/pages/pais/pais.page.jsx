@@ -120,40 +120,40 @@ function Pais() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
             <Paper>
-              <form onSubmit={onClickGuardar} className="pais-inputs-container">
+              <form onSubmit={onClickGuardar} className="inputs-container">
                 <TextField
                   label="Nomenclatura"
                   variant="outlined"
-                  className="pais-inputs"
+                  className="inputs"
                   onChange={(e) => onChange(e, setNomesclatura)}
                 />
                 <TextField
                   label="Pais"
                   variant="outlined"
-                  className="pais-inputs"
+                  className="inputs"
                   onChange={(e) => onChange(e, setPais)}
                 />
                 <TextField
                   label="Nacionalidad"
                   variant="outlined"
-                  className="pais-inputs"
+                  className="inputs"
                   onChange={(e) => onChange(e, setNacionalidad)}
                 />
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
-                  className="pais-inputs"
+                  className="inputs"
                   control={
                     <Switch
                       checked={estado}
                       color="primary"
-                      className="pais-inputs"
+                      className="inputs"
                       inputProps={{ "aria-label": "primary checkbox" }}
                       onChange={() => setEstado(!estado)}
                     />
                   }
                 />
                 <Button
-                  className="pais-inputs"
+                  className="inputs"
                   variant="contained"
                   color="primary"
                   type="submit"

@@ -123,15 +123,12 @@ function Provincias() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
             <Paper>
-              <form
-                onSubmit={onClickGuardar}
-                className="provincias-inputs-container"
-              >
+              <form onSubmit={onClickGuardar} className="inputs-container">
                 <TextField
                   label="Provincia"
                   variant="outlined"
                   value={provincia}
-                  className="provincias-inputs"
+                  className="inputs"
                   onChange={(e) => onChange(e, setProvincia)}
                 />
                 <div className="select-form">
@@ -139,7 +136,7 @@ function Provincias() {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    className="provincias-inputs"
+                    className="inputs"
                     onChange={(e) => onChange(e, setId_pais)}
                     autoWidth
                     defaultValue={id_pais}
@@ -153,19 +150,19 @@ function Provincias() {
                 </div>
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
-                  className="provincias-inputs"
+                  className="inputs"
                   control={
                     <Switch
                       checked={estado}
                       color="primary"
-                      className="provincias-inputs"
+                      className="inputs"
                       inputProps={{ "aria-label": "primary checkbox" }}
                       onChange={() => setEstado(!estado)}
                     />
                   }
                 />
                 <Button
-                  className="provincias-inputs"
+                  className="inputs"
                   variant="contained"
                   color="primary"
                   type="submit"

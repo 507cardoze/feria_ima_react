@@ -13,6 +13,7 @@ import Provincias from "./pages/provincias/provincias.page";
 import ProvinciaModify from "./pages/provincias/provincias-modify/provincia-modify.page";
 import Corregimientos from "./pages/corregimientos/corregimientos.page";
 import Distritos from "./pages/distritos/distritos.page";
+import DistritoModify from "./pages/distritos/distrito-modify/distrito-modify.page";
 import "moment/locale/es.js";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/provincias/:id" component={ProvinciaModify} />
           <Route exact path="/corregimientos" component={Corregimientos} />
           <Route exact path="/distritos" component={Distritos} />
+          <Route path="/distritos/:id" component={DistritoModify} />
           <Route exact path="/login" component={Login} />
         </Switch>
       </BrowserRouter>

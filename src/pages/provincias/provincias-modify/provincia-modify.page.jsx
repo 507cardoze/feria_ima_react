@@ -93,7 +93,7 @@ function ProvinciaModify(match) {
   };
 
   const bodyRequest = {
-    id_provincia: id,
+    id_provincia: parseInt(id),
     id_pais: id_pais,
     nombre_provincia: provincia_nombre,
     estado: estado,
@@ -139,12 +139,12 @@ function ProvinciaModify(match) {
                 Atras
               </Button>
             </div>
-            <Paper className="provincia-modify-inputs-container">
+            <Paper className="modify-inputs-container">
               <TextField
                 label="Provincia"
                 variant="outlined"
                 value={provincia_nombre}
-                className="provincia-modify-inputs"
+                className="modify-inputs"
                 onChange={(e) => onChange(e, setProvinciaNombre)}
               />
               <div className="select-form">
@@ -152,7 +152,7 @@ function ProvinciaModify(match) {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  className="provincia-modify-inputs"
+                  className="modify-inputs"
                   onChange={(e) => onChange(e, setId_pais)}
                   value={id_pais}
                   autoWidth
@@ -172,7 +172,7 @@ function ProvinciaModify(match) {
                   <Switch
                     checked={estado}
                     color="primary"
-                    className="provincia-modify-inputs"
+                    className="modify-inputs"
                     inputProps={{ "aria-label": "primary checkbox" }}
                     onChange={() => setEstado(!estado)}
                   />
@@ -181,7 +181,7 @@ function ProvinciaModify(match) {
               <Button
                 variant="contained"
                 color="primary"
-                className="provincia-modify-inputs"
+                className="modify-inputs"
                 onClick={onClickGuardar}
               >
                 Guardar Modificación

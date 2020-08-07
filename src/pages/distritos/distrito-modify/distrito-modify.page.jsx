@@ -7,10 +7,12 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import "./pais-modify.styles.scss";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
 
-function PaisModify(match) {
+function DistritoModify(match) {
   toast.configure({
     autoClose: 6000,
     draggable: true,
@@ -20,13 +22,15 @@ function PaisModify(match) {
 
   const { id } = match.match.params;
 
-  const [pais, setPais] = useState("");
-  const [nacionalidad, setNacionalidad] = useState("");
+  const [provincia, setProvincia] = useState([]);
+  const [distrito_nombre, setDistritoNombre] = useState("");
+  const [id_provincia, setId_provincia] = useState("");
   const [estado, setEstado] = useState(true);
   const [isLoading, setisLoading] = useState(true);
 
-  const urlPaisBuscar = `${process.env.REACT_APP_BACK_END}/api/pais/buscar/${id}`;
-  const urlPaisUpdate = `${process.env.REACT_APP_BACK_END}/api/pais/update`;
+  const urlDistritoBuscar = `${process.env.REACT_APP_BACK_END}/api/distritos/buscar/${id}`;
+  const urlDistritoUpdate = `${process.env.REACT_APP_BACK_END}/api/distritos/update`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {
@@ -44,16 +48,30 @@ function PaisModify(match) {
     mode: "cors",
     cache: "default",
   };
-  const fetchData = async () => {
+
+  const fetchdata = async (url, header, setter) => {
     setisLoading(false);
     try {
-      const data_pais = await fetch(urlPaisBuscar, header);
-      const pa = await data_pais.json();
-      UnauthorizedRedirect(pa);
-      pa.forEach((pais) => {
-        setPais(pais.nombre_pais);
-        setNacionalidad(pais.nombre_nacionalidad);
-        setEstado(pais.estado === 1 ? true : false);
+      const data = await fetch(url, header);
+      const filtered = await data.json();
+      UnauthorizedRedirect(filtered);
+      setter(filtered);
+      setisLoading(true);
+    } catch (error) {
+      msgError(error);
+    }
+  };
+
+  const fetchDataBuscar = async () => {
+    setisLoading(false);
+    try {
+      const data = await fetch(urlDistritoBuscar, header);
+      const dat = await data.json();
+      UnauthorizedRedirect(dat);
+      dat.forEach((dt) => {
+        setId_provincia(dt.id_provincia);
+        setDistritoNombre(dt.nombre_distrito);
+        setEstado(dt.estado === 1 ? true : false);
       });
       setisLoading(true);
     } catch (error) {
@@ -62,25 +80,18 @@ function PaisModify(match) {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchDataBuscar();
+    fetchdata(urlProvincia, header, setProvincia);
   }, [localStorage.token_key]);
 
-  const onchangePais = (e) => {
-    setPais(e.target.value);
-  };
-
-  const onchangeNacionalidad = (e) => {
-    setNacionalidad(e.target.value);
-  };
-
-  const onchangeEstado = (e) => {
-    setEstado(e.target.checked);
+  const onChange = (e, setter) => {
+    setter(e.target.value);
   };
 
   const bodyRequest = {
-    nomesclatura: id,
-    pais: pais,
-    nacionalidad: nacionalidad,
+    id_distrito: parseInt(id),
+    id_provincia: id_provincia,
+    nombre_distrito: distrito_nombre,
     estado: estado,
   };
 
@@ -94,7 +105,7 @@ function PaisModify(match) {
   };
 
   const onClickGuardar = () => {
-    fetch(urlPaisUpdate, headerPut)
+    fetch(urlDistritoUpdate, headerPut)
       .then((response) => response.json())
       .then((data) => {
         UnauthorizedRedirect(data);
@@ -107,7 +118,7 @@ function PaisModify(match) {
   };
 
   return (
-    <MainLayout Tittle={`Editar ${id}`}>
+    <MainLayout Tittle={`Editar`}>
       {!isLoading ? (
         <CircularProgress />
       ) : (
@@ -124,19 +135,33 @@ function PaisModify(match) {
             </div>
             <Paper className="modify-inputs-container">
               <TextField
-                label="Pais"
+                label="Distrito"
                 variant="outlined"
-                value={pais}
+                value={distrito_nombre}
                 className="modify-inputs"
-                onChange={(e) => onchangePais(e)}
+                onChange={(e) => onChange(e, setDistritoNombre)}
               />
-              <TextField
-                label="Nacionalidad"
-                variant="outlined"
-                value={nacionalidad}
-                className="modify-inputs"
-                onChange={(e) => onchangeNacionalidad(e)}
-              />
+              <div className="select-form">
+                <InputLabel id="demo-simple-select-label">
+                  Provincias
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  className="modify-inputs"
+                  onChange={(e) => onChange(e, setId_provincia)}
+                  value={id_provincia}
+                  autoWidth
+                >
+                  {provincia.map((pa, i) => {
+                    return (
+                      <MenuItem key={i} value={pa.id_provincia}>
+                        {pa.nombre_provincia}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </div>
               <FormControlLabel
                 label={estado ? "Activo" : "Inactivo"}
                 control={
@@ -151,8 +176,8 @@ function PaisModify(match) {
               />
               <Button
                 variant="contained"
-                className="modify-inputs"
                 color="primary"
+                className="modify-inputs"
                 onClick={onClickGuardar}
               >
                 Guardar Modificación
@@ -165,4 +190,4 @@ function PaisModify(match) {
   );
 }
 
-export default PaisModify;
+export default DistritoModify;
