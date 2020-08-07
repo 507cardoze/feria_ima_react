@@ -145,7 +145,7 @@ function PaisModify(match) {
                     color="primary"
                     className="pais-modify-switch"
                     inputProps={{ "aria-label": "primary checkbox" }}
-                    onChange={(e) => onchangeEstado(e)}
+                    onChange={() => setEstado(!estado)}
                   />
                 }
               />

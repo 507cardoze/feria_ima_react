@@ -43,11 +43,50 @@ function Pais() {
   const urlPais = `${process.env.REACT_APP_BACK_END}/api/pais`;
   const urlPaisCrear = `${process.env.REACT_APP_BACK_END}/api/pais/crear`;
 
+  const fetchdata = async (url, header, setter) => {
+    setisLoading(false);
+    try {
+      const data = await fetch(url, header);
+      const filtered = await data.json();
+      UnauthorizedRedirect(filtered);
+      setter(filtered);
+      setisLoading(true);
+    } catch (error) {
+      msgError(error);
+    }
+  };
+
+  const onChange = (e, setter) => {
+    setter(e.target.value);
+  };
+
+  const onClickGuardar = (e) => {
+    e.preventDefault();
+    fetch(urlPaisCrear, headerPost)
+      .then((response) => response.json())
+      .then((data) => {
+        UnauthorizedRedirect(data);
+        if (data === "success") {
+          fetchdata(urlPais, header, setRows);
+          msgSuccess("Registro Exitoso.");
+        } else {
+          msgError(data);
+        }
+      });
+  };
+
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {
       localStorage.clear();
       window.location.replace("/login");
     }
+  };
+
+  const bodyRequest = {
+    nomesclatura: nomesclatura,
+    pais: pais,
+    nacionalidad: nacionalidad,
+    estado: estado,
   };
 
   const header = {
@@ -59,45 +98,6 @@ function Pais() {
     mode: "cors",
     cache: "default",
   };
-  const fetchData = async () => {
-    setisLoading(false);
-    try {
-      const data_pais = await fetch(urlPais, header);
-      const pa = await data_pais.json();
-      UnauthorizedRedirect(pa);
-      setRows(pa);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [localStorage.token_key]);
-
-  const onchangeNomesclatura = (e) => {
-    setNomesclatura(e.target.value);
-  };
-
-  const onchangePais = (e) => {
-    setPais(e.target.value);
-  };
-
-  const onchangeNacionalidad = (e) => {
-    setNacionalidad(e.target.value);
-  };
-
-  const onchangeEstado = (e) => {
-    setEstado(e.target.checked);
-  };
-
-  const bodyRequest = {
-    nomesclatura: nomesclatura,
-    pais: pais,
-    nacionalidad: nacionalidad,
-    estado: estado,
-  };
 
   const headerPost = {
     method: "POST",
@@ -108,22 +108,9 @@ function Pais() {
     body: JSON.stringify(bodyRequest),
   };
 
-  const onClickGuardar = (e) => {
-    e.preventDefault();
-    fetch(urlPaisCrear, headerPost)
-      .then((response) => response.json())
-      .then((data) => {
-        UnauthorizedRedirect(data);
-        if (data === "success") {
-          fetchData();
-          msgSuccess("Registro Exitoso.");
-        } else {
-          msgError(data);
-        }
-      });
-  };
-
-  console.log(rows);
+  useEffect(() => {
+    fetchdata(urlPais, header, setRows);
+  }, [localStorage.token_key, urlPais]);
 
   return (
     <MainLayout Tittle="Pais">
@@ -138,33 +125,39 @@ function Pais() {
                   label="Nomenclatura"
                   variant="outlined"
                   className="pais-inputs"
-                  onChange={(e) => onchangeNomesclatura(e)}
+                  onChange={(e) => onChange(e, setNomesclatura)}
                 />
                 <TextField
                   label="Pais"
                   variant="outlined"
                   className="pais-inputs"
-                  onChange={(e) => onchangePais(e)}
+                  onChange={(e) => onChange(e, setPais)}
                 />
                 <TextField
                   label="Nacionalidad"
                   variant="outlined"
                   className="pais-inputs"
-                  onChange={(e) => onchangeNacionalidad(e)}
+                  onChange={(e) => onChange(e, setNacionalidad)}
                 />
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
+                  className="pais-inputs"
                   control={
                     <Switch
                       checked={estado}
                       color="primary"
-                      className="pais-modify-switch"
+                      className="pais-inputs"
                       inputProps={{ "aria-label": "primary checkbox" }}
-                      onChange={(e) => onchangeEstado(e)}
+                      onChange={() => setEstado(!estado)}
                     />
                   }
                 />
-                <Button variant="contained" color="primary" type="submit">
+                <Button
+                  className="pais-inputs"
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                >
                   Crear Nuevo Pais
                 </Button>
               </form>
