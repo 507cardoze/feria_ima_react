@@ -79,11 +79,6 @@ function DistritoModify(match) {
     }
   };
 
-  useEffect(() => {
-    fetchDataBuscar();
-    fetchdata(urlProvincia, header, setProvincia);
-  }, [localStorage.token_key]);
-
   const onChange = (e, setter) => {
     setter(e.target.value);
   };
@@ -116,6 +111,11 @@ function DistritoModify(match) {
         }
       });
   };
+
+  useEffect(() => {
+    fetchDataBuscar();
+    fetchdata(urlProvincia, header, setProvincia);
+  }, []);
 
   return (
     <MainLayout Tittle={`Editar`}>
@@ -153,9 +153,9 @@ function DistritoModify(match) {
                   value={id_provincia}
                   autoWidth
                 >
-                  {provincia.map((pa, i) => {
+                  {provincia.map((pa) => {
                     return (
-                      <MenuItem key={i} value={pa.id_provincia}>
+                      <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
                         {pa.nombre_provincia}
                       </MenuItem>
                     );

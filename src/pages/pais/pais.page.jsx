@@ -110,7 +110,7 @@ function Pais() {
 
   useEffect(() => {
     fetchdata(urlPais, header, setRows);
-  }, [localStorage.token_key, urlPais]);
+  }, []);
 
   return (
     <MainLayout Tittle="Pais">
@@ -165,9 +165,9 @@ function Pais() {
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             <DataTable columns={columns}>
-              {rows.map((row, i) => {
+              {rows.map((row) => {
                 return (
-                  <TableRow key={i}>
+                  <TableRow key={row.id_pais}>
                     <TableCell align="center">
                       <Link to={`/pais/${row.id_pais}`}>
                         <IconButton aria-label="edit">

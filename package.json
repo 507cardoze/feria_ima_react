@@ -24,8 +24,8 @@
     "react-scripts": "3.4.1",
     "react-spinners": "^0.9.0",
     "react-toastify": "^6.0.8",
-    "react-virtualized": "^9.21.2",
-    "recharts": "^1.8.5"
+    "recharts": "^1.8.5",
+    "window-table": "^0.13.2"
   },
   "scripts": {
     "start": "react-scripts start",

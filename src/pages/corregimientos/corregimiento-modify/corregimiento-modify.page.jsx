@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import MainLayout from "../../../components/MainLayOut/mainLayout.component";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -217,4 +217,4 @@ function CorregimientoModify(match) {
   );
 }
 
-export default CorregimientoModify;
+export default memo(CorregimientoModify);

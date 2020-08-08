@@ -21,7 +21,7 @@ import HouseIcon from "@material-ui/icons/House";
 import "./mainList.styles.scss";
 
 function MainList() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const handleClick = () => {
     setOpen(!open);
@@ -34,7 +34,7 @@ function MainList() {
       backgroundColor: theme.palette.background.paper,
     },
     nested: {
-      paddingLeft: theme.spacing(4),
+      paddingLeft: theme.spacing(2),
     },
     links: {
       textDecoration: "none",

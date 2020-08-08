@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import MainLayout from "../../components/MainLayOut/mainLayout.component";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -15,7 +15,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Link } from "react-router-dom";
-import "./corregimientos.styles.scss";
 import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
 
@@ -148,9 +147,9 @@ function Corregimientos() {
                     autoWidth
                     defaultValue={id_distrito}
                   >
-                    {distritos.map((pa, i) => {
+                    {distritos.map((pa) => {
                       return (
-                        <MenuItem key={i} value={pa.id_distrito}>
+                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
                           {pa.nombre_distrito}
                         </MenuItem>
                       );
@@ -169,9 +168,9 @@ function Corregimientos() {
                     autoWidth
                     defaultValue={id_provincia}
                   >
-                    {provincias.map((pa, i) => {
+                    {provincias.map((pa) => {
                       return (
-                        <MenuItem key={i} value={pa.id_provincia}>
+                        <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
                           {pa.nombre_provincia}
                         </MenuItem>
                       );
@@ -204,10 +203,10 @@ function Corregimientos() {
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             <DataTable columns={columns}>
-              {rows.map((row, i) => {
+              {rows.map((row) => {
                 return (
-                  <TableRow key={i}>
-                    <TableCell align="center">
+                  <TableRow key={row.id_corregimiento}>
+                    <TableCell component="th" scope="row">
                       <Link to={`/corregimientos/${row.id_corregimiento}`}>
                         <IconButton aria-label="edit">
                           <EditIcon />
@@ -234,4 +233,4 @@ function Corregimientos() {
   );
 }
 
-export default Corregimientos;
+export default memo(Corregimientos);

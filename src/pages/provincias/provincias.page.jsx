@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import MainLayout from "../../components/MainLayOut/mainLayout.component";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -113,7 +113,7 @@ function Provincias() {
   useEffect(() => {
     fetchdata(urlPais, header, setPais);
     fetchdata(urlProvincia, header, setRows);
-  }, [localStorage.token_key, urlPais, urlProvincia]);
+  }, []);
 
   return (
     <MainLayout Tittle="Provincias">
@@ -141,9 +141,11 @@ function Provincias() {
                     autoWidth
                     defaultValue={id_pais}
                   >
-                    {pais.map((pa, i) => {
+                    {pais.map((pa) => {
                       return (
-                        <MenuItem value={pa.id_pais}>{pa.nombre_pais}</MenuItem>
+                        <MenuItem key={pa.id_pais} value={pa.id_pais}>
+                          {pa.nombre_pais}
+                        </MenuItem>
                       );
                     })}
                   </Select>
@@ -174,13 +176,11 @@ function Provincias() {
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             <DataTable columns={columns}>
-              {rows.map((row, i) => {
+              {rows.map((row) => {
                 return (
-                  <TableRow key={i}>
+                  <TableRow key={row.id_provincia}>
                     <TableCell align="center">
-                      <Link
-                        to={`/provincias/${row.id_provincia}/${row.nombre_provincia}`}
-                      >
+                      <Link to={`/provincias/${row.id_provincia}`}>
                         <IconButton aria-label="edit">
                           <EditIcon />
                         </IconButton>
@@ -203,4 +203,4 @@ function Provincias() {
   );
 }
 
-export default Provincias;
+export default memo(Provincias);

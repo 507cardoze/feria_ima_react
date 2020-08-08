@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import "fontsource-roboto";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Dashboard from "./pages/dashboard/dashboard.page";
@@ -45,4 +45,4 @@ function App() {
   );
 }
 
-export default App;
+export default memo(App);

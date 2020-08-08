@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import MainLayout from "../../components/MainLayOut/mainLayout.component";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -112,10 +112,7 @@ function Distritos() {
   useEffect(() => {
     fetchdata(urlProvincia, header, setProvincias);
     fetchdata(urlDistrito, header, setRows);
-  }, [localStorage.token_key]);
-
-  console.log(rows);
-  console.log(provincias);
+  }, []);
   return (
     <MainLayout Tittle="Distritos">
       {!isLoading ? (
@@ -144,9 +141,9 @@ function Distritos() {
                     autoWidth
                     defaultValue={id_provincia}
                   >
-                    {provincias.map((pa, i) => {
+                    {provincias.map((pa) => {
                       return (
-                        <MenuItem value={pa.id_provincia}>
+                        <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
                           {pa.nombre_provincia}
                         </MenuItem>
                       );
@@ -179,9 +176,9 @@ function Distritos() {
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             <DataTable columns={columns}>
-              {rows.map((row, i) => {
+              {rows.map((row) => {
                 return (
-                  <TableRow key={i}>
+                  <TableRow key={row.id_distrito}>
                     <TableCell align="center">
                       <Link to={`/distritos/${row.id_distrito}`}>
                         <IconButton aria-label="edit">
@@ -205,4 +202,4 @@ function Distritos() {
   );
 }
 
-export default Distritos;
+export default memo(Distritos);
