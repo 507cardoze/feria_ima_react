@@ -21,6 +21,7 @@ function CorregimientoModify(match) {
   const msgSuccess = (msj) => toast.success(msj);
 
   const { id } = match.match.params;
+  console.log(match.match.params);
 
   const [id_provincia, setIdProvincia] = useState("");
   const [id_distrito, setIdDistrito] = useState("");
@@ -123,7 +124,7 @@ function CorregimientoModify(match) {
     fetchDataBuscar();
     fetchdata(urlProvincia, header, setProvincias);
     fetchdata(urlDistrito, header, setDistritos);
-  }, [localStorage.token_key]);
+  }, []);
 
   return (
     <MainLayout Tittle={`Editar`}>

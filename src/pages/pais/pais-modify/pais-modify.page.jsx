@@ -73,10 +73,6 @@ function PaisModify(match) {
     setNacionalidad(e.target.value);
   };
 
-  const onchangeEstado = (e) => {
-    setEstado(e.target.checked);
-  };
-
   const bodyRequest = {
     nomesclatura: id,
     pais: pais,

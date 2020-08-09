@@ -43,10 +43,15 @@ function Corregimientos() {
   const [provincias, setProvincias] = useState([]);
   const [distritos, setDistritos] = useState([]);
 
-  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos`;
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(50);
+
+  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada?page=${page}&limit=${limit}`;
   const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
   const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
   const urlCorregimientoCrear = `${process.env.REACT_APP_BACK_END}/api/corregimientos/crear`;
+
+  const { results } = rows;
 
   const header = {
     method: "GET",
@@ -56,6 +61,22 @@ function Corregimientos() {
     },
     mode: "cors",
     cache: "default",
+  };
+
+  const bodyRequest = {
+    id_provincia: id_provincia,
+    id_distrito: id_distrito,
+    nombre_corregimiento: nombre_corregimiento,
+    estado: estado,
+  };
+
+  const headerPost = {
+    method: "POST",
+    headers: {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.token_key}`,
+    },
+    body: JSON.stringify(bodyRequest),
   };
 
   const fetchdata = async (url, header, setter) => {
@@ -82,22 +103,6 @@ function Corregimientos() {
     setter(e.target.value);
   };
 
-  const bodyRequest = {
-    id_provincia: id_provincia,
-    id_distrito: id_distrito,
-    nombre_corregimiento: nombre_corregimiento,
-    estado: estado,
-  };
-
-  const headerPost = {
-    method: "POST",
-    headers: {
-      "content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.token_key}`,
-    },
-    body: JSON.stringify(bodyRequest),
-  };
-
   const onClickGuardar = (e) => {
     e.preventDefault();
     fetch(urlCorregimientoCrear, headerPost)
@@ -116,10 +121,18 @@ function Corregimientos() {
   };
 
   useEffect(() => {
-    fetchdata(urlCorregimientos, header, setRows);
-    fetchdata(urlProvincia, header, setProvincias);
     fetchdata(urlDistrito, header, setDistritos);
-  }, []);
+  }, [urlDistrito]);
+
+  useEffect(() => {
+    fetchdata(urlProvincia, header, setProvincias);
+  }, [urlProvincia]);
+
+  useEffect(() => {
+    fetchdata(urlCorregimientos, header, setRows);
+  }, [urlCorregimientos]);
+
+  console.log(page);
 
   return (
     <MainLayout Tittle="Corregimientos">
@@ -203,27 +216,32 @@ function Corregimientos() {
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             <DataTable columns={columns}>
-              {rows.map((row) => {
-                return (
-                  <TableRow key={row.id_corregimiento}>
-                    <TableCell component="th" scope="row">
-                      <Link to={`/corregimientos/${row.id_corregimiento}`}>
-                        <IconButton aria-label="edit">
-                          <EditIcon />
-                        </IconButton>
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.nombre_corregimiento}
-                    </TableCell>
-                    <TableCell align="center">{row.nombre_distrito}</TableCell>
-                    <TableCell align="center">{row.nombre_provincia}</TableCell>
-                    <TableCell align="center">
-                      {row.estado === 1 ? "Activo" : "Inactivo"}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {results &&
+                results.map((row) => {
+                  return (
+                    <TableRow key={row.id_corregimiento}>
+                      <TableCell component="th" scope="row">
+                        <Link to={`/corregimientos/${row.id_corregimiento}`}>
+                          <IconButton aria-label="edit">
+                            <EditIcon />
+                          </IconButton>
+                        </Link>
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.nombre_corregimiento}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.nombre_distrito}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.nombre_provincia}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.estado === 1 ? "Activo" : "Inactivo"}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
             </DataTable>
           </Grid>
         </Grid>
