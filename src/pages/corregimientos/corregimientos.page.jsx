@@ -17,6 +17,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Link } from "react-router-dom";
 import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
+import TablePagination from "@material-ui/core/TablePagination";
 
 function Corregimientos() {
   toast.configure({
@@ -44,7 +45,7 @@ function Corregimientos() {
   const [distritos, setDistritos] = useState([]);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(50);
+  const [limit, setLimit] = useState(25);
 
   const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada?page=${page}&limit=${limit}`;
   const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
@@ -52,6 +53,9 @@ function Corregimientos() {
   const urlCorregimientoCrear = `${process.env.REACT_APP_BACK_END}/api/corregimientos/crear`;
 
   const { results } = rows;
+  const { total } = rows;
+  const { next } = rows;
+  const { previous } = rows;
 
   const header = {
     method: "GET",
@@ -132,7 +136,19 @@ function Corregimientos() {
     fetchdata(urlCorregimientos, header, setRows);
   }, [urlCorregimientos]);
 
-  console.log(page);
+  useEffect(() => {
+    fetchdata(urlCorregimientos, header, setRows);
+  }, [page, limit]);
+
+  //console.log(page);
+
+  const handleChangePage = (page) => {
+    setPage(page + 1);
+  };
+
+  const handleChangeLimit = (limit) => {
+    setLimit(limit);
+  };
 
   return (
     <MainLayout Tittle="Corregimientos">
@@ -215,34 +231,61 @@ function Corregimientos() {
             </Paper>
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
-            <DataTable columns={columns}>
-              {results &&
-                results.map((row) => {
-                  return (
-                    <TableRow key={row.id_corregimiento}>
-                      <TableCell component="th" scope="row">
-                        <Link to={`/corregimientos/${row.id_corregimiento}`}>
-                          <IconButton aria-label="edit">
-                            <EditIcon />
-                          </IconButton>
-                        </Link>
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.nombre_corregimiento}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.nombre_distrito}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.nombre_provincia}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.estado === 1 ? "Activo" : "Inactivo"}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </DataTable>
+            {results && (
+              <>
+                <TablePagination
+                  rowsPerPageOptions={[25, 50, 100, 200]}
+                  labelRowsPerPage="Filas por página"
+                  component="div"
+                  count={total && total}
+                  rowsPerPage={limit}
+                  onChangeRowsPerPage={(event) =>
+                    handleChangeLimit(parseInt(event.target.value))
+                  }
+                  page={page - 1}
+                  onChangePage={(event, page) => handleChangePage(page)}
+                />
+                <DataTable columns={columns}>
+                  {results.map((row) => {
+                    return (
+                      <TableRow key={row.id_corregimiento}>
+                        <TableCell component="th" scope="row">
+                          <Link to={`/corregimientos/${row.id_corregimiento}`}>
+                            <IconButton aria-label="edit">
+                              <EditIcon />
+                            </IconButton>
+                          </Link>
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.nombre_corregimiento}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.nombre_distrito}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.nombre_provincia}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.estado === 1 ? "Activo" : "Inactivo"}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </DataTable>
+                <TablePagination
+                  rowsPerPageOptions={[25, 50, 100, 200]}
+                  labelRowsPerPage="Filas por página"
+                  component="div"
+                  count={total && total}
+                  rowsPerPage={limit}
+                  onChangeRowsPerPage={(event) =>
+                    handleChangeLimit(parseInt(event.target.value))
+                  }
+                  page={page - 1}
+                  onChangePage={(event, page) => handleChangePage(page)}
+                />
+              </>
+            )}
           </Grid>
         </Grid>
       )}
