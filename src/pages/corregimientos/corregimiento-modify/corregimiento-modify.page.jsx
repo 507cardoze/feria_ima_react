@@ -143,7 +143,7 @@ function CorregimientoModify(match) {
             </div>
             <Paper className="modify-inputs-container">
               <TextField
-                label="Distrito"
+                label="Corregimiento"
                 variant="outlined"
                 value={nombre_corregimiento}
                 className="modify-inputs"

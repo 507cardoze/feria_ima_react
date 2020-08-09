@@ -213,7 +213,6 @@ function Corregimientos() {
                         </IconButton>
                       </Link>
                     </TableCell>
-
                     <TableCell align="center">
                       {row.nombre_corregimiento}
                     </TableCell>
