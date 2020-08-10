@@ -1,21 +1,9 @@
-// .inputs-container {
-//   display: flex;
-//   width: 100%;
-//   min-height: 100px;
-//   flex-wrap: wrap;
-//   justify-content: space-between;
-//   align-items: center;
-//   padding: 15px;
-//   .inputs {
-//     margin-left: 10px;
-//     margin-bottom: 15px;
-//   }
-// }
-// a {
-//   color: rgba(0, 0, 0, 0.534);
-//   text-decoration: none;
-//   cursor: pointer;
-//   &:active {
-//     color: black;
-//   }
-// }
+.green {
+  color: green;
+  font-weight: bold;
+}
+
+.red {
+  color: red;
+  font-weight: bold;
+}

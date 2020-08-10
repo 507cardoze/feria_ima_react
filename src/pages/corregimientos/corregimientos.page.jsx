@@ -18,6 +18,8 @@ import { Link } from "react-router-dom";
 import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
 import TablePagination from "@material-ui/core/TablePagination";
+import "./corregimientos.styles.scss";
+import SearchBox from "../../components/searchBox/searchBox.compoent";
 
 function Corregimientos() {
   toast.configure({
@@ -40,22 +42,23 @@ function Corregimientos() {
 
   const [estado, setEstado] = useState(true);
   const [isLoading, setisLoading] = useState(true);
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState({});
   const [provincias, setProvincias] = useState([]);
   const [distritos, setDistritos] = useState([]);
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
 
+  const [searchResults, setSearchResults] = useState([]);
+
   const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada?page=${page}&limit=${limit}`;
   const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
   const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
   const urlCorregimientoCrear = `${process.env.REACT_APP_BACK_END}/api/corregimientos/crear`;
+  const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/corregimientos/searchField/`;
 
   const { results } = rows;
   const { total } = rows;
-  const { next } = rows;
-  const { previous } = rows;
 
   const header = {
     method: "GET",
@@ -140,14 +143,27 @@ function Corregimientos() {
     fetchdata(urlCorregimientos, header, setRows);
   }, [page, limit]);
 
-  //console.log(page);
-
   const handleChangePage = (page) => {
     setPage(page + 1);
   };
 
   const handleChangeLimit = (limit) => {
     setLimit(limit);
+  };
+
+  const handleOnChangeSearchField = async (e) => {
+    if (e.target.value.length > 3) {
+      const data = await fetch(`${urlBusqueda}${e.target.value}`, header);
+      const received_data = await data.json();
+
+      try {
+        setSearchResults(received_data);
+      } catch (error) {
+        setSearchResults([]);
+      }
+    } else {
+      setSearchResults([]);
+    }
   };
 
   return (
@@ -157,6 +173,21 @@ function Corregimientos() {
       ) : (
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
+            <SearchBox onChangeInput={handleOnChangeSearchField}>
+              {searchResults.length > 0 && (
+                <ul className="list">
+                  {searchResults.map((value) => {
+                    return (
+                      <Link
+                        className="list-item"
+                        key={value.id_corregimiento}
+                        to={`/corregimientos/${value.id_corregimiento}`}
+                      >{`${value.nombre_corregimiento} - ${value.nombre_distrito} - ${value.nombre_provincia}`}</Link>
+                    );
+                  })}
+                </ul>
+              )}
+            </SearchBox>
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
                 <TextField
@@ -213,7 +244,7 @@ function Corregimientos() {
                     <Switch
                       checked={estado}
                       color="primary"
-                      className="inputs"
+                      className={`inputs`}
                       inputProps={{ "aria-label": "primary checkbox" }}
                       onChange={() => setEstado(!estado)}
                     />
@@ -265,8 +296,15 @@ function Corregimientos() {
                         <TableCell align="center">
                           {row.nombre_provincia}
                         </TableCell>
-                        <TableCell align="center">
-                          {row.estado === 1 ? "Activo" : "Inactivo"}
+                        <TableCell
+                          align="center"
+                          className={`${row.estado === 1 ? "green" : "red"}`}
+                        >
+                          <span
+                            className={`${row.estado === 1 ? "green" : "red"}`}
+                          >
+                            {row.estado === 1 ? "Activo" : "Inactivo"}
+                          </span>
                         </TableCell>
                       </TableRow>
                     );
