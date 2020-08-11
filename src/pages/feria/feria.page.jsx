@@ -141,7 +141,6 @@ function Feria() {
   };
 
   const onChangeDistrito = (e) => {
-    console.log("dist: ", e.target.value);
     setIdDistrito(e.target.value);
     fetch(`${urlCorregimientos}${e.target.value}`, header)
       .then((response) => response.json())
