@@ -15,6 +15,9 @@ import Corregimientos from "./pages/corregimientos/corregimientos.page";
 import CorregimientoModify from "./pages/corregimientos/corregimiento-modify/corregimiento-modify.page";
 import Distritos from "./pages/distritos/distritos.page";
 import DistritoModify from "./pages/distritos/distrito-modify/distrito-modify.page";
+import Feria from "./pages/feria/feria.page";
+import FeriaModify from "./pages/feria/feria-modify/feria-modify.page";
+import TipoAjustes from "./pages/tipo-ajustes/tipo-ajustes.page";
 import "moment/locale/es.js";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
@@ -38,6 +41,9 @@ function App() {
           <Route path="/corregimientos/:id" component={CorregimientoModify} />
           <Route exact path="/distritos" component={Distritos} />
           <Route path="/distritos/:id" component={DistritoModify} />
+          <Route exact path="/feria" component={Feria} />
+          <Route path="/feria/:id" component={FeriaModify} />
+          <Route exact path="/tipo-ajustes" component={TipoAjustes} />
           <Route exact path="/login" component={Login} />
         </Switch>
       </BrowserRouter>

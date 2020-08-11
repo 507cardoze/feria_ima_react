@@ -163,10 +163,10 @@ function MainLayout(props) {
         <List>
           <MainList />
         </List>
-        <Divider />
+        {/* <Divider />
         <List>
           <SecondaryList />
-        </List>
+        </List> */}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

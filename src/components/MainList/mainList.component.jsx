@@ -128,12 +128,22 @@ function MainList() {
               <ListItemText primary="Corregimientos" />
             </ListItem>
           </Link>
-          {/* <Link to="/" className={classes.links}><ListItem button className={`${classes.nested} list-fix-padding`}>
-            <ListItemIcon>
-              <HomeWorkIcon />
-            </ListItemIcon>
-            <ListItemText primary="Tipos de Ajustes" />
-          </ListItem></Link> */}
+          <Link to="/feria" className={classes.links}>
+            <ListItem button className={`${classes.nested} list-fix-padding`}>
+              <ListItemIcon>
+                <HomeWorkIcon />
+              </ListItemIcon>
+              <ListItemText primary="Feria" />
+            </ListItem>
+          </Link>
+          {/* <Link to="/tipo-ajustes" className={classes.links}>
+            <ListItem button className={`${classes.nested} list-fix-padding`}>
+              <ListItemIcon>
+                <HomeWorkIcon />
+              </ListItemIcon>
+              <ListItemText primary="Tipo Ajustes" />
+            </ListItem>
+          </Link> */}
         </List>
       </Collapse>
     </div>

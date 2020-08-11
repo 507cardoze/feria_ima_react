@@ -12,7 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
 
-function CorregimientoModify(match) {
+function FeriaModify(match) {
   toast.configure({
     autoClose: 6000,
     draggable: true,
@@ -24,16 +24,22 @@ function CorregimientoModify(match) {
 
   const [id_provincia, setIdProvincia] = useState("");
   const [id_distrito, setIdDistrito] = useState("");
-  const [nombre_corregimiento, setNombreCorregimiento] = useState("");
+  const [id_corregimiento, setIdCorregimiento] = useState("");
+  const [nombre_feria, setNombreFeria] = useState("");
+  const [descripcion_lugar, setDescripcionLugar] = useState("");
+  const [descripcion_feria, setDescripcionFeria] = useState("");
 
+  const [corregimientos, setCorregimientos] = useState([]);
   const [provincias, setProvincias] = useState([]);
   const [distritos, setDistritos] = useState([]);
 
   const [estado, setEstado] = useState(true);
   const [isLoading, setisLoading] = useState(true);
 
-  const urlCorregimientoBuscar = `${process.env.REACT_APP_BACK_END}/api/corregimientos/buscar/${id}`;
-  const urlCorregimientoUpdate = `${process.env.REACT_APP_BACK_END}/api/corregimientos/update`;
+  const urlBuscar = `${process.env.REACT_APP_BACK_END}/api/feria/buscar/${id}`;
+  const urlUpdate = `${process.env.REACT_APP_BACK_END}/api/feria/update`;
+
+  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada`;
   const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
   const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
 
@@ -70,13 +76,16 @@ function CorregimientoModify(match) {
   const fetchDataBuscar = async () => {
     setisLoading(false);
     try {
-      const data = await fetch(urlCorregimientoBuscar, header);
+      const data = await fetch(urlBuscar, header);
       const dat = await data.json();
       UnauthorizedRedirect(dat);
       dat.forEach((dt) => {
+        setNombreFeria(dt.nombre_feria);
+        setDescripcionLugar(dt.descripcion_lugar);
+        setDescripcionFeria(dt.nombre_corregimiento);
         setIdProvincia(dt.id_provincia);
         setIdDistrito(dt.id_distrito);
-        setNombreCorregimiento(dt.nombre_corregimiento);
+        setIdCorregimiento(dt.id_corregimiento);
         setEstado(dt.estado === 1 ? true : false);
       });
       setisLoading(true);
@@ -90,10 +99,13 @@ function CorregimientoModify(match) {
   };
 
   const bodyRequest = {
-    id_corregimiento: parseInt(id),
+    id_feria: id,
+    nombre_feria: nombre_feria,
     id_provincia: id_provincia,
     id_distrito: id_distrito,
-    nombre_corregimiento: nombre_corregimiento,
+    id_corregimiento: id_corregimiento,
+    descripcion_lugar: descripcion_lugar,
+    descripcion_feria: descripcion_feria,
     estado: estado,
   };
 
@@ -107,7 +119,7 @@ function CorregimientoModify(match) {
   };
 
   const onClickGuardar = () => {
-    fetch(urlCorregimientoUpdate, headerPut)
+    fetch(urlUpdate, headerPut)
       .then((response) => response.json())
       .then((data) => {
         UnauthorizedRedirect(data);
@@ -121,9 +133,19 @@ function CorregimientoModify(match) {
 
   useEffect(() => {
     fetchDataBuscar();
-    fetchdata(urlProvincia, header, setProvincias);
-    fetchdata(urlDistrito, header, setDistritos);
   }, []);
+
+  useEffect(() => {
+    fetchdata(urlDistrito, header, setDistritos);
+  }, [urlDistrito]);
+
+  useEffect(() => {
+    fetchdata(urlProvincia, header, setProvincias);
+  }, [urlProvincia]);
+
+  useEffect(() => {
+    fetchdata(urlCorregimientos, header, setCorregimientos);
+  }, [urlCorregimientos]);
 
   return (
     <MainLayout Tittle={`Editar`}>
@@ -143,25 +165,65 @@ function CorregimientoModify(match) {
             </div>
             <Paper className="modify-inputs-container">
               <TextField
-                label="Corregimiento"
+                label="Feria"
                 variant="outlined"
-                value={nombre_corregimiento}
+                value={nombre_feria}
                 className="modify-inputs"
-                onChange={(e) => onChange(e, setNombreCorregimiento)}
+                onChange={(e) => onChange(e, setNombreFeria)}
+              />
+              <TextField
+                label="Lugar"
+                variant="outlined"
+                multiline
+                value={descripcion_lugar}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setDescripcionLugar)}
+              />
+              <TextField
+                label="Descripcion"
+                variant="outlined"
+                multiline
+                value={descripcion_feria}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setDescripcionFeria)}
               />
               <div className="select-form">
-                <InputLabel id="demo-simple-select-label">Distritos</InputLabel>
+                <InputLabel id="corregimiento-select-label">
+                  Corregimiento
+                </InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  labelId="corregimiento-select-label"
+                  id="corregimiento-simple-select"
+                  className="modify-inputs"
+                  onChange={(e) => onChange(e, setIdCorregimiento)}
+                  autoWidth
+                  defaultValue={id_corregimiento}
+                >
+                  {corregimientos.map((pa) => {
+                    return (
+                      <MenuItem
+                        key={pa.id_corregimiento}
+                        value={pa.id_corregimiento}
+                      >
+                        {pa.nombre_corregimiento}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </div>
+              <div className="select-form">
+                <InputLabel id="distrito-select-label">Distrito</InputLabel>
+                <Select
+                  labelId="distrito-select-label"
+                  id="distrito-simple-select"
                   className="modify-inputs"
                   onChange={(e) => onChange(e, setIdDistrito)}
-                  value={id_distrito}
                   autoWidth
+                  defaultValue={id_distrito}
                 >
-                  {distritos.map((pa, i) => {
+                  {distritos.map((pa) => {
                     return (
-                      <MenuItem key={i} value={pa.id_distrito}>
+                      <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
                         {pa.nombre_distrito}
                       </MenuItem>
                     );
@@ -169,20 +231,18 @@ function CorregimientoModify(match) {
                 </Select>
               </div>
               <div className="select-form">
-                <InputLabel id="demo-simple-select-label">
-                  Provincias
-                </InputLabel>
+                <InputLabel id="provincias-select-label">Provincias</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  labelId="provincias-select-label"
+                  id="provincias-simple-select"
                   className="modify-inputs"
                   onChange={(e) => onChange(e, setIdProvincia)}
-                  value={id_provincia}
                   autoWidth
+                  defaultValue={id_provincia}
                 >
-                  {provincias.map((pa, i) => {
+                  {provincias.map((pa) => {
                     return (
-                      <MenuItem key={i} value={pa.id_provincia}>
+                      <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
                         {pa.nombre_provincia}
                       </MenuItem>
                     );
@@ -191,11 +251,12 @@ function CorregimientoModify(match) {
               </div>
               <FormControlLabel
                 label={estado ? "Activo" : "Inactivo"}
+                className="modify-inputs"
                 control={
                   <Switch
                     checked={estado}
                     color="primary"
-                    className="modify-inputs"
+                    className={`inputs`}
                     inputProps={{ "aria-label": "primary checkbox" }}
                     onChange={() => setEstado(!estado)}
                   />
@@ -217,4 +278,4 @@ function CorregimientoModify(match) {
   );
 }
 
-export default memo(CorregimientoModify);
+export default memo(FeriaModify);
