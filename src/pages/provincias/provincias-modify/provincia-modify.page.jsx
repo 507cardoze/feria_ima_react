@@ -140,13 +140,6 @@ function ProvinciaModify(match) {
               </Button>
             </div>
             <Paper className="modify-inputs-container">
-              <TextField
-                label="Provincia"
-                variant="outlined"
-                value={provincia_nombre}
-                className="modify-inputs"
-                onChange={(e) => onChange(e, setProvinciaNombre)}
-              />
               <div className="select-form">
                 <InputLabel id="demo-simple-select-label">Pais</InputLabel>
                 <Select
@@ -166,6 +159,14 @@ function ProvinciaModify(match) {
                   })}
                 </Select>
               </div>
+              <TextField
+                label="Provincia"
+                variant="outlined"
+                value={provincia_nombre}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setProvinciaNombre)}
+              />
+
               <FormControlLabel
                 label={estado ? "Activo" : "Inactivo"}
                 control={

@@ -35,7 +35,7 @@ function CorregimientoModify(match) {
   const urlCorregimientoBuscar = `${process.env.REACT_APP_BACK_END}/api/corregimientos/buscar/${id}`;
   const urlCorregimientoUpdate = `${process.env.REACT_APP_BACK_END}/api/corregimientos/update`;
   const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/filtrada`;
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/buscarDistritoByProvincia/`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {
@@ -79,14 +79,27 @@ function CorregimientoModify(match) {
         setNombreCorregimiento(dt.nombre_corregimiento);
         setEstado(dt.estado === 1 ? true : false);
       });
+      fetchdata(urlProvincia, header, setProvincias);
+      fetchdata(`${urlDistrito}${dat[0].id_provincia}`, header, setDistritos);
       setisLoading(true);
     } catch (error) {
       msgError(error);
     }
   };
 
-  const onChange = (e, setter) => {
+  const onChangeSetter = (e, setter) => {
     setter(e.target.value);
+  };
+
+  const onChange = (e) => {
+    setIdProvincia(e.target.value);
+    setDistritos([]);
+    fetch(`${urlDistrito}${e.target.value}`, header)
+      .then((response) => response.json())
+      .then((data) => {
+        UnauthorizedRedirect(data);
+        setDistritos(data);
+      });
   };
 
   const bodyRequest = {
@@ -121,8 +134,6 @@ function CorregimientoModify(match) {
 
   useEffect(() => {
     fetchDataBuscar();
-    fetchdata(urlProvincia, header, setProvincias);
-    fetchdata(urlDistrito, header, setDistritos);
   }, []);
 
   return (
@@ -150,7 +161,7 @@ function CorregimientoModify(match) {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   className="modify-inputs"
-                  onChange={(e) => onChange(e, setIdProvincia)}
+                  onChange={(e) => onChange(e)}
                   value={id_provincia}
                   autoWidth
                 >
@@ -169,7 +180,7 @@ function CorregimientoModify(match) {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   className="modify-inputs"
-                  onChange={(e) => onChange(e, setIdDistrito)}
+                  onChange={(e) => onChangeSetter(e, setIdDistrito)}
                   value={id_distrito}
                   autoWidth
                 >
