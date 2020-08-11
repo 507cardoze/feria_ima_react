@@ -34,8 +34,8 @@ function CorregimientoModify(match) {
 
   const urlCorregimientoBuscar = `${process.env.REACT_APP_BACK_END}/api/corregimientos/buscar/${id}`;
   const urlCorregimientoUpdate = `${process.env.REACT_APP_BACK_END}/api/corregimientos/update`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/filtrada`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {
@@ -142,32 +142,6 @@ function CorregimientoModify(match) {
               </Button>
             </div>
             <Paper className="modify-inputs-container">
-              <TextField
-                label="Corregimiento"
-                variant="outlined"
-                value={nombre_corregimiento}
-                className="modify-inputs"
-                onChange={(e) => onChange(e, setNombreCorregimiento)}
-              />
-              <div className="select-form">
-                <InputLabel id="demo-simple-select-label">Distritos</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  className="modify-inputs"
-                  onChange={(e) => onChange(e, setIdDistrito)}
-                  value={id_distrito}
-                  autoWidth
-                >
-                  {distritos.map((pa, i) => {
-                    return (
-                      <MenuItem key={i} value={pa.id_distrito}>
-                        {pa.nombre_distrito}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </div>
               <div className="select-form">
                 <InputLabel id="demo-simple-select-label">
                   Provincias
@@ -189,6 +163,32 @@ function CorregimientoModify(match) {
                   })}
                 </Select>
               </div>
+              <div className="select-form">
+                <InputLabel id="demo-simple-select-label">Distritos</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  className="modify-inputs"
+                  onChange={(e) => onChange(e, setIdDistrito)}
+                  value={id_distrito}
+                  autoWidth
+                >
+                  {distritos.map((pa, i) => {
+                    return (
+                      <MenuItem key={i} value={pa.id_distrito}>
+                        {pa.nombre_distrito}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </div>
+              <TextField
+                label="Corregimiento"
+                variant="outlined"
+                value={nombre_corregimiento}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setNombreCorregimiento)}
+              />
               <FormControlLabel
                 label={estado ? "Activo" : "Inactivo"}
                 control={

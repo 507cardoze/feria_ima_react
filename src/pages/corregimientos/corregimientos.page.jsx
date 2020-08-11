@@ -52,7 +52,7 @@ function Corregimientos() {
   const [searchResults, setSearchResults] = useState([]);
 
   const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada?page=${page}&limit=${limit}`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
   const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/buscarDistritoByProvincia/`;
   const urlCorregimientoCrear = `${process.env.REACT_APP_BACK_END}/api/corregimientos/crear`;
   const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/corregimientos/searchField/`;
@@ -112,7 +112,6 @@ function Corregimientos() {
     fetch(`${urlDistrito}${e.target.value}`, header)
       .then((response) => response.json())
       .then((data) => {
-        console.log("data:", data);
         UnauthorizedRedirect(data);
         setDistritos(data);
       });

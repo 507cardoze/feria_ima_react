@@ -40,8 +40,8 @@ function FeriaModify(match) {
   const urlUpdate = `${process.env.REACT_APP_BACK_END}/api/feria/update`;
 
   const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/filtrada`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {

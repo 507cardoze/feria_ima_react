@@ -33,7 +33,7 @@ function ProvinciaModify(match) {
 
   const urlProviciaBuscar = `${process.env.REACT_APP_BACK_END}/api/provincias/buscar/${id}`;
   const urlProvinciaUpdate = `${process.env.REACT_APP_BACK_END}/api/provincias/update`;
-  const urlPais = `${process.env.REACT_APP_BACK_END}/api/pais`;
+  const urlPais = `${process.env.REACT_APP_BACK_END}/api/pais/filtrada`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {

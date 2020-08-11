@@ -30,7 +30,7 @@ function DistritoModify(match) {
 
   const urlDistritoBuscar = `${process.env.REACT_APP_BACK_END}/api/distritos/buscar/${id}`;
   const urlDistritoUpdate = `${process.env.REACT_APP_BACK_END}/api/distritos/update`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {

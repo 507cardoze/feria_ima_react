@@ -59,7 +59,7 @@ function Feria() {
   const [searchResults, setSearchResults] = useState([]);
 
   const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/buscarCorregimientoByDistrito/`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
   const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/buscarDistritoByProvincia/`;
 
   const urlFeria = `${process.env.REACT_APP_BACK_END}/api/feria/filtrada?page=${page}&limit=${limit}`;
