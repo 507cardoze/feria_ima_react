@@ -124,13 +124,6 @@ function Provincias() {
           <Grid item xs={12} md={12} lg={12}>
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
-                <TextField
-                  label="Provincia"
-                  variant="outlined"
-                  value={provincia}
-                  className="inputs"
-                  onChange={(e) => onChange(e, setProvincia)}
-                />
                 <div className="select-form">
                   <InputLabel id="demo-simple-select-label">Pais</InputLabel>
                   <Select
@@ -150,6 +143,13 @@ function Provincias() {
                     })}
                   </Select>
                 </div>
+                <TextField
+                  label="Provincia"
+                  variant="outlined"
+                  value={provincia}
+                  className="inputs"
+                  onChange={(e) => onChange(e, setProvincia)}
+                />
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
                   className="inputs"

@@ -58,9 +58,9 @@ function Feria() {
 
   const [searchResults, setSearchResults] = useState([]);
 
-  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada`;
+  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/buscarCorregimientoByDistrito/`;
   const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/buscarDistritoByProvincia/`;
 
   const urlFeria = `${process.env.REACT_APP_BACK_END}/api/feria/filtrada?page=${page}&limit=${limit}`;
   const urlCrear = `${process.env.REACT_APP_BACK_END}/api/feria/crear`;
@@ -126,6 +126,32 @@ function Feria() {
     setter(e.target.value);
   };
 
+  const onChangeProvincia = (e) => {
+    console.log("pro: ", e.target.value);
+    setIdProvincia(e.target.value);
+    setDistritos([]);
+    setCorregimientos([]);
+
+    fetch(`${urlDistrito}${e.target.value}`, header)
+      .then((response) => response.json())
+      .then((data) => {
+        UnauthorizedRedirect(data);
+        setDistritos(data);
+      });
+  };
+
+  const onChangeDistrito = (e) => {
+    console.log("dist: ", e.target.value);
+    setIdDistrito(e.target.value);
+    fetch(`${urlCorregimientos}${e.target.value}`, header)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data:", data);
+        UnauthorizedRedirect(data);
+        setCorregimientos(data);
+      });
+  };
+
   const onClickGuardar = (e) => {
     e.preventDefault();
     fetch(urlCrear, headerPost)
@@ -134,9 +160,7 @@ function Feria() {
         UnauthorizedRedirect(data);
         if (data === "success") {
           fetchdata(urlFeria, header, setRows);
-          fetchdata(urlCorregimientos, header, setCorregimientos);
           fetchdata(urlProvincia, header, setProvincias);
-          fetchdata(urlDistrito, header, setDistritos);
           msgSuccess("Registro Exitoso.");
         } else {
           msgError(data);
@@ -145,16 +169,8 @@ function Feria() {
   };
 
   useEffect(() => {
-    fetchdata(urlDistrito, header, setDistritos);
-  }, [urlDistrito]);
-
-  useEffect(() => {
     fetchdata(urlProvincia, header, setProvincias);
   }, [urlProvincia]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setCorregimientos);
-  }, [urlCorregimientos]);
 
   useEffect(() => {
     fetchdata(urlFeria, header, setRows);
@@ -211,6 +227,72 @@ function Feria() {
             </SearchBox>
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
+                <div className="select-form">
+                  <InputLabel id="provincias-select-label">
+                    Provincias
+                  </InputLabel>
+                  <Select
+                    labelId="provincias-select-label"
+                    id="provincias-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChangeProvincia(e)}
+                    autoWidth
+                    defaultValue={id_provincia}
+                  >
+                    {provincias.map((pa) => {
+                      return (
+                        <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
+                          {pa.nombre_provincia}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
+                <div className="select-form">
+                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
+                  <Select
+                    labelId="distrito-select-label"
+                    id="distrito-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChangeDistrito(e)}
+                    autoWidth
+                    defaultValue={id_distrito}
+                    disabled={distritos.length > 0 ? false : true}
+                  >
+                    {distritos.map((pa) => {
+                      return (
+                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
+                          {pa.nombre_distrito}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
+                <div className="select-form">
+                  <InputLabel id="corregimiento-select-label">
+                    Corregimiento
+                  </InputLabel>
+                  <Select
+                    labelId="corregimiento-select-label"
+                    id="corregimiento-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChange(e, setIdCorregimiento)}
+                    autoWidth
+                    defaultValue={id_corregimiento}
+                    disabled={corregimientos.length > 0 ? false : true}
+                  >
+                    {corregimientos.map((pa) => {
+                      return (
+                        <MenuItem
+                          key={pa.id_corregimiento}
+                          value={pa.id_corregimiento}
+                        >
+                          {pa.nombre_corregimiento}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
                 <TextField
                   label="Feria"
                   variant="outlined"
@@ -234,70 +316,7 @@ function Feria() {
                   className="inputs"
                   onChange={(e) => onChange(e, setDescripcionFeria)}
                 />
-                <div className="select-form">
-                  <InputLabel id="corregimiento-select-label">
-                    Corregimiento
-                  </InputLabel>
-                  <Select
-                    labelId="corregimiento-select-label"
-                    id="corregimiento-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdCorregimiento)}
-                    autoWidth
-                    defaultValue={id_corregimiento}
-                  >
-                    {corregimientos.map((pa) => {
-                      return (
-                        <MenuItem
-                          key={pa.id_corregimiento}
-                          value={pa.id_corregimiento}
-                        >
-                          {pa.nombre_corregimiento}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
-                <div className="select-form">
-                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
-                  <Select
-                    labelId="distrito-select-label"
-                    id="distrito-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdDistrito)}
-                    autoWidth
-                    defaultValue={id_distrito}
-                  >
-                    {distritos.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
-                          {pa.nombre_distrito}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
-                <div className="select-form">
-                  <InputLabel id="provincias-select-label">
-                    Provincias
-                  </InputLabel>
-                  <Select
-                    labelId="provincias-select-label"
-                    id="provincias-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdProvincia)}
-                    autoWidth
-                    defaultValue={id_provincia}
-                  >
-                    {provincias.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
-                          {pa.nombre_provincia}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
+
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
                   className="inputs"

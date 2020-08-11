@@ -53,7 +53,7 @@ function Corregimientos() {
 
   const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada?page=${page}&limit=${limit}`;
   const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/buscarDistritoByProvincia/`;
   const urlCorregimientoCrear = `${process.env.REACT_APP_BACK_END}/api/corregimientos/crear`;
   const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/corregimientos/searchField/`;
 
@@ -106,7 +106,19 @@ function Corregimientos() {
     { tittle: "Estado" },
   ];
 
-  const onChange = (e, setter) => {
+  const onChange = (e) => {
+    setIdProvincia(e.target.value);
+    setDistritos([]);
+    fetch(`${urlDistrito}${e.target.value}`, header)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data:", data);
+        UnauthorizedRedirect(data);
+        setDistritos(data);
+      });
+  };
+
+  const onChangeSetter = (e, setter) => {
     setter(e.target.value);
   };
 
@@ -119,17 +131,12 @@ function Corregimientos() {
         if (data === "success") {
           fetchdata(urlCorregimientos, header, setRows);
           fetchdata(urlProvincia, header, setProvincias);
-          fetchdata(urlDistrito, header, setDistritos);
           msgSuccess("Registro Exitoso.");
         } else {
           msgError(data);
         }
       });
   };
-
-  useEffect(() => {
-    fetchdata(urlDistrito, header, setDistritos);
-  }, [urlDistrito]);
 
   useEffect(() => {
     fetchdata(urlProvincia, header, setProvincias);
@@ -190,32 +197,6 @@ function Corregimientos() {
             </SearchBox>
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
-                <TextField
-                  label="Corregimiento"
-                  variant="outlined"
-                  value={nombre_corregimiento}
-                  className="inputs"
-                  onChange={(e) => onChange(e, setNombreCorregimiento)}
-                />
-                <div className="select-form">
-                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
-                  <Select
-                    labelId="distrito-select-label"
-                    id="distrito-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdDistrito)}
-                    autoWidth
-                    defaultValue={id_distrito}
-                  >
-                    {distritos.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
-                          {pa.nombre_distrito}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
                 <div className="select-form">
                   <InputLabel id="provincias-select-label">
                     Provincias
@@ -224,7 +205,7 @@ function Corregimientos() {
                     labelId="provincias-select-label"
                     id="provincias-simple-select"
                     className="inputs"
-                    onChange={(e) => onChange(e, setIdProvincia)}
+                    onChange={(e) => onChange(e)}
                     autoWidth
                     defaultValue={id_provincia}
                   >
@@ -237,6 +218,35 @@ function Corregimientos() {
                     })}
                   </Select>
                 </div>
+                <div className="select-form">
+                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
+                  <Select
+                    labelId="distrito-select-label"
+                    id="distrito-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChangeSetter(e, setIdDistrito)}
+                    autoWidth
+                    defaultValue={id_distrito}
+                    disabled={distritos.length > 0 ? false : true}
+                  >
+                    {distritos.map((pa) => {
+                      return (
+                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
+                          {pa.nombre_distrito}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
+
+                <TextField
+                  label="Corregimiento"
+                  variant="outlined"
+                  value={nombre_corregimiento}
+                  className="inputs"
+                  onChange={(e) => onChange(e, setNombreCorregimiento)}
+                />
+
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
                   className="inputs"

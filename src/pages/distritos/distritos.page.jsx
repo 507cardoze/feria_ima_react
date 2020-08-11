@@ -122,13 +122,6 @@ function Distritos() {
           <Grid item xs={12} md={12} lg={12}>
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
-                <TextField
-                  label="Distrito"
-                  variant="outlined"
-                  value={distrito}
-                  className="inputs"
-                  onChange={(e) => onChange(e, setDistrito)}
-                />
                 <div className="select-form">
                   <InputLabel id="demo-simple-select-label">
                     Provincias
@@ -150,6 +143,13 @@ function Distritos() {
                     })}
                   </Select>
                 </div>
+                <TextField
+                  label="Distrito"
+                  variant="outlined"
+                  value={distrito}
+                  className="inputs"
+                  onChange={(e) => onChange(e, setDistrito)}
+                />
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
                   className="inputs"
