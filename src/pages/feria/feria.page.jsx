@@ -167,18 +167,6 @@ function Feria() {
       });
   };
 
-  useEffect(() => {
-    fetchdata(urlProvincia, header, setProvincias);
-  }, [urlProvincia]);
-
-  useEffect(() => {
-    fetchdata(urlFeria, header, setRows);
-  }, [urlFeria]);
-
-  useEffect(() => {
-    fetchdata(urlFeria, header, setRows);
-  }, [page, limit]);
-
   const handleChangePage = (page) => {
     setPage(page + 1);
   };
@@ -201,6 +189,81 @@ function Feria() {
       setSearchResults([]);
     }
   };
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlProvincia, header, setProvincias);
+  }, [urlProvincia]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlFeria, header, setRows);
+  }, [urlFeria]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlFeria, header, setRows);
+  }, [page, limit, urlFeria]);
 
   return (
     <MainLayout Tittle="Feria">

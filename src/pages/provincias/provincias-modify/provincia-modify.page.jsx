@@ -42,52 +42,6 @@ function ProvinciaModify(match) {
     }
   };
 
-  const header = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.token_key}`,
-    },
-    mode: "cors",
-    cache: "default",
-  };
-
-  const fetchdata = async (url, header, setter) => {
-    setisLoading(false);
-    try {
-      const data = await fetch(url, header);
-      const filtered = await data.json();
-      UnauthorizedRedirect(filtered);
-      setter(filtered);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  const fetchDataBuscar = async () => {
-    setisLoading(false);
-    try {
-      const data = await fetch(urlProviciaBuscar, header);
-      const dat = await data.json();
-      UnauthorizedRedirect(dat);
-      dat.forEach((dt) => {
-        setId_pais(dt.id_pais);
-        setProvinciaNombre(dt.nombre_provincia);
-        setEstado(dt.estado === 1 ? true : false);
-      });
-      setProvincia(dat);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDataBuscar();
-    fetchdata(urlPais, header, setPais);
-  }, [localStorage.token_key]);
-
   const onChange = (e, setter) => {
     setter(e.target.value);
   };
@@ -120,6 +74,51 @@ function ProvinciaModify(match) {
         }
       });
   };
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+
+    const fetchDataBuscar = async () => {
+      setisLoading(false);
+      try {
+        const data = await fetch(urlProviciaBuscar, header);
+        const dat = await data.json();
+        UnauthorizedRedirect(dat);
+        dat.forEach((dt) => {
+          setId_pais(dt.id_pais);
+          setProvinciaNombre(dt.nombre_provincia);
+          setEstado(dt.estado === 1 ? true : false);
+        });
+        setProvincia(dat);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+
+    fetchDataBuscar();
+    fetchdata(urlPais, header, setPais);
+  }, [urlProviciaBuscar, urlPais]);
 
   return (
     <MainLayout

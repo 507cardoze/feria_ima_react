@@ -119,14 +119,6 @@ function Pais() {
     body: JSON.stringify(bodyRequest),
   };
 
-  useEffect(() => {
-    fetchdata(urlPais, header, setRows);
-  }, []);
-
-  useEffect(() => {
-    fetchdata(urlPais, header, setRows);
-  }, [page, limit]);
-
   const handleChangePage = (page) => {
     setPage(page + 1);
   };
@@ -149,6 +141,56 @@ function Pais() {
       setSearchResults([]);
     }
   };
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlPais, header, setRows);
+  }, [urlPais]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlPais, header, setRows);
+  }, [page, limit, urlPais]);
 
   return (
     <MainLayout Tittle="Pais">

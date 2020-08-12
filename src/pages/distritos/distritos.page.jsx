@@ -121,15 +121,6 @@ function Distritos() {
       });
   };
 
-  useEffect(() => {
-    fetchdata(urlProvincia, header, setProvincias);
-    fetchdata(urlDistrito, header, setRows);
-  }, []);
-
-  useEffect(() => {
-    fetchdata(urlDistrito, header, setRows);
-  }, [page, limit]);
-
   const handleChangePage = (page) => {
     setPage(page + 1);
   };
@@ -152,6 +143,57 @@ function Distritos() {
       setSearchResults([]);
     }
   };
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlProvincia, header, setProvincias);
+    fetchdata(urlDistrito, header, setRows);
+  }, [urlProvincia, urlDistrito]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlDistrito, header, setRows);
+  }, [page, limit, urlDistrito]);
 
   return (
     <MainLayout Tittle="Distritos">

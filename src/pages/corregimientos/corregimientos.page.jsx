@@ -137,18 +137,6 @@ function Corregimientos() {
       });
   };
 
-  useEffect(() => {
-    fetchdata(urlProvincia, header, setProvincias);
-  }, [urlProvincia]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setRows);
-  }, [urlCorregimientos]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setRows);
-  }, [page, limit]);
-
   const handleChangePage = (page) => {
     setPage(page + 1);
   };
@@ -171,6 +159,84 @@ function Corregimientos() {
       setSearchResults([]);
     }
   };
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlProvincia, header, setProvincias);
+  }, [urlProvincia]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlCorregimientos, header, setRows);
+  }, [urlCorregimientos]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlCorregimientos, header, setRows);
+  }, [page, limit, urlCorregimientos]);
 
   return (
     <MainLayout Tittle="Corregimientos">

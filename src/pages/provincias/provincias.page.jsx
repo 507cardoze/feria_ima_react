@@ -121,15 +121,6 @@ function Provincias() {
       });
   };
 
-  useEffect(() => {
-    fetchdata(urlPais, header, setPais);
-    fetchdata(urlProvincia, header, setRows);
-  }, []);
-
-  useEffect(() => {
-    fetchdata(urlProvincia, header, setRows);
-  }, [page, limit]);
-
   const handleChangePage = (page) => {
     setPage(page + 1);
   };
@@ -152,6 +143,59 @@ function Provincias() {
       setSearchResults([]);
     }
   };
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlPais, header, setPais);
+    fetchdata(urlProvincia, header, setRows);
+  }, [urlPais, urlProvincia]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlProvincia, header, setRows);
+  }, [page, limit, urlProvincia]);
 
   return (
     <MainLayout Tittle="Provincias">

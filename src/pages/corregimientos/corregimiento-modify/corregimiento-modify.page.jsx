@@ -54,39 +54,6 @@ function CorregimientoModify(match) {
     cache: "default",
   };
 
-  const fetchdata = async (url, header, setter) => {
-    setisLoading(false);
-    try {
-      const data = await fetch(url, header);
-      const filtered = await data.json();
-      UnauthorizedRedirect(filtered);
-      setter(filtered);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  const fetchDataBuscar = async () => {
-    setisLoading(false);
-    try {
-      const data = await fetch(urlCorregimientoBuscar, header);
-      const dat = await data.json();
-      UnauthorizedRedirect(dat);
-      dat.forEach((dt) => {
-        setIdProvincia(dt.id_provincia);
-        setIdDistrito(dt.id_distrito);
-        setNombreCorregimiento(dt.nombre_corregimiento);
-        setEstado(dt.estado === 1 ? true : false);
-      });
-      fetchdata(urlProvincia, header, setProvincias);
-      fetchdata(`${urlDistrito}${dat[0].id_provincia}`, header, setDistritos);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
   const onChangeSetter = (e, setter) => {
     setter(e.target.value);
   };
@@ -133,8 +100,48 @@ function CorregimientoModify(match) {
   };
 
   useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    const fetchDataBuscar = async () => {
+      setisLoading(false);
+      try {
+        const data = await fetch(urlCorregimientoBuscar, header);
+        const dat = await data.json();
+        UnauthorizedRedirect(dat);
+        dat.forEach((dt) => {
+          setIdProvincia(dt.id_provincia);
+          setIdDistrito(dt.id_distrito);
+          setNombreCorregimiento(dt.nombre_corregimiento);
+          setEstado(dt.estado === 1 ? true : false);
+        });
+        fetchdata(urlProvincia, header, setProvincias);
+        fetchdata(`${urlDistrito}${dat[0].id_provincia}`, header, setDistritos);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
     fetchDataBuscar();
-  }, []);
+  }, [urlCorregimientoBuscar, urlProvincia, urlDistrito]);
 
   return (
     <MainLayout Tittle={`Editar`}>

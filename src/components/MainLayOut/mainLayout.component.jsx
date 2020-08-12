@@ -13,7 +13,6 @@ import Container from "@material-ui/core/Container";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MainList from "../MainList/mainList.component";
-import SecondaryList from "../secondaryList/secondaryList.component";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import "./mainLayout.styles.scss";
 
@@ -163,10 +162,6 @@ function MainLayout(props) {
         <List>
           <MainList />
         </List>
-        {/* <Divider />
-        <List>
-          <SecondaryList />
-        </List> */}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

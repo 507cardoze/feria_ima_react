@@ -60,46 +60,6 @@ function FeriaModify(match) {
     cache: "default",
   };
 
-  const fetchdata = async (url, header, setter) => {
-    setisLoading(false);
-    try {
-      const data = await fetch(url, header);
-      const filtered = await data.json();
-      UnauthorizedRedirect(filtered);
-      setter(filtered);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  const fetchDataBuscar = async () => {
-    setisLoading(false);
-    try {
-      const data = await fetch(urlBuscar, header);
-      const dat = await data.json();
-      UnauthorizedRedirect(dat);
-      dat.forEach((dt) => {
-        setNombreFeria(dt.nombre_feria);
-        setDescripcionLugar(dt.descripcion_lugar);
-        setDescripcionFeria(dt.nombre_corregimiento);
-        setIdProvincia(dt.id_provincia);
-        setIdDistrito(dt.id_distrito);
-        setIdCorregimiento(dt.id_corregimiento);
-        setEstado(dt.estado === 1 ? true : false);
-      });
-      fetchdata(`${urlDistrito}${dat[0].id_provincia}`, header, setDistritos);
-      fetchdata(
-        `${urlCorregimientos}${dat[0].id_distrito}`,
-        header,
-        setCorregimientos
-      );
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
   const onChangeProvincia = (e) => {
     setIdProvincia(e.target.value);
     setDistritos([]);
@@ -162,10 +122,79 @@ function FeriaModify(match) {
   };
 
   useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    const fetchDataBuscar = async () => {
+      setisLoading(false);
+      try {
+        const data = await fetch(urlBuscar, header);
+        const dat = await data.json();
+        UnauthorizedRedirect(dat);
+        dat.forEach((dt) => {
+          setNombreFeria(dt.nombre_feria);
+          setDescripcionLugar(dt.descripcion_lugar);
+          setDescripcionFeria(dt.nombre_corregimiento);
+          setIdProvincia(dt.id_provincia);
+          setIdDistrito(dt.id_distrito);
+          setIdCorregimiento(dt.id_corregimiento);
+          setEstado(dt.estado === 1 ? true : false);
+        });
+        fetchdata(`${urlDistrito}${dat[0].id_provincia}`, header, setDistritos);
+        fetchdata(
+          `${urlCorregimientos}${dat[0].id_distrito}`,
+          header,
+          setCorregimientos
+        );
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
     fetchDataBuscar();
-  }, []);
+  }, [urlBuscar, urlDistrito, urlCorregimientos]);
 
   useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
     fetchdata(urlProvincia, header, setProvincias);
   }, [urlProvincia]);
 

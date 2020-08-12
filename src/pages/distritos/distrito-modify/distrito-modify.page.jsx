@@ -39,46 +39,6 @@ function DistritoModify(match) {
     }
   };
 
-  const header = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.token_key}`,
-    },
-    mode: "cors",
-    cache: "default",
-  };
-
-  const fetchdata = async (url, header, setter) => {
-    setisLoading(false);
-    try {
-      const data = await fetch(url, header);
-      const filtered = await data.json();
-      UnauthorizedRedirect(filtered);
-      setter(filtered);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  const fetchDataBuscar = async () => {
-    setisLoading(false);
-    try {
-      const data = await fetch(urlDistritoBuscar, header);
-      const dat = await data.json();
-      UnauthorizedRedirect(dat);
-      dat.forEach((dt) => {
-        setId_provincia(dt.id_provincia);
-        setDistritoNombre(dt.nombre_distrito);
-        setEstado(dt.estado === 1 ? true : false);
-      });
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
   const onChange = (e, setter) => {
     setter(e.target.value);
   };
@@ -113,9 +73,46 @@ function DistritoModify(match) {
   };
 
   useEffect(() => {
+    const fetchDataBuscar = async () => {
+      setisLoading(false);
+      try {
+        const data = await fetch(urlDistritoBuscar, header);
+        const dat = await data.json();
+        UnauthorizedRedirect(dat);
+        dat.forEach((dt) => {
+          setId_provincia(dt.id_provincia);
+          setDistritoNombre(dt.nombre_distrito);
+          setEstado(dt.estado === 1 ? true : false);
+        });
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
     fetchDataBuscar();
     fetchdata(urlProvincia, header, setProvincia);
-  }, []);
+  }, [urlDistritoBuscar, urlProvincia]);
 
   return (
     <MainLayout Tittle={`Editar`}>

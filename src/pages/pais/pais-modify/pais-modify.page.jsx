@@ -35,36 +35,6 @@ function PaisModify(match) {
     }
   };
 
-  const header = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.token_key}`,
-    },
-    mode: "cors",
-    cache: "default",
-  };
-  const fetchData = async () => {
-    setisLoading(false);
-    try {
-      const data_pais = await fetch(urlPaisBuscar, header);
-      const pa = await data_pais.json();
-      UnauthorizedRedirect(pa);
-      pa.forEach((pais) => {
-        setPais(pais.nombre_pais);
-        setNacionalidad(pais.nombre_nacionalidad);
-        setEstado(pais.estado === 1 ? true : false);
-      });
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [localStorage.token_key]);
-
   const onchangePais = (e) => {
     setPais(e.target.value);
   };
@@ -101,6 +71,35 @@ function PaisModify(match) {
         }
       });
   };
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchData = async () => {
+      setisLoading(false);
+      try {
+        const data_pais = await fetch(urlPaisBuscar, header);
+        const pa = await data_pais.json();
+        UnauthorizedRedirect(pa);
+        pa.forEach((pais) => {
+          setPais(pais.nombre_pais);
+          setNacionalidad(pais.nombre_nacionalidad);
+          setEstado(pais.estado === 1 ? true : false);
+        });
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchData();
+  }, [urlPaisBuscar]);
 
   return (
     <MainLayout Tittle={`Editar ${id}`}>
