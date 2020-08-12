@@ -21,7 +21,7 @@ import HouseIcon from "@material-ui/icons/House";
 import "./mainList.styles.scss";
 
 function MainList() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(!open);
@@ -136,14 +136,14 @@ function MainList() {
               <ListItemText primary="Feria" />
             </ListItem>
           </Link>
-          {/* <Link to="/tipo-ajustes" className={classes.links}>
+          <Link to="/tipo-ajustes" className={classes.links}>
             <ListItem button className={`${classes.nested} list-fix-padding`}>
               <ListItemIcon>
                 <HomeWorkIcon />
               </ListItemIcon>
               <ListItemText primary="Tipo Ajustes" />
             </ListItem>
-          </Link> */}
+          </Link>
         </List>
       </Collapse>
     </div>
