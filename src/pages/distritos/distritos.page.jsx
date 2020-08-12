@@ -81,8 +81,8 @@ function Distritos() {
   };
 
   const columns = [
-    { tittle: "Distrito" },
     { tittle: "Provincias" },
+    { tittle: "Distrito" },
     { tittle: "Estado" },
   ];
 
@@ -298,10 +298,10 @@ function Distritos() {
                           </Link>
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_distrito}
+                          {row.nombre_provincia}
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_provincia}
+                          {row.nombre_distrito}
                         </TableCell>
                         <TableCell
                           align="center"

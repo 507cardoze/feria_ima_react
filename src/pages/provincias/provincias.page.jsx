@@ -81,8 +81,8 @@ function Provincias() {
   };
 
   const columns = [
-    { tittle: "Provincias" },
     { tittle: "Pais" },
+    { tittle: "Provincias" },
     { tittle: "Estado" },
   ];
 
@@ -297,11 +297,10 @@ function Provincias() {
                             </IconButton>
                           </Link>
                         </TableCell>
-
+                        <TableCell align="center">{row.id_pais}</TableCell>
                         <TableCell align="center">
                           {row.nombre_provincia}
                         </TableCell>
-                        <TableCell align="center">{row.id_pais}</TableCell>
                         <TableCell
                           align="center"
                           className={`${row.estado === 1 ? "green" : "red"}`}

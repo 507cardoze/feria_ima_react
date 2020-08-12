@@ -131,13 +131,6 @@ function DistritoModify(match) {
               </Button>
             </div>
             <Paper className="modify-inputs-container">
-              <TextField
-                label="Distrito"
-                variant="outlined"
-                value={distrito_nombre}
-                className="modify-inputs"
-                onChange={(e) => onChange(e, setDistritoNombre)}
-              />
               <div className="select-form">
                 <InputLabel id="demo-simple-select-label">
                   Provincias
@@ -159,6 +152,13 @@ function DistritoModify(match) {
                   })}
                 </Select>
               </div>
+              <TextField
+                label="Distrito"
+                variant="outlined"
+                value={distrito_nombre}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setDistritoNombre)}
+              />
               <FormControlLabel
                 label={estado ? "Activo" : "Inactivo"}
                 control={

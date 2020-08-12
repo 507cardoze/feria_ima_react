@@ -116,9 +116,9 @@ function Feria() {
     { tittle: "Feria" },
     { tittle: "Lugar" },
     { tittle: "Descripcion" },
-    { tittle: "Corregimientos" },
-    { tittle: "Distritos" },
     { tittle: "Provincias" },
+    { tittle: "Distritos" },
+    { tittle: "Corregimientos" },
     { tittle: "Estado" },
   ];
 
@@ -437,13 +437,13 @@ function Feria() {
                           {row.descripcion_feria}
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_corregimiento}
+                          {row.nombre_provincia}
                         </TableCell>
                         <TableCell align="center">
                           {row.nombre_distrito}
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_provincia}
+                          {row.nombre_corregimiento}
                         </TableCell>
                         <TableCell
                           align="center"

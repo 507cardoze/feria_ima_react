@@ -100,9 +100,9 @@ function Corregimientos() {
   };
 
   const columns = [
-    { tittle: "Corregimientos" },
-    { tittle: "Distritos" },
     { tittle: "Provincias" },
+    { tittle: "Distritos" },
+    { tittle: "Corregimientos" },
     { tittle: "Estado" },
   ];
 
@@ -363,13 +363,13 @@ function Corregimientos() {
                           </Link>
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_corregimiento}
+                          {row.nombre_provincia}
                         </TableCell>
                         <TableCell align="center">
                           {row.nombre_distrito}
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_provincia}
+                          {row.nombre_corregimiento}
                         </TableCell>
                         <TableCell
                           align="center"
