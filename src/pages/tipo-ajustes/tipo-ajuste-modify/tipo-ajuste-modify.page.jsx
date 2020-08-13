@@ -19,7 +19,6 @@ function TipoModify(match) {
 
   const { id } = match.match.params;
 
-  const [id_tipo_ajuste, setIdTipoAjuste] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [estado, setEstado] = useState(true);
 
@@ -39,7 +38,11 @@ function TipoModify(match) {
     setter(e.target.value);
   };
 
-  const bodyRequest = {};
+  const bodyRequest = {
+    id_tipo_ajuste: id,
+    descripcion: descripcion,
+    estado: estado,
+  };
 
   const headerPut = {
     method: "PUT",
@@ -80,7 +83,6 @@ function TipoModify(match) {
         const pa = await data_pais.json();
         UnauthorizedRedirect(pa);
         pa.forEach((pais) => {
-          setIdTipoAjuste(pais.id_tipo_ajuste);
           setDescripcion(pais.descripcion);
           setEstado(pais.estado === 1 ? true : false);
         });
@@ -109,13 +111,6 @@ function TipoModify(match) {
               </Button>
             </div>
             <Paper className="modify-inputs-container">
-              <TextField
-                label="Tipo de Ajuste"
-                variant="outlined"
-                value={id_tipo_ajuste}
-                className="modify-inputs"
-                onChange={(e) => onChange(e, setIdTipoAjuste)}
-              />
               <TextField
                 label="Descripcion"
                 variant="outlined"
