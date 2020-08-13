@@ -2,7 +2,8 @@ import React, { memo } from "react";
 import "fontsource-roboto";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Dashboard from "./pages/dashboard/dashboard.page";
-import EntradasSalidas from "./pages/entradas&salidas/entrada&salidas.page";
+import Transacciones from "./pages/transacciones/transacciones.page";
+import TransaccionesAjustes from "./pages/transacciones-ajustes/transacciones-ajustes.page";
 import Clientes from "./pages/clientes/clientes.page";
 import Productos from "./pages/productos/productos.page";
 import Consultas from "./pages/consultas/consultas.page";
@@ -30,7 +31,12 @@ function App() {
         {localStorage.token_key === undefined && <Redirect to="/login" />}
         <Switch>
           <Route exact path="/" component={Dashboard} />
-          <Route exact path="/entradas-salidas" component={EntradasSalidas} />
+          <Route exact path="/transacciones" component={Transacciones} />
+          <Route
+            exact
+            path="/transacciones-ajustes"
+            component={TransaccionesAjustes}
+          />
           <Route exact path="/clientes" component={Clientes} />
           <Route exact path="/productos" component={Productos} />
           <Route exact path="/consultas" component={Consultas} />

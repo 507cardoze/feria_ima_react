@@ -5,7 +5,7 @@ import Paper from "@material-ui/core/Paper";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 
-function EntradasSalidas() {
+function TransaccionesAjustes() {
   const useStyles = makeStyles((theme) => ({
     paper: {
       padding: theme.spacing(2),
@@ -20,7 +20,7 @@ function EntradasSalidas() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   return (
-    <MainLayout Tittle="Entradas y Salidas">
+    <MainLayout Tittle="Transacciones Ajustes">
       <Grid container spacing={3}>
         {/* Chart */}
         <Grid item xs={12} md={8} lg={9}>
@@ -39,4 +39,4 @@ function EntradasSalidas() {
   );
 }
 
-export default EntradasSalidas;
+export default TransaccionesAjustes;

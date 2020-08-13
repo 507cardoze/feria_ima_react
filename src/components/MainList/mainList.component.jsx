@@ -55,12 +55,20 @@ function MainList() {
           <ListItemText primary="Dashboard" />
         </ListItem>
       </Link>
-      <Link to="/entradas-salidas" className={classes.links}>
+      <Link to="/transacciones" className={classes.links}>
         <ListItem button className="list-fix-padding">
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
-          <ListItemText primary="Entradas y Salidas" />
+          <ListItemText primary="Transacciones" />
+        </ListItem>
+      </Link>
+      <Link to="/transacciones-ajustes" className={classes.links}>
+        <ListItem button className={`${classes.nested} list-fix-padding`}>
+          <ListItemIcon>
+            <HomeWorkIcon />
+          </ListItemIcon>
+          <ListItemText primary="Transacciones Ajustes" />
         </ListItem>
       </Link>
       <Link to="/clientes" className={classes.links}>
@@ -87,6 +95,7 @@ function MainList() {
           <ListItemText primary="Consultas" />
         </ListItem>
       </Link>
+
       <ListItem button onClick={handleClick} className="list-fix-padding">
         <ListItemIcon>
           <SettingsIcon />
