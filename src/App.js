@@ -18,6 +18,7 @@ import DistritoModify from "./pages/distritos/distrito-modify/distrito-modify.pa
 import Feria from "./pages/feria/feria.page";
 import FeriaModify from "./pages/feria/feria-modify/feria-modify.page";
 import TipoAjustes from "./pages/tipo-ajustes/tipo-ajustes.page";
+import TipoModify from "./pages/tipo-ajustes/tipo-ajuste-modify/tipo-ajuste-modify.page";
 import "moment/locale/es.js";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
@@ -44,6 +45,7 @@ function App() {
           <Route exact path="/feria" component={Feria} />
           <Route path="/feria/:id" component={FeriaModify} />
           <Route exact path="/tipo-ajustes" component={TipoAjustes} />
+          <Route exact path="/tipo-ajustes/:id" component={TipoModify} />
           <Route exact path="/login" component={Login} />
         </Switch>
       </BrowserRouter>

@@ -314,7 +314,7 @@ function Corregimientos() {
                 <TextField
                   label="Corregimiento"
                   variant="outlined"
-                  value={nombre_corregimiento}
+                  defaultValue={nombre_corregimiento}
                   className="inputs"
                   type="text"
                   onChange={(e) =>

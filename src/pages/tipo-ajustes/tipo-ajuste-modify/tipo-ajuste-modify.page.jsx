@@ -7,10 +7,9 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import "./pais-modify.styles.scss";
 import { toast } from "react-toastify";
 
-function PaisModify(match) {
+function TipoModify(match) {
   toast.configure({
     autoClose: 6000,
     draggable: true,
@@ -26,10 +25,8 @@ function PaisModify(match) {
 
   const [isLoading, setisLoading] = useState(true);
 
-  const [searchResults, setSearchResults] = useState([]);
-
-  const urlPaisBuscar = `${process.env.REACT_APP_BACK_END}/api/pais/buscar/${id}`;
-  const urlPaisUpdate = `${process.env.REACT_APP_BACK_END}/api/pais/update`;
+  const urlBuscar = `${process.env.REACT_APP_BACK_END}/api/tipo-ajustes/buscar/${id}`;
+  const urlUpdate = `${process.env.REACT_APP_BACK_END}/api/tipo-ajustes/update`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {
@@ -38,20 +35,11 @@ function PaisModify(match) {
     }
   };
 
-  const onchangePais = (e) => {
-    setPais(e.target.value);
+  const onChange = (e, setter) => {
+    setter(e.target.value);
   };
 
-  const onchangeNacionalidad = (e) => {
-    setNacionalidad(e.target.value);
-  };
-
-  const bodyRequest = {
-    nomesclatura: id,
-    pais: pais,
-    nacionalidad: nacionalidad,
-    estado: estado,
-  };
+  const bodyRequest = {};
 
   const headerPut = {
     method: "PUT",
@@ -63,7 +51,7 @@ function PaisModify(match) {
   };
 
   const onClickGuardar = () => {
-    fetch(urlPaisUpdate, headerPut)
+    fetch(urlUpdate, headerPut)
       .then((response) => response.json())
       .then((data) => {
         UnauthorizedRedirect(data);
@@ -88,12 +76,12 @@ function PaisModify(match) {
     const fetchData = async () => {
       setisLoading(false);
       try {
-        const data_pais = await fetch(urlPaisBuscar, header);
+        const data_pais = await fetch(urlBuscar, header);
         const pa = await data_pais.json();
         UnauthorizedRedirect(pa);
         pa.forEach((pais) => {
-          setPais(pais.nombre_pais);
-          setNacionalidad(pais.nombre_nacionalidad);
+          setIdTipoAjuste(pais.id_tipo_ajuste);
+          setDescripcion(pais.descripcion);
           setEstado(pais.estado === 1 ? true : false);
         });
         setisLoading(true);
@@ -102,7 +90,7 @@ function PaisModify(match) {
       }
     };
     fetchData();
-  }, [urlPaisBuscar]);
+  }, [urlBuscar]);
 
   return (
     <MainLayout Tittle={`Editar ${id}`}>
@@ -122,18 +110,18 @@ function PaisModify(match) {
             </div>
             <Paper className="modify-inputs-container">
               <TextField
-                label="Pais"
+                label="Tipo de Ajuste"
                 variant="outlined"
-                value={pais}
+                value={id_tipo_ajuste}
                 className="modify-inputs"
-                onChange={(e) => onchangePais(e)}
+                onChange={(e) => onChange(e, setIdTipoAjuste)}
               />
               <TextField
-                label="Nacionalidad"
+                label="Descripcion"
                 variant="outlined"
-                value={nacionalidad}
+                value={descripcion}
                 className="modify-inputs"
-                onChange={(e) => onchangeNacionalidad(e)}
+                onChange={(e) => onChange(e, setDescripcion)}
               />
               <FormControlLabel
                 label={estado ? "Activo" : "Inactivo"}
@@ -163,4 +151,4 @@ function PaisModify(match) {
   );
 }
 
-export default PaisModify;
+export default TipoModify;
