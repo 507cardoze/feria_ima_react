@@ -112,7 +112,9 @@ function TipoAjustes() {
     fetch(urlCrear, headerPost)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         UnauthorizedRedirect(data);
+
         if (data === "success") {
           fetchdata(url, header, setRows);
           msgSuccess("Registro Exitoso.");

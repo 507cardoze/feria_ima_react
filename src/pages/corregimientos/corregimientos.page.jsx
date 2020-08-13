@@ -121,6 +121,10 @@ function Corregimientos() {
     setter(e.target.value);
   };
 
+  const onChangeCorregimientoText = (e, setter) => {
+    setter(e.target.value);
+  };
+
   const onClickGuardar = (e) => {
     e.preventDefault();
     fetch(urlCorregimientoCrear, headerPost)
@@ -238,6 +242,9 @@ function Corregimientos() {
     fetchdata(urlCorregimientos, header, setRows);
   }, [page, limit, urlCorregimientos]);
 
+  console.log("input: ", nombre_corregimiento);
+  console.log("input: ", id_distrito);
+
   return (
     <MainLayout Tittle="Corregimientos">
       {!isLoading ? (
@@ -272,7 +279,7 @@ function Corregimientos() {
                     className="inputs"
                     onChange={(e) => onChange(e)}
                     autoWidth
-                    defaultValue={id_provincia}
+                    defaultValue={id_provincia ? id_provincia : " "}
                   >
                     {provincias.map((pa) => {
                       return (
@@ -291,7 +298,7 @@ function Corregimientos() {
                     className="inputs"
                     onChange={(e) => onChangeSetter(e, setIdDistrito)}
                     autoWidth
-                    defaultValue={id_distrito}
+                    defaultValue={id_distrito ? id_distrito : " "}
                     disabled={distritos.length > 0 ? false : true}
                   >
                     {distritos.map((pa) => {
@@ -309,7 +316,10 @@ function Corregimientos() {
                   variant="outlined"
                   value={nombre_corregimiento}
                   className="inputs"
-                  onChange={(e) => onChange(e, setNombreCorregimiento)}
+                  type="text"
+                  onChange={(e) =>
+                    onChangeCorregimientoText(e, setNombreCorregimiento)
+                  }
                 />
 
                 <FormControlLabel

@@ -131,7 +131,6 @@ function Pais() {
     if (e.target.value.length > 3) {
       const data = await fetch(`${urlBusqueda}${e.target.value}`, header);
       const received_data = await data.json();
-
       try {
         setSearchResults(received_data);
       } catch (error) {
