@@ -33,7 +33,7 @@ function ProvinciaModify(match) {
 
   const urlProviciaBuscar = `${process.env.REACT_APP_BACK_END}/api/provincias/buscar/${id}`;
   const urlProvinciaUpdate = `${process.env.REACT_APP_BACK_END}/api/provincias/update`;
-  const urlPais = `${process.env.REACT_APP_BACK_END}/api/pais`;
+  const urlPais = `${process.env.REACT_APP_BACK_END}/api/pais/filtrada`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {
@@ -41,52 +41,6 @@ function ProvinciaModify(match) {
       window.location.replace("/login");
     }
   };
-
-  const header = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.token_key}`,
-    },
-    mode: "cors",
-    cache: "default",
-  };
-
-  const fetchdata = async (url, header, setter) => {
-    setisLoading(false);
-    try {
-      const data = await fetch(url, header);
-      const filtered = await data.json();
-      UnauthorizedRedirect(filtered);
-      setter(filtered);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  const fetchDataBuscar = async () => {
-    setisLoading(false);
-    try {
-      const data = await fetch(urlProviciaBuscar, header);
-      const dat = await data.json();
-      UnauthorizedRedirect(dat);
-      dat.forEach((dt) => {
-        setId_pais(dt.id_pais);
-        setProvinciaNombre(dt.nombre_provincia);
-        setEstado(dt.estado === 1 ? true : false);
-      });
-      setProvincia(dat);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDataBuscar();
-    fetchdata(urlPais, header, setPais);
-  }, [localStorage.token_key]);
 
   const onChange = (e, setter) => {
     setter(e.target.value);
@@ -121,6 +75,51 @@ function ProvinciaModify(match) {
       });
   };
 
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+
+    const fetchDataBuscar = async () => {
+      setisLoading(false);
+      try {
+        const data = await fetch(urlProviciaBuscar, header);
+        const dat = await data.json();
+        UnauthorizedRedirect(dat);
+        dat.forEach((dt) => {
+          setId_pais(dt.id_pais);
+          setProvinciaNombre(dt.nombre_provincia);
+          setEstado(dt.estado === 1 ? true : false);
+        });
+        setProvincia(dat);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+
+    fetchDataBuscar();
+    fetchdata(urlPais, header, setPais);
+  }, [urlProviciaBuscar, urlPais]);
+
   return (
     <MainLayout
       Tittle={`Editar ${provincia.length > 0 && provincia[0].nombre_provincia}`}
@@ -140,13 +139,6 @@ function ProvinciaModify(match) {
               </Button>
             </div>
             <Paper className="modify-inputs-container">
-              <TextField
-                label="Provincia"
-                variant="outlined"
-                value={provincia_nombre}
-                className="modify-inputs"
-                onChange={(e) => onChange(e, setProvinciaNombre)}
-              />
               <div className="select-form">
                 <InputLabel id="demo-simple-select-label">Pais</InputLabel>
                 <Select
@@ -166,6 +158,14 @@ function ProvinciaModify(match) {
                   })}
                 </Select>
               </div>
+              <TextField
+                label="Provincia"
+                variant="outlined"
+                value={provincia_nombre}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setProvinciaNombre)}
+              />
+
               <FormControlLabel
                 label={estado ? "Activo" : "Inactivo"}
                 control={

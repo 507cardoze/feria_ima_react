@@ -39,9 +39,9 @@ function FeriaModify(match) {
   const urlBuscar = `${process.env.REACT_APP_BACK_END}/api/feria/buscar/${id}`;
   const urlUpdate = `${process.env.REACT_APP_BACK_END}/api/feria/update`;
 
-  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
+  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/buscarCorregimientoByDistrito/`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/buscarDistritoByProvincia/`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {
@@ -60,38 +60,28 @@ function FeriaModify(match) {
     cache: "default",
   };
 
-  const fetchdata = async (url, header, setter) => {
-    setisLoading(false);
-    try {
-      const data = await fetch(url, header);
-      const filtered = await data.json();
-      UnauthorizedRedirect(filtered);
-      setter(filtered);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
+  const onChangeProvincia = (e) => {
+    setIdProvincia(e.target.value);
+    setDistritos([]);
+    setCorregimientos([]);
+
+    fetch(`${urlDistrito}${e.target.value}`, header)
+      .then((response) => response.json())
+      .then((data) => {
+        UnauthorizedRedirect(data);
+        setDistritos(data);
+      });
   };
 
-  const fetchDataBuscar = async () => {
-    setisLoading(false);
-    try {
-      const data = await fetch(urlBuscar, header);
-      const dat = await data.json();
-      UnauthorizedRedirect(dat);
-      dat.forEach((dt) => {
-        setNombreFeria(dt.nombre_feria);
-        setDescripcionLugar(dt.descripcion_lugar);
-        setDescripcionFeria(dt.nombre_corregimiento);
-        setIdProvincia(dt.id_provincia);
-        setIdDistrito(dt.id_distrito);
-        setIdCorregimiento(dt.id_corregimiento);
-        setEstado(dt.estado === 1 ? true : false);
+  const onChangeDistrito = (e) => {
+    setIdDistrito(e.target.value);
+    fetch(`${urlCorregimientos}${e.target.value}`, header)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data:", data);
+        UnauthorizedRedirect(data);
+        setCorregimientos(data);
       });
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
   };
 
   const onChange = (e, setter) => {
@@ -132,20 +122,81 @@ function FeriaModify(match) {
   };
 
   useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    const fetchDataBuscar = async () => {
+      setisLoading(false);
+      try {
+        const data = await fetch(urlBuscar, header);
+        const dat = await data.json();
+        UnauthorizedRedirect(dat);
+        dat.forEach((dt) => {
+          setNombreFeria(dt.nombre_feria);
+          setDescripcionLugar(dt.descripcion_lugar);
+          setDescripcionFeria(dt.nombre_corregimiento);
+          setIdProvincia(dt.id_provincia);
+          setIdDistrito(dt.id_distrito);
+          setIdCorregimiento(dt.id_corregimiento);
+          setEstado(dt.estado === 1 ? true : false);
+        });
+        fetchdata(`${urlDistrito}${dat[0].id_provincia}`, header, setDistritos);
+        fetchdata(
+          `${urlCorregimientos}${dat[0].id_distrito}`,
+          header,
+          setCorregimientos
+        );
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
     fetchDataBuscar();
-  }, []);
+  }, [urlBuscar, urlDistrito, urlCorregimientos]);
 
   useEffect(() => {
-    fetchdata(urlDistrito, header, setDistritos);
-  }, [urlDistrito]);
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
 
-  useEffect(() => {
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
     fetchdata(urlProvincia, header, setProvincias);
   }, [urlProvincia]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setCorregimientos);
-  }, [urlCorregimientos]);
 
   return (
     <MainLayout Tittle={`Editar`}>
@@ -164,29 +215,44 @@ function FeriaModify(match) {
               </Button>
             </div>
             <Paper className="modify-inputs-container">
-              <TextField
-                label="Feria"
-                variant="outlined"
-                value={nombre_feria}
-                className="modify-inputs"
-                onChange={(e) => onChange(e, setNombreFeria)}
-              />
-              <TextField
-                label="Lugar"
-                variant="outlined"
-                multiline
-                value={descripcion_lugar}
-                className="modify-inputs"
-                onChange={(e) => onChange(e, setDescripcionLugar)}
-              />
-              <TextField
-                label="Descripcion"
-                variant="outlined"
-                multiline
-                value={descripcion_feria}
-                className="modify-inputs"
-                onChange={(e) => onChange(e, setDescripcionFeria)}
-              />
+              <div className="select-form">
+                <InputLabel id="provincias-select-label">Provincias</InputLabel>
+                <Select
+                  labelId="provincias-select-label"
+                  id="provincias-simple-select"
+                  className="modify-inputs"
+                  onChange={(e) => onChangeProvincia(e)}
+                  autoWidth
+                  defaultValue={id_provincia}
+                >
+                  {provincias.map((pa) => {
+                    return (
+                      <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
+                        {pa.nombre_provincia}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </div>
+              <div className="select-form">
+                <InputLabel id="distrito-select-label">Distrito</InputLabel>
+                <Select
+                  labelId="distrito-select-label"
+                  id="distrito-simple-select"
+                  className="modify-inputs"
+                  onChange={(e) => onChangeDistrito(e)}
+                  autoWidth
+                  defaultValue={id_distrito}
+                >
+                  {distritos.map((pa) => {
+                    return (
+                      <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
+                        {pa.nombre_distrito}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </div>
               <div className="select-form">
                 <InputLabel id="corregimiento-select-label">
                   Corregimiento
@@ -211,44 +277,30 @@ function FeriaModify(match) {
                   })}
                 </Select>
               </div>
-              <div className="select-form">
-                <InputLabel id="distrito-select-label">Distrito</InputLabel>
-                <Select
-                  labelId="distrito-select-label"
-                  id="distrito-simple-select"
-                  className="modify-inputs"
-                  onChange={(e) => onChange(e, setIdDistrito)}
-                  autoWidth
-                  defaultValue={id_distrito}
-                >
-                  {distritos.map((pa) => {
-                    return (
-                      <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
-                        {pa.nombre_distrito}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </div>
-              <div className="select-form">
-                <InputLabel id="provincias-select-label">Provincias</InputLabel>
-                <Select
-                  labelId="provincias-select-label"
-                  id="provincias-simple-select"
-                  className="modify-inputs"
-                  onChange={(e) => onChange(e, setIdProvincia)}
-                  autoWidth
-                  defaultValue={id_provincia}
-                >
-                  {provincias.map((pa) => {
-                    return (
-                      <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
-                        {pa.nombre_provincia}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </div>
+              <TextField
+                label="Feria"
+                variant="outlined"
+                value={nombre_feria}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setNombreFeria)}
+              />
+              <TextField
+                label="Lugar"
+                variant="outlined"
+                multiline
+                value={descripcion_lugar}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setDescripcionLugar)}
+              />
+              <TextField
+                label="Descripcion"
+                variant="outlined"
+                multiline
+                value={descripcion_feria}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setDescripcionFeria)}
+              />
+
               <FormControlLabel
                 label={estado ? "Activo" : "Inactivo"}
                 className="modify-inputs"

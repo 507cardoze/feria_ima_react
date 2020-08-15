@@ -30,52 +30,12 @@ function DistritoModify(match) {
 
   const urlDistritoBuscar = `${process.env.REACT_APP_BACK_END}/api/distritos/buscar/${id}`;
   const urlDistritoUpdate = `${process.env.REACT_APP_BACK_END}/api/distritos/update`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {
       localStorage.clear();
       window.location.replace("/login");
-    }
-  };
-
-  const header = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.token_key}`,
-    },
-    mode: "cors",
-    cache: "default",
-  };
-
-  const fetchdata = async (url, header, setter) => {
-    setisLoading(false);
-    try {
-      const data = await fetch(url, header);
-      const filtered = await data.json();
-      UnauthorizedRedirect(filtered);
-      setter(filtered);
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
-  const fetchDataBuscar = async () => {
-    setisLoading(false);
-    try {
-      const data = await fetch(urlDistritoBuscar, header);
-      const dat = await data.json();
-      UnauthorizedRedirect(dat);
-      dat.forEach((dt) => {
-        setId_provincia(dt.id_provincia);
-        setDistritoNombre(dt.nombre_distrito);
-        setEstado(dt.estado === 1 ? true : false);
-      });
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
     }
   };
 
@@ -113,9 +73,46 @@ function DistritoModify(match) {
   };
 
   useEffect(() => {
+    const fetchDataBuscar = async () => {
+      setisLoading(false);
+      try {
+        const data = await fetch(urlDistritoBuscar, header);
+        const dat = await data.json();
+        UnauthorizedRedirect(dat);
+        dat.forEach((dt) => {
+          setId_provincia(dt.id_provincia);
+          setDistritoNombre(dt.nombre_distrito);
+          setEstado(dt.estado === 1 ? true : false);
+        });
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
     fetchDataBuscar();
     fetchdata(urlProvincia, header, setProvincia);
-  }, []);
+  }, [urlDistritoBuscar, urlProvincia]);
 
   return (
     <MainLayout Tittle={`Editar`}>
@@ -134,13 +131,6 @@ function DistritoModify(match) {
               </Button>
             </div>
             <Paper className="modify-inputs-container">
-              <TextField
-                label="Distrito"
-                variant="outlined"
-                value={distrito_nombre}
-                className="modify-inputs"
-                onChange={(e) => onChange(e, setDistritoNombre)}
-              />
               <div className="select-form">
                 <InputLabel id="demo-simple-select-label">
                   Provincias
@@ -162,6 +152,13 @@ function DistritoModify(match) {
                   })}
                 </Select>
               </div>
+              <TextField
+                label="Distrito"
+                variant="outlined"
+                value={distrito_nombre}
+                className="modify-inputs"
+                onChange={(e) => onChange(e, setDistritoNombre)}
+              />
               <FormControlLabel
                 label={estado ? "Activo" : "Inactivo"}
                 control={

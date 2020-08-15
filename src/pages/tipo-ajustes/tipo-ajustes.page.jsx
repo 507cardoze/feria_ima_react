@@ -18,8 +18,8 @@ import { Link } from "react-router-dom";
 import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
 import TablePagination from "@material-ui/core/TablePagination";
-import "./tipo-ajustes.styles.scss";
 import SearchBox from "../../components/searchBox/searchBox.compoent";
+import moment from "moment";
 
 function TipoAjustes() {
   toast.configure({
@@ -36,28 +36,21 @@ function TipoAjustes() {
     }
   };
 
-  const [id_provincia, setIdProvincia] = useState("");
-  const [id_distrito, setIdDistrito] = useState("");
-  const [nombre_corregimiento, setNombreCorregimiento] = useState("");
+  const [id_tipo_ajuste, setIdTipoAjuste] = useState("");
+  const [descripcion, setDescripcion] = useState("");
 
   const [estado, setEstado] = useState(true);
   const [isLoading, setisLoading] = useState(true);
   const [rows, setRows] = useState({});
-
-  const [corregimientos, setCorregimientos] = useState({});
-  const [provincias, setProvincias] = useState([]);
-  const [distritos, setDistritos] = useState([]);
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
 
   const [searchResults, setSearchResults] = useState([]);
 
-  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada?page=${page}&limit=${limit}`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
-  const urlCorregimientoCrear = `${process.env.REACT_APP_BACK_END}/api/corregimientos/crear`;
-  const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/corregimientos/searchField/`;
+  const url = `${process.env.REACT_APP_BACK_END}/api/tipo-ajustes/filtrada?page=${page}&limit=${limit}`;
+  const urlCrear = `${process.env.REACT_APP_BACK_END}/api/tipo-ajustes/crear`;
+  const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/tipo-ajustes/searchField/`;
 
   const { results } = rows;
   const { total } = rows;
@@ -73,9 +66,9 @@ function TipoAjustes() {
   };
 
   const bodyRequest = {
-    id_provincia: id_provincia,
-    id_distrito: id_distrito,
-    nombre_corregimiento: nombre_corregimiento,
+    id_tipo_ajuste: id_tipo_ajuste,
+    descripcion: descripcion,
+    usuario_creacion: "admin",
     estado: estado,
   };
 
@@ -102,10 +95,11 @@ function TipoAjustes() {
   };
 
   const columns = [
-    { tittle: "Corregimientos" },
-    { tittle: "Distritos" },
-    { tittle: "Provincias" },
+    { tittle: "Tipo" },
+    { tittle: "Descripcion" },
     { tittle: "Estado" },
+    { tittle: "Usuario creacion" },
+    { tittle: "Fecha creacion" },
   ];
 
   const onChange = (e, setter) => {
@@ -114,40 +108,20 @@ function TipoAjustes() {
 
   const onClickGuardar = (e) => {
     e.preventDefault();
-    fetch(urlCorregimientoCrear, headerPost)
+    fetch(urlCrear, headerPost)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         UnauthorizedRedirect(data);
+
         if (data === "success") {
-          fetchdata(urlCorregimientos, header, setRows);
-          fetchdata(urlProvincia, header, setProvincias);
-          fetchdata(urlDistrito, header, setDistritos);
+          fetchdata(url, header, setRows);
           msgSuccess("Registro Exitoso.");
         } else {
           msgError(data);
         }
       });
   };
-
-  useEffect(() => {
-    fetchdata(urlDistrito, header, setDistritos);
-  }, [urlDistrito]);
-
-  useEffect(() => {
-    fetchdata(urlProvincia, header, setProvincias);
-  }, [urlProvincia]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setRows);
-  }, [urlCorregimientos]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setCorregimientos);
-  }, [urlCorregimientos]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setRows);
-  }, [page, limit]);
 
   const handleChangePage = (page) => {
     setPage(page + 1);
@@ -172,8 +146,23 @@ function TipoAjustes() {
     }
   };
 
+  useEffect(() => {
+    fetchdata(url, header, setRows);
+  }, [url]);
+
+  useEffect(() => {
+    fetchdata(url, header, setRows);
+  }, [page, limit, url]);
+
   return (
     <MainLayout Tittle="Tipo Ajustes">
+      <Grid item xs={12} md={12} lg={12}>
+        <div className="header-buttons">
+          <Button variant="contained" color="primary" className="button-input">
+            <Link to="/inventario">Atras</Link>
+          </Button>
+        </div>
+      </Grid>
       {!isLoading ? (
         <CircularProgress />
       ) : (
@@ -186,9 +175,9 @@ function TipoAjustes() {
                     return (
                       <Link
                         className="list-item"
-                        key={value.id_corregimiento}
-                        to={`/corregimientos/${value.id_corregimiento}`}
-                      >{`${value.nombre_corregimiento} - ${value.nombre_distrito} - ${value.nombre_provincia}`}</Link>
+                        key={value.id_tipo_ajuste}
+                        to={`/tipo-ajustes/${value.id_tipo_ajuste}`}
+                      >{`${value.id_tipo_ajuste} - ${value.descripcion}`}</Link>
                     );
                   })}
                 </ul>
@@ -197,52 +186,19 @@ function TipoAjustes() {
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
                 <TextField
-                  label="Corregimiento"
+                  label="Tipo"
                   variant="outlined"
-                  value={nombre_corregimiento}
+                  value={id_tipo_ajuste}
                   className="inputs"
-                  onChange={(e) => onChange(e, setNombreCorregimiento)}
+                  onChange={(e) => onChange(e, setIdTipoAjuste)}
                 />
-                <div className="select-form">
-                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
-                  <Select
-                    labelId="distrito-select-label"
-                    id="distrito-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdDistrito)}
-                    autoWidth
-                    defaultValue={id_distrito}
-                  >
-                    {distritos.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
-                          {pa.nombre_distrito}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
-                <div className="select-form">
-                  <InputLabel id="provincias-select-label">
-                    Provincias
-                  </InputLabel>
-                  <Select
-                    labelId="provincias-select-label"
-                    id="provincias-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdProvincia)}
-                    autoWidth
-                    defaultValue={id_provincia}
-                  >
-                    {provincias.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
-                          {pa.nombre_provincia}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
+                <TextField
+                  label="Descripcion"
+                  variant="outlined"
+                  value={descripcion}
+                  className="inputs"
+                  onChange={(e) => onChange(e, setDescripcion)}
+                />
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
                   className="inputs"
@@ -262,7 +218,7 @@ function TipoAjustes() {
                   color="primary"
                   type="submit"
                 >
-                  Crear Nuevo Corregimiento
+                  Crear Tipo Ajuste
                 </Button>
               </form>
             </Paper>
@@ -285,23 +241,19 @@ function TipoAjustes() {
                 <DataTable columns={columns}>
                   {results.map((row) => {
                     return (
-                      <TableRow key={row.id_corregimiento}>
+                      <TableRow key={row.id_tipo_ajuste}>
                         <TableCell component="th" scope="row">
-                          <Link to={`/corregimientos/${row.id_corregimiento}`}>
+                          <Link to={`/tipo-ajustes/${row.id_tipo_ajuste}`}>
                             <IconButton aria-label="edit">
                               <EditIcon />
                             </IconButton>
                           </Link>
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_corregimiento}
+                          {row.id_tipo_ajuste}
                         </TableCell>
-                        <TableCell align="center">
-                          {row.nombre_distrito}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.nombre_provincia}
-                        </TableCell>
+                        <TableCell align="center">{row.descripcion}</TableCell>
+
                         <TableCell
                           align="center"
                           className={`${row.estado === 1 ? "green" : "red"}`}
@@ -311,6 +263,12 @@ function TipoAjustes() {
                           >
                             {row.estado === 1 ? "Activo" : "Inactivo"}
                           </span>
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.usuario_creacion}
+                        </TableCell>
+                        <TableCell align="center">
+                          {moment(row.fecha_creacion).fromNow()}
                         </TableCell>
                       </TableRow>
                     );

@@ -2,9 +2,11 @@ import React, { memo } from "react";
 import "fontsource-roboto";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Dashboard from "./pages/dashboard/dashboard.page";
-import EntradasSalidas from "./pages/entradas&salidas/entrada&salidas.page";
+import Transacciones from "./pages/transacciones/transacciones.page";
 import Clientes from "./pages/clientes/clientes.page";
+import ClientesModify from "./pages/clientes/clientes-modify/clientes-modify.page";
 import Productos from "./pages/productos/productos.page";
+import ProductosModify from "./pages/productos/productos-modify/productos-modify.page";
 import Consultas from "./pages/consultas/consultas.page";
 import Login from "./pages/login/login.page";
 import Pais from "./pages/pais/pais.page";
@@ -18,6 +20,9 @@ import DistritoModify from "./pages/distritos/distrito-modify/distrito-modify.pa
 import Feria from "./pages/feria/feria.page";
 import FeriaModify from "./pages/feria/feria-modify/feria-modify.page";
 import TipoAjustes from "./pages/tipo-ajustes/tipo-ajustes.page";
+import TipoModify from "./pages/tipo-ajustes/tipo-ajuste-modify/tipo-ajuste-modify.page";
+import Inventario from "./pages/inventario/inventario.page";
+import InventarioAjuste from "./pages/inventario-ajuste/inventario-ajuste.page";
 import "moment/locale/es.js";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
@@ -29,9 +34,13 @@ function App() {
         {localStorage.token_key === undefined && <Redirect to="/login" />}
         <Switch>
           <Route exact path="/" component={Dashboard} />
-          <Route exact path="/entradas-salidas" component={EntradasSalidas} />
+          <Route exact path="/transacciones" component={Transacciones} />
+          <Route exact path="/inventario" component={Inventario} />
+          <Route exact path="/inventario-ajuste" component={InventarioAjuste} />
           <Route exact path="/clientes" component={Clientes} />
+          <Route path="/clientes/:id" component={ClientesModify} />
           <Route exact path="/productos" component={Productos} />
+          <Route path="/productos/:id" component={ProductosModify} />
           <Route exact path="/consultas" component={Consultas} />
           <Route exact path="/pais" component={Pais} />
           <Route path="/pais/:id" component={PaisModify} />
@@ -44,6 +53,7 @@ function App() {
           <Route exact path="/feria" component={Feria} />
           <Route path="/feria/:id" component={FeriaModify} />
           <Route exact path="/tipo-ajustes" component={TipoAjustes} />
+          <Route exact path="/tipo-ajustes/:id" component={TipoModify} />
           <Route exact path="/login" component={Login} />
         </Switch>
       </BrowserRouter>

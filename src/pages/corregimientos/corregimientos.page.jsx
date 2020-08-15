@@ -52,8 +52,8 @@ function Corregimientos() {
   const [searchResults, setSearchResults] = useState([]);
 
   const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada?page=${page}&limit=${limit}`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/buscarDistritoByProvincia/`;
   const urlCorregimientoCrear = `${process.env.REACT_APP_BACK_END}/api/corregimientos/crear`;
   const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/corregimientos/searchField/`;
 
@@ -100,13 +100,28 @@ function Corregimientos() {
   };
 
   const columns = [
-    { tittle: "Corregimientos" },
-    { tittle: "Distritos" },
     { tittle: "Provincias" },
+    { tittle: "Distritos" },
+    { tittle: "Corregimientos" },
     { tittle: "Estado" },
   ];
 
-  const onChange = (e, setter) => {
+  const onChange = (e) => {
+    setIdProvincia(e.target.value);
+    setDistritos([]);
+    fetch(`${urlDistrito}${e.target.value}`, header)
+      .then((response) => response.json())
+      .then((data) => {
+        UnauthorizedRedirect(data);
+        setDistritos(data);
+      });
+  };
+
+  const onChangeSetter = (e, setter) => {
+    setter(e.target.value);
+  };
+
+  const onChangeCorregimientoText = (e, setter) => {
     setter(e.target.value);
   };
 
@@ -119,29 +134,12 @@ function Corregimientos() {
         if (data === "success") {
           fetchdata(urlCorregimientos, header, setRows);
           fetchdata(urlProvincia, header, setProvincias);
-          fetchdata(urlDistrito, header, setDistritos);
           msgSuccess("Registro Exitoso.");
         } else {
           msgError(data);
         }
       });
   };
-
-  useEffect(() => {
-    fetchdata(urlDistrito, header, setDistritos);
-  }, [urlDistrito]);
-
-  useEffect(() => {
-    fetchdata(urlProvincia, header, setProvincias);
-  }, [urlProvincia]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setRows);
-  }, [urlCorregimientos]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setRows);
-  }, [page, limit]);
 
   const handleChangePage = (page) => {
     setPage(page + 1);
@@ -165,6 +163,87 @@ function Corregimientos() {
       setSearchResults([]);
     }
   };
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlProvincia, header, setProvincias);
+  }, [urlProvincia]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlCorregimientos, header, setRows);
+  }, [urlCorregimientos]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlCorregimientos, header, setRows);
+  }, [page, limit, urlCorregimientos]);
+
+  console.log("input: ", nombre_corregimiento);
+  console.log("input: ", id_distrito);
 
   return (
     <MainLayout Tittle="Corregimientos">
@@ -190,32 +269,6 @@ function Corregimientos() {
             </SearchBox>
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
-                <TextField
-                  label="Corregimiento"
-                  variant="outlined"
-                  value={nombre_corregimiento}
-                  className="inputs"
-                  onChange={(e) => onChange(e, setNombreCorregimiento)}
-                />
-                <div className="select-form">
-                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
-                  <Select
-                    labelId="distrito-select-label"
-                    id="distrito-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdDistrito)}
-                    autoWidth
-                    defaultValue={id_distrito}
-                  >
-                    {distritos.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
-                          {pa.nombre_distrito}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
                 <div className="select-form">
                   <InputLabel id="provincias-select-label">
                     Provincias
@@ -224,9 +277,9 @@ function Corregimientos() {
                     labelId="provincias-select-label"
                     id="provincias-simple-select"
                     className="inputs"
-                    onChange={(e) => onChange(e, setIdProvincia)}
+                    onChange={(e) => onChange(e)}
                     autoWidth
-                    defaultValue={id_provincia}
+                    defaultValue={id_provincia ? id_provincia : " "}
                   >
                     {provincias.map((pa) => {
                       return (
@@ -237,6 +290,38 @@ function Corregimientos() {
                     })}
                   </Select>
                 </div>
+                <div className="select-form">
+                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
+                  <Select
+                    labelId="distrito-select-label"
+                    id="distrito-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChangeSetter(e, setIdDistrito)}
+                    autoWidth
+                    defaultValue={id_distrito ? id_distrito : " "}
+                    disabled={distritos.length > 0 ? false : true}
+                  >
+                    {distritos.map((pa) => {
+                      return (
+                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
+                          {pa.nombre_distrito}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
+
+                <TextField
+                  label="Corregimiento"
+                  variant="outlined"
+                  defaultValue={nombre_corregimiento}
+                  className="inputs"
+                  type="text"
+                  onChange={(e) =>
+                    onChangeCorregimientoText(e, setNombreCorregimiento)
+                  }
+                />
+
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
                   className="inputs"
@@ -288,13 +373,13 @@ function Corregimientos() {
                           </Link>
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_corregimiento}
+                          {row.nombre_provincia}
                         </TableCell>
                         <TableCell align="center">
                           {row.nombre_distrito}
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_provincia}
+                          {row.nombre_corregimiento}
                         </TableCell>
                         <TableCell
                           align="center"

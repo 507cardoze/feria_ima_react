@@ -17,6 +17,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Link } from "react-router-dom";
 import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
+import SearchBox from "../../components/searchBox/searchBox.compoent";
+import TablePagination from "@material-ui/core/TablePagination";
 
 function Distritos() {
   toast.configure({
@@ -41,9 +43,19 @@ function Distritos() {
   const [rows, setRows] = useState([]);
   const [provincias, setProvincias] = useState([]);
 
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(25);
+
+  const [searchResults, setSearchResults] = useState([]);
+
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/filtrada?page=${page}&limit=${limit}`;
   const urlDistritoCrear = `${process.env.REACT_APP_BACK_END}/api/distritos/crear`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
+
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
+  const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/distritos/searchField/`;
+
+  const { results } = rows;
+  const { total } = rows;
 
   const header = {
     method: "GET",
@@ -69,8 +81,8 @@ function Distritos() {
   };
 
   const columns = [
-    { tittle: "Distrito" },
     { tittle: "Provincias" },
+    { tittle: "Distrito" },
     { tittle: "Estado" },
   ];
 
@@ -109,10 +121,80 @@ function Distritos() {
       });
   };
 
+  const handleChangePage = (page) => {
+    setPage(page + 1);
+  };
+
+  const handleChangeLimit = (limit) => {
+    setLimit(limit);
+  };
+
+  const handleOnChangeSearchField = async (e) => {
+    if (e.target.value.length > 3) {
+      const data = await fetch(`${urlBusqueda}${e.target.value}`, header);
+      const received_data = await data.json();
+
+      try {
+        setSearchResults(received_data);
+      } catch (error) {
+        setSearchResults([]);
+      }
+    } else {
+      setSearchResults([]);
+    }
+  };
+
   useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
     fetchdata(urlProvincia, header, setProvincias);
     fetchdata(urlDistrito, header, setRows);
-  }, []);
+  }, [urlProvincia, urlDistrito]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlDistrito, header, setRows);
+  }, [page, limit, urlDistrito]);
+
   return (
     <MainLayout Tittle="Distritos">
       {!isLoading ? (
@@ -120,15 +202,23 @@ function Distritos() {
       ) : (
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
+            <SearchBox onChangeInput={handleOnChangeSearchField}>
+              {searchResults.length > 0 && (
+                <ul className="list">
+                  {searchResults.map((value) => {
+                    return (
+                      <Link
+                        className="list-item"
+                        key={value.id_distrito}
+                        to={`/distritos/${value.id_distrito}`}
+                      >{`${value.nombre_distrito}`}</Link>
+                    );
+                  })}
+                </ul>
+              )}
+            </SearchBox>
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
-                <TextField
-                  label="Distrito"
-                  variant="outlined"
-                  value={distrito}
-                  className="inputs"
-                  onChange={(e) => onChange(e, setDistrito)}
-                />
                 <div className="select-form">
                   <InputLabel id="demo-simple-select-label">
                     Provincias
@@ -150,6 +240,13 @@ function Distritos() {
                     })}
                   </Select>
                 </div>
+                <TextField
+                  label="Distrito"
+                  variant="outlined"
+                  value={distrito}
+                  className="inputs"
+                  onChange={(e) => onChange(e, setDistrito)}
+                />
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
                   className="inputs"
@@ -175,26 +272,65 @@ function Distritos() {
             </Paper>
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
-            <DataTable columns={columns}>
-              {rows.map((row) => {
-                return (
-                  <TableRow key={row.id_distrito}>
-                    <TableCell align="center">
-                      <Link to={`/distritos/${row.id_distrito}`}>
-                        <IconButton aria-label="edit">
-                          <EditIcon />
-                        </IconButton>
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">{row.nombre_distrito}</TableCell>
-                    <TableCell align="center">{row.nombre_provincia}</TableCell>
-                    <TableCell align="center">
-                      {row.estado === 1 ? "Activo" : "Inactivo"}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </DataTable>
+            {results && (
+              <>
+                <TablePagination
+                  rowsPerPageOptions={[25, 50, 100, 200]}
+                  labelRowsPerPage="Filas por página"
+                  component="div"
+                  count={total && total}
+                  rowsPerPage={limit}
+                  onChangeRowsPerPage={(event) =>
+                    handleChangeLimit(parseInt(event.target.value))
+                  }
+                  page={page - 1}
+                  onChangePage={(event, page) => handleChangePage(page)}
+                />
+                <DataTable columns={columns}>
+                  {results.map((row) => {
+                    return (
+                      <TableRow key={row.id_distrito}>
+                        <TableCell align="center">
+                          <Link to={`/distritos/${row.id_distrito}`}>
+                            <IconButton aria-label="edit">
+                              <EditIcon />
+                            </IconButton>
+                          </Link>
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.nombre_provincia}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.nombre_distrito}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className={`${row.estado === 1 ? "green" : "red"}`}
+                        >
+                          <span
+                            className={`${row.estado === 1 ? "green" : "red"}`}
+                          >
+                            {row.estado === 1 ? "Activo" : "Inactivo"}
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </DataTable>
+                <TablePagination
+                  rowsPerPageOptions={[25, 50, 100, 200]}
+                  labelRowsPerPage="Filas por página"
+                  component="div"
+                  count={total && total}
+                  rowsPerPage={limit}
+                  onChangeRowsPerPage={(event) =>
+                    handleChangeLimit(parseInt(event.target.value))
+                  }
+                  page={page - 1}
+                  onChangePage={(event, page) => handleChangePage(page)}
+                />
+              </>
+            )}
           </Grid>
         </Grid>
       )}

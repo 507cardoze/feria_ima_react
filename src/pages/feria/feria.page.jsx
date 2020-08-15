@@ -58,9 +58,9 @@ function Feria() {
 
   const [searchResults, setSearchResults] = useState([]);
 
-  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/filtrada`;
-  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias`;
-  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos`;
+  const urlCorregimientos = `${process.env.REACT_APP_BACK_END}/api/corregimientos/buscarCorregimientoByDistrito/`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
+  const urlDistrito = `${process.env.REACT_APP_BACK_END}/api/distritos/buscarDistritoByProvincia/`;
 
   const urlFeria = `${process.env.REACT_APP_BACK_END}/api/feria/filtrada?page=${page}&limit=${limit}`;
   const urlCrear = `${process.env.REACT_APP_BACK_END}/api/feria/crear`;
@@ -116,14 +116,39 @@ function Feria() {
     { tittle: "Feria" },
     { tittle: "Lugar" },
     { tittle: "Descripcion" },
-    { tittle: "Corregimientos" },
-    { tittle: "Distritos" },
     { tittle: "Provincias" },
+    { tittle: "Distritos" },
+    { tittle: "Corregimientos" },
     { tittle: "Estado" },
   ];
 
   const onChange = (e, setter) => {
     setter(e.target.value);
+  };
+
+  const onChangeProvincia = (e) => {
+    console.log("pro: ", e.target.value);
+    setIdProvincia(e.target.value);
+    setDistritos([]);
+    setCorregimientos([]);
+
+    fetch(`${urlDistrito}${e.target.value}`, header)
+      .then((response) => response.json())
+      .then((data) => {
+        UnauthorizedRedirect(data);
+        setDistritos(data);
+      });
+  };
+
+  const onChangeDistrito = (e) => {
+    setIdDistrito(e.target.value);
+    fetch(`${urlCorregimientos}${e.target.value}`, header)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data:", data);
+        UnauthorizedRedirect(data);
+        setCorregimientos(data);
+      });
   };
 
   const onClickGuardar = (e) => {
@@ -134,35 +159,13 @@ function Feria() {
         UnauthorizedRedirect(data);
         if (data === "success") {
           fetchdata(urlFeria, header, setRows);
-          fetchdata(urlCorregimientos, header, setCorregimientos);
           fetchdata(urlProvincia, header, setProvincias);
-          fetchdata(urlDistrito, header, setDistritos);
           msgSuccess("Registro Exitoso.");
         } else {
           msgError(data);
         }
       });
   };
-
-  useEffect(() => {
-    fetchdata(urlDistrito, header, setDistritos);
-  }, [urlDistrito]);
-
-  useEffect(() => {
-    fetchdata(urlProvincia, header, setProvincias);
-  }, [urlProvincia]);
-
-  useEffect(() => {
-    fetchdata(urlCorregimientos, header, setCorregimientos);
-  }, [urlCorregimientos]);
-
-  useEffect(() => {
-    fetchdata(urlFeria, header, setRows);
-  }, [urlFeria]);
-
-  useEffect(() => {
-    fetchdata(urlFeria, header, setRows);
-  }, [page, limit]);
 
   const handleChangePage = (page) => {
     setPage(page + 1);
@@ -186,6 +189,81 @@ function Feria() {
       setSearchResults([]);
     }
   };
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlProvincia, header, setProvincias);
+  }, [urlProvincia]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlFeria, header, setRows);
+  }, [urlFeria]);
+
+  useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+    const fetchdata = async (url, header, setter) => {
+      setisLoading(false);
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchdata(urlFeria, header, setRows);
+  }, [page, limit, urlFeria]);
 
   return (
     <MainLayout Tittle="Feria">
@@ -211,6 +289,72 @@ function Feria() {
             </SearchBox>
             <Paper>
               <form onSubmit={onClickGuardar} className="inputs-container">
+                <div className="select-form">
+                  <InputLabel id="provincias-select-label">
+                    Provincias
+                  </InputLabel>
+                  <Select
+                    labelId="provincias-select-label"
+                    id="provincias-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChangeProvincia(e)}
+                    autoWidth
+                    defaultValue={id_provincia}
+                  >
+                    {provincias.map((pa) => {
+                      return (
+                        <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
+                          {pa.nombre_provincia}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
+                <div className="select-form">
+                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
+                  <Select
+                    labelId="distrito-select-label"
+                    id="distrito-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChangeDistrito(e)}
+                    autoWidth
+                    defaultValue={id_distrito}
+                    disabled={distritos.length > 0 ? false : true}
+                  >
+                    {distritos.map((pa) => {
+                      return (
+                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
+                          {pa.nombre_distrito}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
+                <div className="select-form">
+                  <InputLabel id="corregimiento-select-label">
+                    Corregimiento
+                  </InputLabel>
+                  <Select
+                    labelId="corregimiento-select-label"
+                    id="corregimiento-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChange(e, setIdCorregimiento)}
+                    autoWidth
+                    defaultValue={id_corregimiento}
+                    disabled={corregimientos.length > 0 ? false : true}
+                  >
+                    {corregimientos.map((pa) => {
+                      return (
+                        <MenuItem
+                          key={pa.id_corregimiento}
+                          value={pa.id_corregimiento}
+                        >
+                          {pa.nombre_corregimiento}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
                 <TextField
                   label="Feria"
                   variant="outlined"
@@ -234,70 +378,7 @@ function Feria() {
                   className="inputs"
                   onChange={(e) => onChange(e, setDescripcionFeria)}
                 />
-                <div className="select-form">
-                  <InputLabel id="corregimiento-select-label">
-                    Corregimiento
-                  </InputLabel>
-                  <Select
-                    labelId="corregimiento-select-label"
-                    id="corregimiento-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdCorregimiento)}
-                    autoWidth
-                    defaultValue={id_corregimiento}
-                  >
-                    {corregimientos.map((pa) => {
-                      return (
-                        <MenuItem
-                          key={pa.id_corregimiento}
-                          value={pa.id_corregimiento}
-                        >
-                          {pa.nombre_corregimiento}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
-                <div className="select-form">
-                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
-                  <Select
-                    labelId="distrito-select-label"
-                    id="distrito-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdDistrito)}
-                    autoWidth
-                    defaultValue={id_distrito}
-                  >
-                    {distritos.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
-                          {pa.nombre_distrito}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
-                <div className="select-form">
-                  <InputLabel id="provincias-select-label">
-                    Provincias
-                  </InputLabel>
-                  <Select
-                    labelId="provincias-select-label"
-                    id="provincias-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChange(e, setIdProvincia)}
-                    autoWidth
-                    defaultValue={id_provincia}
-                  >
-                    {provincias.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
-                          {pa.nombre_provincia}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
+
                 <FormControlLabel
                   label={estado ? "Activo" : "Inactivo"}
                   className="inputs"
@@ -356,13 +437,13 @@ function Feria() {
                           {row.descripcion_feria}
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_corregimiento}
+                          {row.nombre_provincia}
                         </TableCell>
                         <TableCell align="center">
                           {row.nombre_distrito}
                         </TableCell>
                         <TableCell align="center">
-                          {row.nombre_provincia}
+                          {row.nombre_corregimiento}
                         </TableCell>
                         <TableCell
                           align="center"
