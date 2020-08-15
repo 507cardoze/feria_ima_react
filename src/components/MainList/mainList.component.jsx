@@ -63,20 +63,12 @@ function MainList() {
           <ListItemText primary="Transacciones" />
         </ListItem>
       </Link>
-<<<<<<< HEAD
       <Link to="/inventario" className={classes.links}>
-=======
-      <Link to="/transacciones-ajustes" className={classes.links}>
->>>>>>> cfe9023b9aeb0f29ea3a7a2483ebded41b75e12b
         <ListItem button className={`${classes.nested} list-fix-padding`}>
           <ListItemIcon>
             <HomeWorkIcon />
           </ListItemIcon>
-<<<<<<< HEAD
           <ListItemText primary="Inventario" />
-=======
-          <ListItemText primary="Transacciones Ajustes" />
->>>>>>> cfe9023b9aeb0f29ea3a7a2483ebded41b75e12b
         </ListItem>
       </Link>
       <Link to="/clientes" className={classes.links}>
@@ -151,14 +143,6 @@ function MainList() {
                 <HomeWorkIcon />
               </ListItemIcon>
               <ListItemText primary="Feria" />
-            </ListItem>
-          </Link>
-          <Link to="/tipo-ajustes" className={classes.links}>
-            <ListItem button className={`${classes.nested} list-fix-padding`}>
-              <ListItemIcon>
-                <HomeWorkIcon />
-              </ListItemIcon>
-              <ListItemText primary="Tipo Ajustes" />
             </ListItem>
           </Link>
         </List>
