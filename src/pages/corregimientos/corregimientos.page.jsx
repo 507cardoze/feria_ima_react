@@ -242,9 +242,6 @@ function Corregimientos() {
     fetchdata(urlCorregimientos, header, setRows);
   }, [page, limit, urlCorregimientos]);
 
-  console.log("input: ", nombre_corregimiento);
-  console.log("input: ", id_distrito);
-
   return (
     <MainLayout Tittle="Corregimientos">
       {!isLoading ? (

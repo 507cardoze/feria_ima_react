@@ -1,40 +1,254 @@
-import React from "react";
+import React, { useState, useEffect, memo } from "react";
 import MainLayout from "../../../components/MainLayOut/mainLayout.component";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { toast } from "react-toastify";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import moment from "moment";
 
-function ClientesModify() {
-  const useStyles = makeStyles((theme) => ({
-    paper: {
-      padding: theme.spacing(2),
-      display: "flex",
-      overflow: "auto",
-      flexDirection: "column",
+function ClientesModify(match) {
+  toast.configure({
+    autoClose: 6000,
+    draggable: true,
+  });
+  const msgError = (msj) => toast.error(msj);
+  const msgSuccess = (msj) => toast.success(msj);
+
+  const [num_documento, setNumDocumento] = useState("");
+  const [nombre, setnombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [genero, setGenero] = useState("");
+  const [fecha_nacimiento, setFechaNacimiento] = useState("");
+  const [nacionalidad, setNacionalidad] = useState("");
+  const [lugar_nacimiento, setLugarNacimiento] = useState("");
+  const [tipo_sangre, setTipoSangre] = useState("");
+  const [direccion, setDireccion] = useState("");
+  const [fecha_expiracion, setFechaExpiracion] = useState("");
+
+  const { id } = match.match.params;
+  const [isLoading, setisLoading] = useState(true);
+
+  const urlBuscar = `${process.env.REACT_APP_BACK_END}/api/clientes/buscar/`;
+  const urlUpdate = `${process.env.REACT_APP_BACK_END}/api/clientes/update`;
+
+  const UnauthorizedRedirect = (data) => {
+    if (data === "No esta autorizado") {
+      localStorage.clear();
+      window.location.replace("/login");
+    }
+  };
+
+  const header = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.token_key}`,
     },
-    fixedHeight: {
-      height: 240,
+    mode: "cors",
+    cache: "default",
+  };
+
+  const onChangeSetter = (e, setter) => {
+    setter(e.target.value);
+  };
+
+  const bodyRequest = {};
+
+  const headerPut = {
+    method: "PUT",
+    headers: {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.token_key}`,
     },
-  }));
-  const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    body: JSON.stringify(bodyRequest),
+  };
+
+  const onClickGuardar = () => {
+    fetch(urlUpdate, headerPut)
+      .then((response) => response.json())
+      .then((data) => {
+        UnauthorizedRedirect(data);
+        if (data === "success") {
+          msgSuccess("Registro Exitoso.");
+        } else {
+          msgError(data);
+        }
+      });
+  };
+
+  useEffect(() => {
+    const fetchDataBuscar = async () => {
+      setisLoading(false);
+      try {
+        const data = await fetch(`${urlBuscar}${id}`, header);
+        const dat = await data.json();
+        UnauthorizedRedirect(dat);
+        dat.forEach((dt) => {
+          setNumDocumento(dt.num_documento);
+          setnombre(dt.nombre);
+          setApellido(dt.apellido);
+          setGenero(dt.genero);
+          setTipoSangre(dt.tipo_sangre);
+          setNacionalidad(dt.nacionalidad);
+          setLugarNacimiento(dt.lugar_nacimiento);
+          setDireccion(dt.direccion);
+          setFechaNacimiento(moment(dt.fecha_nacimiento).format("YYYY-MM-DD"));
+          setFechaExpiracion(moment(dt.fecha_expiracion).format("YYYY-MM-DD"));
+        });
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    fetchDataBuscar();
+  }, []);
+
   return (
-    <MainLayout Tittle="ClientesModify">
-      <Grid container spacing={3}>
-        {/* Chart */}
-        <Grid item xs={12} md={8} lg={9}>
-          <Paper className={fixedHeightPaper}></Paper>
+    <MainLayout Tittle={`Modificar ${num_documento && num_documento}`}>
+      {!isLoading ? (
+        <CircularProgress />
+      ) : (
+        <Grid item xs={12} md={12} lg={12}>
+          <div className="header-container">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={match.history.goBack}
+            >
+              Atras
+            </Button>
+          </div>
+          <Paper>
+            <form onSubmit="" className="inputs-container">
+              <Grid item xs={12} md={6} lg={6}>
+                <TextField
+                  label="Cedula"
+                  variant="outlined"
+                  defaultValue={num_documento}
+                  className="inputs"
+                  type="text"
+                />
+                <TextField
+                  label="Nombre"
+                  variant="outlined"
+                  defaultValue={nombre}
+                  className="inputs"
+                  type="text"
+                />
+                <TextField
+                  label="Apellido"
+                  variant="outlined"
+                  defaultValue={apellido}
+                  className="inputs"
+                  type="text"
+                />
+                <TextField
+                  label="Nacionalidad"
+                  variant="outlined"
+                  defaultValue={nacionalidad}
+                  className="inputs"
+                  type="text"
+                />
+                <TextField
+                  label="Lugar de Nacimiento"
+                  variant="outlined"
+                  defaultValue={lugar_nacimiento}
+                  className="inputs"
+                  multiline
+                  type="text"
+                />
+
+                <TextField
+                  label="Direccion"
+                  variant="outlined"
+                  defaultValue={direccion}
+                  className="inputs"
+                  multiline
+                  type="text"
+                />
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <div className="select-form">
+                  <InputLabel id="sangre-select-label">
+                    Tipo de sangre
+                  </InputLabel>
+                  <Select
+                    labelId="sangre-select-label"
+                    id="sangre-simple-select"
+                    className="inputs"
+                    //onChange={(e) => onChangeSetter(e, setIdDistrito)}
+                    autoWidth
+                    defaultValue={tipo_sangre}
+                  >
+                    <MenuItem value="O-">O negativo</MenuItem>
+                    <MenuItem value="O+">O positivo</MenuItem>
+                    <MenuItem value="A-">A negativo</MenuItem>
+                    <MenuItem value="A+">A positivo</MenuItem>
+                    <MenuItem value="B-">B negativo</MenuItem>
+                    <MenuItem value="B+">B positivo</MenuItem>
+                    <MenuItem value="AB+">AB negativo</MenuItem>
+                    <MenuItem value="AB-">AB positivo</MenuItem>
+                    <MenuItem value="NA">No Sabe</MenuItem>
+                  </Select>
+                </div>
+                <div className="select-form">
+                  <InputLabel id="genero-select-label">Genero</InputLabel>
+                  <Select
+                    labelId="genero-select-label"
+                    id="genero-simple-select"
+                    className="inputs"
+                    //onChange={(e) => onChangeSetter(e, setIdDistrito)}
+                    autoWidth
+                    defaultValue={genero}
+                  >
+                    <MenuItem value="M">Masculino</MenuItem>
+                    <MenuItem value="F">Femenino</MenuItem>
+                  </Select>
+                </div>
+                <div className="select-form">
+                  <InputLabel id="nacimiento-label">
+                    Fecha de nacimiento
+                  </InputLabel>
+                  <TextField
+                    labelId="nacimiento-label"
+                    variant="outlined"
+                    defaultValue={fecha_nacimiento}
+                    className="inputs"
+                    type="date"
+                  />
+                </div>
+                <div className="select-form">
+                  <InputLabel id="expiracion-label">
+                    Fecha de expiracion
+                  </InputLabel>
+                  <TextField
+                    labelId="expiracion-label"
+                    variant="outlined"
+                    defaultValue={fecha_expiracion}
+                    className="inputs"
+                    type="date"
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={12} md={12} lg={12}>
+                <Button
+                  className="inputs"
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                >
+                  Guardar Modificaciones
+                </Button>
+              </Grid>
+            </form>
+          </Paper>
         </Grid>
-        {/* Recent Deposits */}
-        <Grid item xs={12} md={4} lg={3}>
-          <Paper className={fixedHeightPaper}></Paper>
-        </Grid>
-        {/* Recent Orders */}
-        <Grid item xs={12}>
-          <Paper className={classes.paper}></Paper>
-        </Grid>
-      </Grid>
+      )}
     </MainLayout>
   );
 }
