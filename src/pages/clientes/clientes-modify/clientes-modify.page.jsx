@@ -33,7 +33,7 @@ function ClientesModify(match) {
   const { id } = match.match.params;
   const [isLoading, setisLoading] = useState(true);
 
-  const urlBuscar = `${process.env.REACT_APP_BACK_END}/api/clientes/buscar/`;
+  const urlBuscar = `${process.env.REACT_APP_BACK_END}/api/clientes/buscar/${id}`;
   const urlUpdate = `${process.env.REACT_APP_BACK_END}/api/clientes/update`;
 
   const UnauthorizedRedirect = (data) => {
@@ -57,7 +57,19 @@ function ClientesModify(match) {
     setter(e.target.value);
   };
 
-  const bodyRequest = {};
+  const bodyRequest = {
+    id_cliente: parseInt(id),
+    num_documento: num_documento.toUpperCase(),
+    nombre: nombre.toUpperCase(),
+    apellido: apellido.toUpperCase(),
+    genero: genero,
+    fecha_nacimiento: fecha_nacimiento,
+    nacionalidad: nacionalidad.toUpperCase(),
+    lugar_nacimiento: lugar_nacimiento.toUpperCase(),
+    tipo_sangre: tipo_sangre,
+    direccion: direccion.toUpperCase(),
+    fecha_expiracion: fecha_expiracion,
+  };
 
   const headerPut = {
     method: "PUT",
@@ -68,7 +80,8 @@ function ClientesModify(match) {
     body: JSON.stringify(bodyRequest),
   };
 
-  const onClickGuardar = () => {
+  const onClickGuardar = (e) => {
+    e.preventDefault();
     fetch(urlUpdate, headerPut)
       .then((response) => response.json())
       .then((data) => {
@@ -85,7 +98,7 @@ function ClientesModify(match) {
     const fetchDataBuscar = async () => {
       setisLoading(false);
       try {
-        const data = await fetch(`${urlBuscar}${id}`, header);
+        const data = await fetch(`${urlBuscar}`, header);
         const dat = await data.json();
         UnauthorizedRedirect(dat);
         dat.forEach((dt) => {
@@ -124,7 +137,7 @@ function ClientesModify(match) {
             </Button>
           </div>
           <Paper>
-            <form onSubmit="" className="inputs-container">
+            <form onSubmit={onClickGuardar} className="inputs-container">
               <Grid item xs={12} md={6} lg={6}>
                 <TextField
                   label="Cedula"
@@ -132,6 +145,7 @@ function ClientesModify(match) {
                   defaultValue={num_documento}
                   className="inputs"
                   type="text"
+                  onChange={(e) => onChangeSetter(e, setNumDocumento)}
                 />
                 <TextField
                   label="Nombre"
@@ -139,6 +153,7 @@ function ClientesModify(match) {
                   defaultValue={nombre}
                   className="inputs"
                   type="text"
+                  onChange={(e) => onChangeSetter(e, setnombre)}
                 />
                 <TextField
                   label="Apellido"
@@ -146,6 +161,7 @@ function ClientesModify(match) {
                   defaultValue={apellido}
                   className="inputs"
                   type="text"
+                  onChange={(e) => onChangeSetter(e, setApellido)}
                 />
                 <TextField
                   label="Nacionalidad"
@@ -153,6 +169,7 @@ function ClientesModify(match) {
                   defaultValue={nacionalidad}
                   className="inputs"
                   type="text"
+                  onChange={(e) => onChangeSetter(e, setNacionalidad)}
                 />
                 <TextField
                   label="Lugar de Nacimiento"
@@ -161,6 +178,7 @@ function ClientesModify(match) {
                   className="inputs"
                   multiline
                   type="text"
+                  onChange={(e) => onChangeSetter(e, setLugarNacimiento)}
                 />
 
                 <TextField
@@ -170,6 +188,7 @@ function ClientesModify(match) {
                   className="inputs"
                   multiline
                   type="text"
+                  onChange={(e) => onChangeSetter(e, setDireccion)}
                 />
               </Grid>
               <Grid item xs={12} md={6} lg={6}>
@@ -181,7 +200,7 @@ function ClientesModify(match) {
                     labelId="sangre-select-label"
                     id="sangre-simple-select"
                     className="inputs"
-                    //onChange={(e) => onChangeSetter(e, setIdDistrito)}
+                    onChange={(e) => onChangeSetter(e, setTipoSangre)}
                     autoWidth
                     defaultValue={tipo_sangre}
                   >
@@ -202,7 +221,7 @@ function ClientesModify(match) {
                     labelId="genero-select-label"
                     id="genero-simple-select"
                     className="inputs"
-                    //onChange={(e) => onChangeSetter(e, setIdDistrito)}
+                    onChange={(e) => onChangeSetter(e, setGenero)}
                     autoWidth
                     defaultValue={genero}
                   >
@@ -220,6 +239,7 @@ function ClientesModify(match) {
                     defaultValue={fecha_nacimiento}
                     className="inputs"
                     type="date"
+                    onChange={(e) => onChangeSetter(e, setFechaNacimiento)}
                   />
                 </div>
                 <div className="select-form">
@@ -232,6 +252,7 @@ function ClientesModify(match) {
                     defaultValue={fecha_expiracion}
                     className="inputs"
                     type="date"
+                    onChange={(e) => onChangeSetter(e, setFechaExpiracion)}
                   />
                 </div>
               </Grid>
@@ -242,7 +263,7 @@ function ClientesModify(match) {
                   color="primary"
                   type="submit"
                 >
-                  Guardar Modificaciones
+                  Guardar Modificación
                 </Button>
               </Grid>
             </form>

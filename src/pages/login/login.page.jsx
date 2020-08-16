@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 function Login() {
   const classes = useStyles();
   toast.configure({
-    autoClose: 2000,
+    autoClose: 6000,
     draggable: true,
     position: toast.POSITION.TOP_CENTER,
   });

@@ -43,7 +43,7 @@ function Clientes() {
   const [fecha_nacimiento, setFechaNacimiento] = useState("");
   const [nacionalidad, setNacionalidad] = useState("");
   const [lugar_nacimiento, setLugarNacimiento] = useState("");
-  const [tipo_sangre, setTipoSangre] = useState("");
+  const [tipo_sangre, setTipoSangre] = useState("NA");
   const [direccion, setDireccion] = useState("");
   const [fecha_expiracion, setFechaExpiracion] = useState("");
 
@@ -60,7 +60,18 @@ function Clientes() {
   const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/clientes/searchField/`;
   const urlCrear = `${process.env.REACT_APP_BACK_END}/api/clientes/crear`;
 
-  const bodyRequest = {};
+  const bodyRequest = {
+    num_documento: num_documento.toUpperCase(),
+    nombre: nombre.toUpperCase(),
+    apellido: apellido.toUpperCase(),
+    genero: genero,
+    fecha_nacimiento: fecha_nacimiento,
+    nacionalidad: nacionalidad.toUpperCase(),
+    lugar_nacimiento: lugar_nacimiento.toUpperCase(),
+    tipo_sangre: tipo_sangre,
+    direccion: direccion.toUpperCase(),
+    fecha_expiracion: fecha_expiracion,
+  };
 
   const header = {
     method: "GET",
@@ -205,6 +216,7 @@ function Clientes() {
                 defaultValue={num_documento}
                 className="inputs"
                 type="text"
+                onChange={(e) => onChangeSetter(e, setNumDocumento)}
               />
               <TextField
                 label="Nombre"
@@ -212,6 +224,7 @@ function Clientes() {
                 defaultValue={nombre}
                 className="inputs"
                 type="text"
+                onChange={(e) => onChangeSetter(e, setnombre)}
               />
               <TextField
                 label="Apellido"
@@ -219,6 +232,7 @@ function Clientes() {
                 defaultValue={apellido}
                 className="inputs"
                 type="text"
+                onChange={(e) => onChangeSetter(e, setApellido)}
               />
               <TextField
                 label="Nacionalidad"
@@ -226,6 +240,7 @@ function Clientes() {
                 defaultValue={nacionalidad}
                 className="inputs"
                 type="text"
+                onChange={(e) => onChangeSetter(e, setNacionalidad)}
               />
               <TextField
                 label="Lugar de Nacimiento"
@@ -234,6 +249,7 @@ function Clientes() {
                 className="inputs"
                 multiline
                 type="text"
+                onChange={(e) => onChangeSetter(e, setLugarNacimiento)}
               />
 
               <TextField
@@ -243,6 +259,7 @@ function Clientes() {
                 className="inputs"
                 multiline
                 type="text"
+                onChange={(e) => onChangeSetter(e, setDireccion)}
               />
             </Grid>
             <Grid item xs={12} md={6} lg={6}>
@@ -252,7 +269,7 @@ function Clientes() {
                   labelId="sangre-select-label"
                   id="sangre-simple-select"
                   className="inputs"
-                  //onChange={(e) => onChangeSetter(e, setIdDistrito)}
+                  onChange={(e) => onChangeSetter(e, setTipoSangre)}
                   autoWidth
                   defaultValue={tipo_sangre}
                 >
@@ -273,7 +290,7 @@ function Clientes() {
                   labelId="genero-select-label"
                   id="genero-simple-select"
                   className="inputs"
-                  //onChange={(e) => onChangeSetter(e, setIdDistrito)}
+                  onChange={(e) => onChangeSetter(e, setGenero)}
                   autoWidth
                   defaultValue={genero}
                 >
@@ -291,6 +308,7 @@ function Clientes() {
                   defaultValue={fecha_nacimiento}
                   className="inputs"
                   type="date"
+                  onChange={(e) => onChangeSetter(e, setFechaNacimiento)}
                 />
               </div>
               <div className="select-form">
@@ -303,6 +321,7 @@ function Clientes() {
                   defaultValue={fecha_expiracion}
                   className="inputs"
                   type="date"
+                  onChange={(e) => onChangeSetter(e, setFechaExpiracion)}
                 />
               </div>
             </Grid>
@@ -320,69 +339,77 @@ function Clientes() {
         </Paper>
       </Grid>
       <Grid item xs={12} md={12} lg={12}>
-        {results && (
-          <>
-            <TablePagination
-              rowsPerPageOptions={[25, 50, 100, 200]}
-              labelRowsPerPage="Filas por página"
-              component="div"
-              count={total && total}
-              rowsPerPage={limit}
-              onChangeRowsPerPage={(event) =>
-                handleChangeLimit(parseInt(event.target.value))
-              }
-              page={page - 1}
-              onChangePage={(event, page) => handleChangePage(page)}
-            />
-            <DataTable columns={columns}>
-              {results.map((row) => {
-                return (
-                  <TableRow key={row.id_cliente}>
-                    <TableCell component="th" scope="row">
-                      <Link to={`/clientes/${row.id_cliente}`}>
-                        <IconButton aria-label="edit">
-                          <EditIcon />
-                        </IconButton>
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">{row.num_documento}</TableCell>
-                    <TableCell align="center">{row.nombre}</TableCell>
-                    <TableCell align="center">{row.apellido}</TableCell>
-                    <TableCell align="center">{row.genero}</TableCell>
-                    <TableCell align="center">
-                      {moment(row.fecha_nacimiento).format("D, MMMM YYYY")}
-                    </TableCell>
-                    <TableCell align="center">{row.nacionalidad}</TableCell>
-                    <TableCell align="center">{row.lugar_nacimiento}</TableCell>
-                    <TableCell align="center">{row.tipo_sangre}</TableCell>
-                    <TableCell align="center">{row.direccion}</TableCell>
-                    <TableCell align="center">
-                      {moment(row.fecha_expiracion).format("D, MMMM YYYY")}
-                    </TableCell>
-                    <TableCell align="center">{row.usuario_creacion}</TableCell>
-                    <TableCell align="center">
-                      {moment(row.fecha_creacion).format("D, MMMM YYYY")}
-                    </TableCell>
-                    <TableCell align="center">
-                      {moment(row.fecha_creacion).fromNow()}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </DataTable>
-            <TablePagination
-              rowsPerPageOptions={[25, 50, 100, 200]}
-              labelRowsPerPage="Filas por página"
-              component="div"
-              count={total && total}
-              rowsPerPage={limit}
-              onChangeRowsPerPage={(event) =>
-                handleChangeLimit(parseInt(event.target.value))
-              }
-              page={page - 1}
-              onChangePage={(event, page) => handleChangePage(page)}
-            />
-          </>
+        {!isLoading ? (
+          <CircularProgress />
+        ) : (
+          results && (
+            <>
+              <TablePagination
+                rowsPerPageOptions={[25, 50, 100, 200]}
+                labelRowsPerPage="Filas por página"
+                component="div"
+                count={total && total}
+                rowsPerPage={limit}
+                onChangeRowsPerPage={(event) =>
+                  handleChangeLimit(parseInt(event.target.value))
+                }
+                page={page - 1}
+                onChangePage={(event, page) => handleChangePage(page)}
+              />
+              <DataTable columns={columns}>
+                {results.map((row) => {
+                  return (
+                    <TableRow key={row.id_cliente}>
+                      <TableCell component="th" scope="row">
+                        <Link to={`/clientes/${row.id_cliente}`}>
+                          <IconButton aria-label="edit">
+                            <EditIcon />
+                          </IconButton>
+                        </Link>
+                      </TableCell>
+                      <TableCell align="center">{row.num_documento}</TableCell>
+                      <TableCell align="center">{row.nombre}</TableCell>
+                      <TableCell align="center">{row.apellido}</TableCell>
+                      <TableCell align="center">{row.genero}</TableCell>
+                      <TableCell align="center">
+                        {moment(row.fecha_nacimiento).format("D, MMMM YYYY")}
+                      </TableCell>
+                      <TableCell align="center">{row.nacionalidad}</TableCell>
+                      <TableCell align="center">
+                        {row.lugar_nacimiento}
+                      </TableCell>
+                      <TableCell align="center">{row.tipo_sangre}</TableCell>
+                      <TableCell align="center">{row.direccion}</TableCell>
+                      <TableCell align="center">
+                        {moment(row.fecha_expiracion).format("D, MMMM YYYY")}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.usuario_creacion}
+                      </TableCell>
+                      <TableCell align="center">
+                        {moment(row.fecha_creacion).format("D, MMMM YYYY")}
+                      </TableCell>
+                      <TableCell align="center">
+                        {moment(row.fecha_creacion).fromNow()}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </DataTable>
+              <TablePagination
+                rowsPerPageOptions={[25, 50, 100, 200]}
+                labelRowsPerPage="Filas por página"
+                component="div"
+                count={total && total}
+                rowsPerPage={limit}
+                onChangeRowsPerPage={(event) =>
+                  handleChangeLimit(parseInt(event.target.value))
+                }
+                page={page - 1}
+                onChangePage={(event, page) => handleChangePage(page)}
+              />
+            </>
+          )
         )}
       </Grid>
     </MainLayout>

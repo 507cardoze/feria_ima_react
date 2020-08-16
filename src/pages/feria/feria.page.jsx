@@ -81,13 +81,12 @@ function Feria() {
 
   const bodyRequest = {
     nombre_feria: nombre_feria,
-    id_provincia: id_provincia,
-    id_distrito: id_distrito,
-    id_corregimiento: id_corregimiento,
+    id_provincia: parseInt(id_provincia),
+    id_distrito: parseInt(id_distrito),
+    id_corregimiento: parseInt(id_corregimiento),
     descripcion_lugar: descripcion_lugar,
     descripcion_feria: descripcion_feria,
     estado: estado,
-    user: "ADMIN",
   };
 
   const headerPost = {
