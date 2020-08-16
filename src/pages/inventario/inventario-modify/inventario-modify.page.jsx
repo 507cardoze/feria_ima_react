@@ -146,34 +146,6 @@ function InventarioModify(match) {
     }
   };
 
-  const fetchDataBuscarInicio = async () => {
-    setisLoading(false);
-    try {
-      const data = await fetch(`${urlBuscar}${id}`, header);
-      const dat = await data.json();
-      UnauthorizedRedirect(dat);
-      dat.forEach((dt) => {
-        setIdPais(dt.id_pais);
-        setIdProvincia(dt.id_provincia);
-        setIdDistrito(dt.id_distrito);
-        setIdCorregimiento(dt.id_corregimiento);
-        setIdFeria(dt.id_feria);
-        setIdProducto(dt.id_producto);
-        setTotalInicialDisponible(dt.total_inicial_disponible);
-        setDisponibleReal(dt.disponible_real);
-        setTotalMaxDiario(dt.total_max_diario);
-        setFrecuenciaCompraDias(dt.frecuencia_compra_dias);
-        setFechaInicio(moment(dt.fecha_inicio).format("YYYY-MM-DD"));
-        setFechaFin(moment(dt.fecha_fin).format("YYYY-MM-DD"));
-        setObservacion(dt.observacion);
-        setEstado(dt.estado === 1 ? true : false);
-      });
-      setisLoading(true);
-    } catch (error) {
-      msgError(error);
-    }
-  };
-
   useEffect(() => {
     const header = {
       method: "GET",
@@ -192,6 +164,33 @@ function InventarioModify(match) {
         const filtered = await data.json();
         UnauthorizedRedirect(filtered);
         setter(filtered);
+        setisLoading(true);
+      } catch (error) {
+        msgError(error);
+      }
+    };
+    const fetchDataBuscarInicio = async () => {
+      setisLoading(false);
+      try {
+        const data = await fetch(`${urlBuscar}${id}`, header);
+        const dat = await data.json();
+        UnauthorizedRedirect(dat);
+        dat.forEach((dt) => {
+          setIdPais(dt.id_pais);
+          setIdProvincia(dt.id_provincia);
+          setIdDistrito(dt.id_distrito);
+          setIdCorregimiento(dt.id_corregimiento);
+          setIdFeria(dt.id_feria);
+          setIdProducto(dt.id_producto);
+          setTotalInicialDisponible(dt.total_inicial_disponible);
+          setDisponibleReal(dt.disponible_real);
+          setTotalMaxDiario(dt.total_max_diario);
+          setFrecuenciaCompraDias(dt.frecuencia_compra_dias);
+          setFechaInicio(moment(dt.fecha_inicio).format("YYYY-MM-DD"));
+          setFechaFin(moment(dt.fecha_fin).format("YYYY-MM-DD"));
+          setObservacion(dt.observacion);
+          setEstado(dt.estado === 1 ? true : false);
+        });
         setisLoading(true);
       } catch (error) {
         msgError(error);
