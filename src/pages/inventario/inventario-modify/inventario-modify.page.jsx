@@ -147,6 +147,7 @@ function InventarioModify(match) {
   };
 
   const fetchDataBuscarInicio = async () => {
+    setisLoading(false);
     try {
       const data = await fetch(`${urlBuscar}${id}`, header);
       const dat = await data.json();
@@ -167,6 +168,7 @@ function InventarioModify(match) {
         setObservacion(dt.observacion);
         setEstado(dt.estado === 1 ? true : false);
       });
+      setisLoading(true);
     } catch (error) {
       msgError(error);
     }
