@@ -274,4 +274,4 @@ function ClientesModify(match) {
   );
 }
 
-export default ClientesModify;
+export default memo(ClientesModify);

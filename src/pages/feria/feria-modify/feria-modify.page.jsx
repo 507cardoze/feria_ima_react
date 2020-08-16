@@ -78,7 +78,6 @@ function FeriaModify(match) {
     fetch(`${urlCorregimientos}${e.target.value}`, header)
       .then((response) => response.json())
       .then((data) => {
-        console.log("data:", data);
         UnauthorizedRedirect(data);
         setCorregimientos(data);
       });

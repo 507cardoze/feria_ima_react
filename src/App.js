@@ -22,6 +22,7 @@ import FeriaModify from "./pages/feria/feria-modify/feria-modify.page";
 import TipoAjustes from "./pages/tipo-ajustes/tipo-ajustes.page";
 import TipoModify from "./pages/tipo-ajustes/tipo-ajuste-modify/tipo-ajuste-modify.page";
 import Inventario from "./pages/inventario/inventario.page";
+import InventarioModify from "./pages/inventario/inventario-modify/inventario-modify.page";
 import InventarioAjuste from "./pages/inventario-ajuste/inventario-ajuste.page";
 import "moment/locale/es.js";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,6 +37,7 @@ function App() {
           <Route exact path="/" component={Dashboard} />
           <Route exact path="/transacciones" component={Transacciones} />
           <Route exact path="/inventario" component={Inventario} />
+          <Route path="/inventario/:id" component={InventarioModify} />
           <Route exact path="/inventario-ajuste" component={InventarioAjuste} />
           <Route exact path="/clientes" component={Clientes} />
           <Route path="/clientes/:id" component={ClientesModify} />
