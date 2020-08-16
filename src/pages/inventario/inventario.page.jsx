@@ -122,6 +122,7 @@ function Inventario() {
   };
 
   const columns = [
+    { tittle: "#" },
     { tittle: "Producto" },
     { tittle: "Frecuencia de compra" },
     { tittle: "Total inicial disponible" },
@@ -438,6 +439,7 @@ function Inventario() {
                           </IconButton>
                         </Link>
                       </TableCell>
+                      <TableCell align="center">{row.id_inventario}</TableCell>
                       <TableCell align="center">
                         {row.nombre_productos}
                       </TableCell>
