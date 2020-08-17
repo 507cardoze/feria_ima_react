@@ -43,16 +43,6 @@ function ClientesModify(match) {
     }
   };
 
-  const header = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.token_key}`,
-    },
-    mode: "cors",
-    cache: "default",
-  };
-
   const onChangeSetter = (e, setter) => {
     setter(e.target.value);
   };
@@ -95,6 +85,15 @@ function ClientesModify(match) {
   };
 
   useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
     const fetchDataBuscar = async () => {
       setisLoading(false);
       try {
@@ -119,7 +118,7 @@ function ClientesModify(match) {
       }
     };
     fetchDataBuscar();
-  }, []);
+  }, [urlBuscar]);
 
   return (
     <MainLayout Tittle={`Modificar ${num_documento && num_documento}`}>

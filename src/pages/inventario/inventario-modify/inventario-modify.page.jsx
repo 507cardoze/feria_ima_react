@@ -228,7 +228,7 @@ function InventarioModify(match) {
     fetchdata(urlProducto, header, setProductos);
     fetchdata(urlPais, header, setPais);
     fetchdata(urlFeria, header, setFerias);
-  }, []);
+  }, [urlBuscar, urlProducto, urlPais, urlFeria, id]);
 
   return (
     <MainLayout Tittle={`Modificar inventario #${id && id}`}>

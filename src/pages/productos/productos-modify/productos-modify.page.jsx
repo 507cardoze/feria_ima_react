@@ -34,16 +34,6 @@ function ProductosModify(match) {
     }
   };
 
-  const header = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.token_key}`,
-    },
-    mode: "cors",
-    cache: "default",
-  };
-
   const onChangeSetter = (e, setter) => {
     setter(e.target.value);
   };
@@ -79,6 +69,15 @@ function ProductosModify(match) {
   };
 
   useEffect(() => {
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
     const fetchDataBuscar = async () => {
       setisLoading(false);
       try {
@@ -96,7 +95,7 @@ function ProductosModify(match) {
       }
     };
     fetchDataBuscar();
-  }, []);
+  }, [urlBuscar]);
 
   return (
     <MainLayout Tittle={`Modificar ${nombre_productos && nombre_productos}`}>

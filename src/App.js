@@ -24,6 +24,7 @@ import TipoModify from "./pages/tipo-ajustes/tipo-ajuste-modify/tipo-ajuste-modi
 import Inventario from "./pages/inventario/inventario.page";
 import InventarioModify from "./pages/inventario/inventario-modify/inventario-modify.page";
 import InventarioAjuste from "./pages/inventario-ajuste/inventario-ajuste.page";
+import InventarioAjusteModify from "./pages/inventario-ajuste/inventario-ajuste-modify/inventario-ajuste-modify.page";
 import "moment/locale/es.js";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
@@ -39,6 +40,10 @@ function App() {
           <Route exact path="/inventario" component={Inventario} />
           <Route path="/inventario/:id" component={InventarioModify} />
           <Route exact path="/inventario-ajuste" component={InventarioAjuste} />
+          <Route
+            path="/inventario-ajuste/:id"
+            component={InventarioAjusteModify}
+          />
           <Route exact path="/clientes" component={Clientes} />
           <Route path="/clientes/:id" component={ClientesModify} />
           <Route exact path="/productos" component={Productos} />

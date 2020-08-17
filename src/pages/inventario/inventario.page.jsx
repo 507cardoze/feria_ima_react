@@ -227,7 +227,7 @@ function Inventario() {
     fetchdata(urlFeria, header, setFerias);
     fetchdata(urlProducto, header, setProductos);
     fetchdata(urlPais, header, setPais);
-  }, [url]);
+  }, [url, urlFeria, urlProducto, urlPais]);
 
   return (
     <MainLayout Tittle="Inventarios">
