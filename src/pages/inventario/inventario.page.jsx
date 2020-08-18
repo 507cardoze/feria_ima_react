@@ -236,9 +236,9 @@ function Inventario() {
           <Button variant="contained" color="primary" className="button-input">
             <Link to="/inventario-ajuste">Inventario Ajuste</Link>
           </Button>
-          <Button variant="contained" color="primary" className="button-input">
+          {/* <Button variant="contained" color="primary" className="button-input">
             <Link to="/tipo-ajustes">Tipo Ajuste</Link>
-          </Button>
+          </Button> */}
         </div>
       </Grid>
       <Grid item xs={12} md={12} lg={12}>
