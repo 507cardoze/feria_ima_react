@@ -40,6 +40,8 @@ function InventarioAjuste() {
   const [cantidad_ajuste, setCantidadAjuste] = useState(0);
   const [observacion, setObservacion] = useState("");
 
+  const [total_disponible_real, setTotalDisponibleReal] = useState(0);
+
   const [rows, setRows] = useState({});
   const [inventarios, setInventarios] = useState([]);
   const [tipo_ajuste, setTipoAjuste] = useState([]);
@@ -123,6 +125,12 @@ function InventarioAjuste() {
       .then((data) => {
         UnauthorizedRedirect(data);
         if (data === "success") {
+          setIdInvenario("");
+          setIdFeria("");
+          setIdTipoAjuste("");
+          setObservacion("");
+          setCantidadAjuste(0);
+          setTotalDisponibleReal(0);
           fetchdata(url, header, setRows);
           fetchdata(urlInventario, header, setInventarios);
           fetchdata(urlTipoAjuste, header, setTipoAjuste);
@@ -164,9 +172,25 @@ function InventarioAjuste() {
       UnauthorizedRedirect(dat);
       dat.forEach((dt) => {
         setIdFeria(dt.id_feria);
+        setTotalDisponibleReal(dt.disponible_real);
       });
     } catch (error) {
       msgError(error);
+    }
+  };
+
+  const salidaOEntrada = (tipo, cantidad) => {
+    console.log(cantidad);
+    if (cantidad >= 0) {
+      if (tipo === "SA") {
+        if (cantidad_ajuste < total_disponible_real) {
+          setCantidadAjuste(cantidad);
+        } else if (cantidad < total_disponible_real) {
+          setCantidadAjuste(cantidad);
+        }
+      } else {
+        setCantidadAjuste(cantidad);
+      }
     }
   };
 
@@ -236,71 +260,90 @@ function InventarioAjuste() {
                   className="inputs"
                   onChange={fetchDataBuscar}
                   autoWidth
-                  defaultValue={id_inventario}
+                  value={id_inventario}
                 >
                   {inventarios.map((pa) => {
                     return (
                       <MenuItem key={pa.id_inventario} value={pa.id_inventario}>
-                        {`${pa.id_inventario} - ${pa.nombre_feria}`}
+                        {`#${pa.id_inventario} - ${pa.nombre_feria} - ${pa.nombre_productos}`}
                       </MenuItem>
                     );
                   })}
                 </Select>
               </div>
-              <div className="select-form">
-                <InputLabel id="tipo-ajuste-select-label">
-                  Tipo de Ajustes
-                </InputLabel>
-                <Select
-                  labelId="tipo-ajuste-select-label"
-                  id="tipo-ajuste-simple-select"
-                  className="inputs"
-                  onChange={(e) => onChangeSetter(e, setIdTipoAjuste)}
-                  autoWidth
-                  defaultValue={id_tipo_ajuste}
-                >
-                  {tipo_ajuste.map((pa) => {
-                    return (
-                      <MenuItem
-                        key={pa.id_tipo_ajuste}
-                        value={pa.id_tipo_ajuste}
-                      >
-                        {pa.id_tipo_ajuste}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </div>
+              {id_feria && (
+                <div className="select-form">
+                  <InputLabel id="tipo-ajuste-select-label">
+                    Tipo de Ajustes
+                  </InputLabel>
+                  <Select
+                    labelId="tipo-ajuste-select-label"
+                    id="tipo-ajuste-simple-select"
+                    className="inputs"
+                    onChange={(e) => {
+                      onChangeSetter(e, setIdTipoAjuste);
+                      setCantidadAjuste(0);
+                    }}
+                    autoWidth
+                    defaultValue={id_tipo_ajuste}
+                  >
+                    {tipo_ajuste.map((pa) => {
+                      return (
+                        <MenuItem
+                          key={pa.id_tipo_ajuste}
+                          value={pa.id_tipo_ajuste}
+                        >
+                          {pa.id_tipo_ajuste}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </div>
+              )}
             </Grid>
             <Grid item xs={12} md={6} lg={6}>
               <TextField
-                label="Cantidad de ajuste"
+                label="Disponible Real"
                 variant="outlined"
-                defaultValue={cantidad_ajuste}
+                value={total_disponible_real}
                 className="inputs"
                 type="number"
-                onChange={(e) => onChangeSetter(e, setCantidadAjuste)}
+                disabled
               />
-              <TextField
-                label="Observación"
-                variant="outlined"
-                defaultValue={observacion}
-                className="inputs"
-                type="text"
-                rows={3}
-                multiline
-                onChange={(e) => onChangeSetter(e, setObservacion)}
-              />
-            </Grid>
-            <Grid item xs={12} md={12} lg={12}>
-              <Button
-                className="inputs"
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Crear Nuevo Inventario Ajuste
-              </Button>
+              {id_tipo_ajuste && (
+                <>
+                  <TextField
+                    label="Cantidad de ajuste"
+                    variant="outlined"
+                    value={cantidad_ajuste}
+                    className="inputs"
+                    type="number"
+                    onChange={(e) =>
+                      salidaOEntrada(id_tipo_ajuste, parseInt(e.target.value))
+                    }
+                  />
+                  <TextField
+                    label="Observación"
+                    variant="outlined"
+                    defaultValue={observacion}
+                    className="inputs"
+                    type="text"
+                    rows={3}
+                    multiline
+                    onChange={(e) => onChangeSetter(e, setObservacion)}
+                  />
+                  <Button
+                    className="inputs"
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                  >
+                    {`Crear Nuevo Ajuste ${
+                      id_tipo_ajuste === "EN" ? "Entrada" : ""
+                    } ${id_tipo_ajuste === "SA" ? "Salida" : ""}`}
+                  </Button>
+                </>
+              )}
             </Grid>
           </form>
         </Paper>

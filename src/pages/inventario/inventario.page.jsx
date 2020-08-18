@@ -332,18 +332,13 @@ function Inventario() {
               <TextField
                 label="Total inicial disponible"
                 variant="outlined"
-                defaultValue={total_inicial_disponible}
+                value={total_inicial_disponible}
                 className="inputs"
                 type="number"
-                onChange={(e) => onChangeSetter(e, setTotalInicialDisponible)}
-              />
-              <TextField
-                label="Disponible real"
-                variant="outlined"
-                defaultValue={disponible_real}
-                className="inputs"
-                type="number"
-                onChange={(e) => onChangeSetter(e, setDisponibleReal)}
+                onChange={(e) => {
+                  onChangeSetter(e, setTotalInicialDisponible);
+                  onChangeSetter(e, setDisponibleReal);
+                }}
               />
               <TextField
                 label="Total máximo diario"
