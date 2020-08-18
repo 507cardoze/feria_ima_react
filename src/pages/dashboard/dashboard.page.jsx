@@ -41,10 +41,10 @@ function Dashboard() {
   const [cantidad, setCantidad] = useState([]);
   const [isLoading, setisLoading] = useState(true);
 
-  useEffect(() => {
-    const url = `${process.env.REACT_APP_BACK_END}/api/consultas/total-ferias`;
-    const urlCantidad = `${process.env.REACT_APP_BACK_END}/api/consultas/total-transacciones`;
+  const url = `${process.env.REACT_APP_BACK_END}/api/consultas/total-ferias`;
+  const urlCantidad = `${process.env.REACT_APP_BACK_END}/api/consultas/total-transacciones`;
 
+  useEffect(() => {
     const header = {
       method: "GET",
       headers: {
@@ -69,7 +69,7 @@ function Dashboard() {
     };
     fetchdata(url, header, setFerias);
     fetchdata(urlCantidad, header, setCantidad);
-  }, []);
+  }, [url, urlCantidad]);
 
   return (
     <MainLayout Tittle="Dashboard">
@@ -90,12 +90,7 @@ function Dashboard() {
           </Grid>
           <Grid item xs={12} md={4} lg={3}>
             <Paper className={fixedHeightPaper}>
-              <Totales
-                title={"Total de Transacciones"}
-                amount={
-                  cantidad.length > 0 && cantidad.map((value) => value.cantidad)
-                }
-              />
+              <Totales title={"Total de Transacciones"} amount={cantidad} />
             </Paper>
           </Grid>
         </Grid>
