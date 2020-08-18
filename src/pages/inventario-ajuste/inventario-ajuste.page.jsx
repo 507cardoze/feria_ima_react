@@ -371,11 +371,11 @@ function InventarioAjuste() {
                   return (
                     <TableRow key={row.id}>
                       <TableCell component="th" scope="row">
-                        <Link to={`/inventario-ajuste/${row.id}`}>
+                        {/* <Link to={`/inventario-ajuste/${row.id}`}>
                           <IconButton aria-label="edit">
                             <EditIcon />
                           </IconButton>
-                        </Link>
+                        </Link> */}
                       </TableCell>
                       <TableCell align="center">{row.id}</TableCell>
                       <TableCell align="center">{row.id_inventario}</TableCell>
