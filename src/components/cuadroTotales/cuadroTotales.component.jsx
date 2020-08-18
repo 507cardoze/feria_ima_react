@@ -2,7 +2,7 @@ import React from "react";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Title from "./Title";
+import moment from "moment";
 
 function preventDefault(event) {
   event.preventDefault();
@@ -18,12 +18,14 @@ export default function Totales({ title, amount }) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Depósitos recientes</Title>
+      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+        {title}
+      </Typography>
       <Typography component="p" variant="h4">
-        $3,024.00
+        {amount}
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        en 15 marzo, 2019
+        {`Hasta hoy, ${moment().format("MMMM Do YYYY")}`}
       </Typography>
     </React.Fragment>
   );
