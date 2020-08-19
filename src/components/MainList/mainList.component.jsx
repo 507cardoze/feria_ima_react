@@ -95,7 +95,14 @@ function MainList() {
           <ListItemText primary="Productos" />
         </ListItem>
       </Link>
-
+      <Link to="/feria" className={classes.links}>
+        <ListItem button className={`${classes.nested} list-fix-padding`}>
+          <ListItemIcon>
+            <HomeWorkIcon />
+          </ListItemIcon>
+          <ListItemText primary="Feria" />
+        </ListItem>
+      </Link>
       <ListItem button onClick={handleClick} className="list-fix-padding">
         <ListItemIcon>
           <SettingsIcon />
@@ -135,14 +142,6 @@ function MainList() {
                 <HouseIcon />
               </ListItemIcon>
               <ListItemText primary="Corregimientos" />
-            </ListItem>
-          </Link>
-          <Link to="/feria" className={classes.links}>
-            <ListItem button className={`${classes.nested} list-fix-padding`}>
-              <ListItemIcon>
-                <HomeWorkIcon />
-              </ListItemIcon>
-              <ListItemText primary="Feria" />
             </ListItem>
           </Link>
         </List>
