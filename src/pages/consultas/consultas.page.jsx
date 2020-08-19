@@ -13,6 +13,7 @@ import moment from "moment";
 import "./consultas.styles.scss";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import GraficaClientes from "../../components/graficaBar/graficaBarClientes.component";
 
 function Consultas() {
   toast.configure({
@@ -28,25 +29,43 @@ function Consultas() {
     }
   };
 
-  const [ferias, setFerias] = useState([]);
-
   const [feriasSelect, setFeriasSelect] = useState([]);
-  const [cantidad, setCantidad] = useState([]);
   const [isLoading, setisLoading] = useState(true);
 
+  // input 1
+  const [ferias, setFerias] = useState([]);
+  const [cantidad, setCantidad] = useState([]);
   const [desde, setDesde] = useState("");
   const [hasta, setHasta] = useState("");
 
+  //input 2
   const [feriasUnica, setFeriasUnica] = useState([]);
   const [id_feria, setIdFeria] = useState("");
   const [desdeFeria, setDesdeFeria] = useState("");
   const [hastaFeria, setHastaFeria] = useState("");
-  const [cantidadUnica, setCantidadUnica] = useState([]);
+
+  //input 3
+  const [clientesTotalesPorFeria, setClientesTotalesPorFeria] = useState([]);
+  const [cantidadClientesTotales, setClientestotales] = useState([]);
+  const [desdeClientesTotales, setDesdeClientesTotales] = useState("");
+  const [HastaClientesTotales, setHastaClientesTotales] = useState("");
+
+  //input 4
+  const [id_feria_cliente, setIdFeriaCliente] = useState("");
+  const [clientesPorFeria, setClientesPorFeria] = useState([]);
+  const [desdeClientePorFeria, setDesdeClientePorFeria] = useState("");
+  const [hastaClientePorFeria, setHastaClientePorFeria] = useState("");
 
   const url = `${process.env.REACT_APP_BACK_END}/api/consultas/total-ferias`;
   const urlCantidad = `${process.env.REACT_APP_BACK_END}/api/consultas/total-transacciones`;
-
   const urlFeriaByFechabyId = `${process.env.REACT_APP_BACK_END}/api/consultas/feria/`;
+
+  //input 3
+  const urlClientes = `${process.env.REACT_APP_BACK_END}/api/consultas/total-clientes`;
+  const urlCantidadClientes = `${process.env.REACT_APP_BACK_END}/api/consultas/cantidad-clientes`;
+
+  // input 4
+  const urlClientesPorFeria = `${process.env.REACT_APP_BACK_END}/api/consultas/clientes/`;
 
   const header = {
     method: "GET",
@@ -64,17 +83,9 @@ function Consultas() {
 
   const onClickBuscar = (e) => {
     e.preventDefault();
+    fetchdata(`${url}?desde=${desde}&hasta=${hasta}`, header, setFerias);
     fetchdata(
-      `${url}?desde=${moment(desde).format("YYYY-MM-DD")}&hasta=${moment(
-        hasta
-      ).format("YYYY-MM-DD")}`,
-      header,
-      setFerias
-    );
-    fetchdata(
-      `${urlCantidad}?desde=${moment(desde).format(
-        "YYYY-MM-DD"
-      )}&hasta=${moment(hasta).format("YYYY-MM-DD")}`,
+      `${urlCantidad}?desde=${desde}&hasta=${hasta}`,
       header,
       setCantidad
     );
@@ -87,13 +98,29 @@ function Consultas() {
       header,
       setFeriasUnica
     );
-    // fetchdata(
-    //   `${urlCantidad}?desde=${moment(desde).format(
-    //     "YYYY-MM-DD"
-    //   )}&hasta=${moment(hasta).format("YYYY-MM-DD")}`,
-    //   header,
-    //   setCantidad
-    // );
+  };
+
+  const onClickBuscarClientes = (e) => {
+    e.preventDefault();
+    fetchdata(
+      `${urlClientes}?desde=${desdeClientesTotales}&hasta=${HastaClientesTotales}`,
+      header,
+      setClientesTotalesPorFeria
+    );
+    fetchdata(
+      `${urlCantidadClientes}?desde=${desdeClientesTotales}&hasta=${HastaClientesTotales}`,
+      header,
+      setClientestotales
+    );
+  };
+
+  const onClickBuscarClientesByFeria = (e) => {
+    e.preventDefault();
+    fetchdata(
+      `${urlClientesPorFeria}${id_feria_cliente}?desde=${desdeClientePorFeria}&hasta=${hastaClientePorFeria}`,
+      header,
+      setClientesPorFeria
+    );
   };
 
   const fetchdata = async (url, header, setter) => {
@@ -136,11 +163,6 @@ function Consultas() {
     };
     fetchdata(urlFeria, header, setFeriasSelect);
   }, []);
-
-  console.log("id_feria: ", id_feria);
-  console.log("desdeFeria: ", desdeFeria);
-  console.log("hastaFeria: ", hastaFeria);
-  console.log("feriasUnica: ", feriasUnica);
 
   return (
     <MainLayout Tittle="Consultas">
@@ -242,9 +264,112 @@ function Consultas() {
             )}
           </Grid>
         </div>
+
+        <div className="consultas-por-ferias">
+          <h3>Consulta clientes total por ferias</h3>
+          <div className="select-form">
+            <InputLabel id="desde-label">Desde</InputLabel>
+            <TextField
+              labelId="desde-label"
+              variant="outlined"
+              defaultValue={desdeClientesTotales}
+              className="inputs"
+              type="date"
+              onChange={(e) => onChangeSetter(e, setDesdeClientesTotales)}
+            />
+          </div>
+          <div className="select-form">
+            <InputLabel id="hasta-label">Hasta</InputLabel>
+            <TextField
+              labelId="hasta-label"
+              variant="outlined"
+              defaultValue={HastaClientesTotales}
+              className="inputs"
+              type="date"
+              onChange={(e) => onChangeSetter(e, setHastaClientesTotales)}
+            />
+          </div>
+          <Grid item xs={12} md={12} lg={12}>
+            {desdeClientesTotales.length > 0 &&
+            HastaClientesTotales.length > 0 ? (
+              <Button
+                className="inputs"
+                variant="contained"
+                color="primary"
+                onClick={onClickBuscarClientes}
+              >
+                Buscar
+              </Button>
+            ) : (
+              ""
+            )}
+          </Grid>
+        </div>
+
+        <div className="consultas-por-feria-select">
+          <div className="select-form">
+            <h3>Consultas de Clientes por feria</h3>
+            <div className="select-form">
+              <InputLabel id="pais-select-label">Ferias</InputLabel>
+              <Select
+                labelId="pais-select-label"
+                id="pais-simple-select"
+                className="inputs"
+                onChange={(e) => onChangeSetter(e, setIdFeriaCliente)}
+                autoWidth
+                defaultValue={id_feria_cliente}
+              >
+                {feriasSelect.map((pa) => {
+                  return (
+                    <MenuItem key={pa.id_feria} value={pa.id_feria}>
+                      {pa.nombre_feria}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </div>
+            <InputLabel id="desde-label">Desde</InputLabel>
+            <TextField
+              labelId="desde-label"
+              variant="outlined"
+              defaultValue={desdeClientePorFeria}
+              className="inputs"
+              type="date"
+              onChange={(e) => onChangeSetter(e, setDesdeClientePorFeria)}
+            />
+          </div>
+          <div className="select-form">
+            <InputLabel id="hasta-label">Hasta</InputLabel>
+            <TextField
+              labelId="hasta-label"
+              variant="outlined"
+              defaultValue={hastaClientePorFeria}
+              className="inputs"
+              type="date"
+              onChange={(e) => onChangeSetter(e, setHastaClientePorFeria)}
+            />
+          </div>
+          <Grid item xs={12} md={12} lg={12}>
+            {desdeClientePorFeria.length > 0 &&
+            hastaClientePorFeria.length &&
+            id_feria_cliente ? (
+              <Button
+                className="inputs"
+                variant="contained"
+                color="primary"
+                onClick={onClickBuscarClientesByFeria}
+              >
+                Buscar
+              </Button>
+            ) : (
+              ""
+            )}
+          </Grid>
+        </div>
       </Paper>
       <div className="grafica-consulta" container spacing={3}>
         <Grid item xs={6} md={6} lg={6}>
+          {/* consumo */}
           {ferias.length > 0 && (
             <Paper className="grafica-space">
               <GraficaConsumo ferias={ferias} etiqueta="Total de consumo" />
@@ -271,6 +396,43 @@ function Consultas() {
                     title={"Total de consumo"}
                     amount={feriasUnica[0].consumo}
                     body={`${feriasUnica[0].feria}: desde ${desdeFeria} hasta ${hastaFeria}`}
+                  />
+                </Paper>
+              </Grid>
+            </Paper>
+          )}
+        </Grid>
+      </div>
+      <div className="grafica-consulta" container spacing={3}>
+        <Grid item xs={6} md={6} lg={6}>
+          {/* clientes */}
+          {clientesTotalesPorFeria.length > 0 && (
+            <Paper className="grafica-space">
+              <GraficaClientes
+                clientes={clientesTotalesPorFeria}
+                etiqueta="Total de clientes"
+              />
+              <Grid item xs={12} md={12} lg={12}>
+                <Paper className="grafica-space">
+                  <Totales
+                    title={"Total de clientes por feria"}
+                    amount={cantidadClientesTotales}
+                    body={`Desde: ${desdeClientesTotales} / Hasta ${HastaClientesTotales}`}
+                  />
+                </Paper>
+              </Grid>
+            </Paper>
+          )}
+        </Grid>
+        <Grid item xs={6} md={6} lg={6}>
+          {clientesPorFeria.length > 0 && (
+            <Paper className="grafica-space">
+              <Grid item xs={12} md={12} lg={12}>
+                <Paper className="grafica-space">
+                  <Totales
+                    title={"Total de clientes"}
+                    amount={clientesPorFeria[0].clientes}
+                    body={`${clientesPorFeria[0].nombre_feria}: desde ${desdeClientePorFeria} hasta ${hastaClientePorFeria}`}
                   />
                 </Paper>
               </Grid>

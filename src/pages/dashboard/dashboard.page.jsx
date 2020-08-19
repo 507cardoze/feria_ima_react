@@ -7,8 +7,8 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
 import GraficaConsumo from "../../components/graficaBar/graficaBar.component";
+import GraficaClientes from "../../components/graficaBar/graficaBarClientes.component";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import moment from "moment";
 
 function Dashboard() {
   toast.configure({
@@ -40,10 +40,17 @@ function Dashboard() {
 
   const [ferias, setFerias] = useState([]);
   const [cantidad, setCantidad] = useState([]);
+
+  const [clientes, setClientes] = useState([]);
+  const [cantidadClientes, setCantidadClientes] = useState([]);
+
   const [isLoading, setisLoading] = useState(true);
 
   const url = `${process.env.REACT_APP_BACK_END}/api/consultas/total-ferias`;
   const urlCantidad = `${process.env.REACT_APP_BACK_END}/api/consultas/total-transacciones`;
+
+  const urlClientes = `${process.env.REACT_APP_BACK_END}/api/consultas/total-clientes`;
+  const urlCantidadClientes = `${process.env.REACT_APP_BACK_END}/api/consultas/cantidad-clientes`;
 
   useEffect(() => {
     const header = {
@@ -70,7 +77,9 @@ function Dashboard() {
     };
     fetchdata(url, header, setFerias);
     fetchdata(urlCantidad, header, setCantidad);
-  }, [url, urlCantidad]);
+    fetchdata(urlClientes, header, setClientes);
+    fetchdata(urlCantidadClientes, header, setCantidadClientes);
+  }, [url, urlCantidad, urlClientes, urlCantidadClientes]);
 
   return (
     <MainLayout Tittle="Dashboard">
@@ -78,7 +87,6 @@ function Dashboard() {
         <CircularProgress />
       ) : (
         <Grid container spacing={3}>
-          {/* Chart */}
           <Grid item xs={12} md={8} lg={9}>
             <Paper className={fixedHeightPaper}>
               {ferias.length > 0 && (
@@ -91,7 +99,26 @@ function Dashboard() {
               <Totales
                 title={"Total de Consumo por ferias"}
                 amount={cantidad}
-                body={`Hasta hoy, ${moment().format("MMMM Do YYYY")}`}
+                body={`Hasta hoy`}
+              />
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={8} lg={9}>
+            <Paper className={fixedHeightPaper}>
+              {clientes.length > 0 && (
+                <GraficaClientes
+                  clientes={clientes}
+                  etiqueta="Total de clientes"
+                />
+              )}
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={4} lg={3}>
+            <Paper className={fixedHeightPaper}>
+              <Totales
+                title={"Total de clientes por ferias"}
+                amount={cantidadClientes}
+                body={`Hasta hoy`}
               />
             </Paper>
           </Grid>
