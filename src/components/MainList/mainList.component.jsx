@@ -55,12 +55,20 @@ function MainList() {
           <ListItemText primary="Dashboard" />
         </ListItem>
       </Link>
-      <Link to="/transacciones" className={classes.links}>
+      {/* <Link to="/transacciones" className={classes.links}>
         <ListItem button className="list-fix-padding">
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
           <ListItemText primary="Transacciones" />
+        </ListItem>
+      </Link> */}
+      <Link to="/consultas" className={classes.links}>
+        <ListItem button className="list-fix-padding">
+          <ListItemIcon>
+            <BarChartIcon />
+          </ListItemIcon>
+          <ListItemText primary="Consultas" />
         </ListItem>
       </Link>
       <Link to="/inventario" className={classes.links}>
@@ -85,14 +93,6 @@ function MainList() {
             <AddShoppingCartIcon />
           </ListItemIcon>
           <ListItemText primary="Productos" />
-        </ListItem>
-      </Link>
-      <Link to="/consultas" className={classes.links}>
-        <ListItem button className="list-fix-padding">
-          <ListItemIcon>
-            <BarChartIcon />
-          </ListItemIcon>
-          <ListItemText primary="Consultas" />
         </ListItem>
       </Link>
 

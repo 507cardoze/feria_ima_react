@@ -11,6 +11,13 @@
   }
 }
 
-.inputs {
-  margin-top: 20px;
+.grid-principal-inputs {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  padding: 50px;
+  .inputs {
+    margin: 15px;
+  }
 }

@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
 import GraficaConsumo from "../../components/graficaBar/graficaBar.component";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import moment from "moment";
 
 function Dashboard() {
   toast.configure({
@@ -81,16 +82,17 @@ function Dashboard() {
           <Grid item xs={12} md={8} lg={9}>
             <Paper className={fixedHeightPaper}>
               {ferias.length > 0 && (
-                <GraficaConsumo
-                  ferias={ferias}
-                  etiqueta="Total de transacciones"
-                />
+                <GraficaConsumo ferias={ferias} etiqueta="Total de Consumo" />
               )}
             </Paper>
           </Grid>
           <Grid item xs={12} md={4} lg={3}>
             <Paper className={fixedHeightPaper}>
-              <Totales title={"Total de Transacciones"} amount={cantidad} />
+              <Totales
+                title={"Total de Consumo por ferias"}
+                amount={cantidad}
+                body={`Hasta hoy, ${moment().format("MMMM Do YYYY")}`}
+              />
             </Paper>
           </Grid>
         </Grid>
