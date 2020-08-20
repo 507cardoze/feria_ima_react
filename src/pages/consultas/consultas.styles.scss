@@ -1,23 +1,23 @@
 .grafica-consulta {
   display: flex;
-  flex-grow: 1;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 1rem;
   .grafica-space {
-    padding: 20px;
+    padding: 1rem;
   }
 }
 
 .grid-principal-inputs {
   display: flex;
   width: 100%;
+  flex-wrap: wrap;
+  min-height: 350px;
   justify-content: space-around;
   align-items: center;
-  padding: 50px;
+  padding: 1rem;
   .inputs {
-    margin: 15px;
+    margin: 0.8rem;
   }
 }

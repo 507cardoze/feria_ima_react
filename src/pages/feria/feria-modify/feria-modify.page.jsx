@@ -139,7 +139,7 @@ function FeriaModify(match) {
         setter(filtered);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     const fetchDataBuscar = async () => {
@@ -165,7 +165,7 @@ function FeriaModify(match) {
         );
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError("No hay conexion...");
       }
     };
     fetchDataBuscar();

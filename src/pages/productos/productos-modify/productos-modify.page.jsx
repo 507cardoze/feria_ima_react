@@ -91,7 +91,7 @@ function ProductosModify(match) {
         });
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     fetchDataBuscar();

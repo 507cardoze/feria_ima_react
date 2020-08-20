@@ -21,8 +21,11 @@ function Dashboard() {
     paper: {
       padding: theme.spacing(2),
       display: "flex",
-      overflow: "auto",
       flexDirection: "column",
+      alignContent: "center",
+      justifyContent: "center",
+      maxHeight: 450,
+      width: "100%",
     },
     fixedHeight: {
       height: "auto",
@@ -72,7 +75,7 @@ function Dashboard() {
         setter(filtered);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     fetchdata(url, header, setFerias);

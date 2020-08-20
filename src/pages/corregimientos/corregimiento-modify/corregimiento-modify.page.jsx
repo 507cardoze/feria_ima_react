@@ -137,7 +137,7 @@ function CorregimientoModify(match) {
         fetchdata(`${urlDistrito}${dat[0].id_provincia}`, header, setDistritos);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     fetchDataBuscar();

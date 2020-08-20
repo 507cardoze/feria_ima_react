@@ -5,7 +5,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
+import PersonIcon from "@material-ui/icons/Person";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -18,6 +19,8 @@ import HomeWorkIcon from "@material-ui/icons/HomeWork";
 import PublicIcon from "@material-ui/icons/Public";
 import TerrainIcon from "@material-ui/icons/Terrain";
 import HouseIcon from "@material-ui/icons/House";
+import ListAltIcon from "@material-ui/icons/ListAlt";
+import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 import "./mainList.styles.scss";
 
 function MainList() {
@@ -27,6 +30,12 @@ function MainList() {
     setOpen(!open);
   };
 
+  const [openConsultas, setOpenConsultas] = useState(true);
+
+  const handleClickConsultas = () => {
+    setOpenConsultas(!openConsultas);
+  };
+
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "100%",
@@ -34,7 +43,7 @@ function MainList() {
       backgroundColor: theme.palette.background.paper,
     },
     nested: {
-      paddingLeft: theme.spacing(2),
+      paddingLeft: theme.spacing(4),
     },
     links: {
       textDecoration: "none",
@@ -63,20 +72,43 @@ function MainList() {
           <ListItemText primary="Transacciones" />
         </ListItem>
       </Link> */}
-      <Link to="/consultas" className={classes.links}>
+      <ListItem
+        button
+        onClick={handleClickConsultas}
+        className="list-fix-padding"
+      >
+        <ListItemIcon>
+          <BarChartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Consultas" />
+        {openConsultas ? <ExpandLess /> : <ExpandMore />}
+      </ListItem>
+      <Collapse in={openConsultas} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <Link to="/consultas-consumo" className={classes.links}>
+            <ListItem button className={`${classes.nested} list-fix-padding`}>
+              <ListItemIcon>
+                <ShoppingBasketIcon />
+              </ListItemIcon>
+              <ListItemText primary="Por consumos" />
+            </ListItem>
+          </Link>
+          <Link to="/consultas-clientes" className={classes.links}>
+            <ListItem button className={`${classes.nested} list-fix-padding`}>
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Por clientes" />
+            </ListItem>
+          </Link>
+        </List>
+      </Collapse>
+      <Link to="/inventario" className={classes.links}>
         <ListItem button className="list-fix-padding">
           <ListItemIcon>
-            <BarChartIcon />
+            <ListAltIcon />
           </ListItemIcon>
-          <ListItemText primary="Consultas" />
-        </ListItem>
-      </Link>
-      <Link to="/inventario" className={classes.links}>
-        <ListItem button className={`${classes.nested} list-fix-padding`}>
-          <ListItemIcon>
-            <HomeWorkIcon />
-          </ListItemIcon>
-          <ListItemText primary="Inventario" />
+          <ListItemText primary="Inventarios" />
         </ListItem>
       </Link>
       <Link to="/clientes" className={classes.links}>
@@ -96,11 +128,11 @@ function MainList() {
         </ListItem>
       </Link>
       <Link to="/feria" className={classes.links}>
-        <ListItem button className={`${classes.nested} list-fix-padding`}>
+        <ListItem button className="list-fix-padding">
           <ListItemIcon>
-            <HomeWorkIcon />
+            <BeachAccessIcon />
           </ListItemIcon>
-          <ListItemText primary="Feria" />
+          <ListItemText primary="Ferias" />
         </ListItem>
       </Link>
       <ListItem button onClick={handleClick} className="list-fix-padding">

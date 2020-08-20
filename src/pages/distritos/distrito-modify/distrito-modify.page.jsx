@@ -86,7 +86,7 @@ function DistritoModify(match) {
         });
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError("No hay conexion...");
       }
     };
     const fetchdata = async (url, header, setter) => {
@@ -98,7 +98,7 @@ function DistritoModify(match) {
         setter(filtered);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     const header = {

@@ -95,7 +95,7 @@ function PaisModify(match) {
         });
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     fetchData();

@@ -7,7 +7,8 @@ import Clientes from "./pages/clientes/clientes.page";
 import ClientesModify from "./pages/clientes/clientes-modify/clientes-modify.page";
 import Productos from "./pages/productos/productos.page";
 import ProductosModify from "./pages/productos/productos-modify/productos-modify.page";
-import Consultas from "./pages/consultas/consultas.page";
+import ConsultasConsumo from "./pages/consultas/consultas.page";
+import ConsultasClientes from "./pages/consultas/consultasClientes";
 import Login from "./pages/login/login.page";
 import Pais from "./pages/pais/pais.page";
 import PaisModify from "./pages/pais/pais-modify/pais-modify.page";
@@ -48,7 +49,12 @@ function App() {
           <Route path="/clientes/:id" component={ClientesModify} />
           <Route exact path="/productos" component={Productos} />
           <Route path="/productos/:id" component={ProductosModify} />
-          <Route exact path="/consultas" component={Consultas} />
+          <Route exact path="/consultas-consumo" component={ConsultasConsumo} />
+          <Route
+            exact
+            path="/consultas-clientes"
+            component={ConsultasClientes}
+          />
           <Route exact path="/pais" component={Pais} />
           <Route path="/pais/:id" component={PaisModify} />
           <Route exact path="/provincias" component={Provincias} />

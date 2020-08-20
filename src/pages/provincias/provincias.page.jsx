@@ -164,7 +164,7 @@ function Provincias() {
         setter(filtered);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     fetchdata(urlPais, header, setPais);
@@ -191,7 +191,7 @@ function Provincias() {
         setter(filtered);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     fetchdata(urlProvincia, header, setRows);

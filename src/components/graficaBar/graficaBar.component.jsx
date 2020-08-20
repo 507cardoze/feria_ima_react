@@ -8,7 +8,7 @@ function GraficaConsumo({ ferias, etiqueta }) {
     const chart = () => {
       const label = ferias.map((feria) => feria.feria);
       const data = ferias.map((feria) => feria.consumo);
-      const colores = "#3f51b5";
+      const colores = "#626eb5";
       setChartData({
         labels: label,
         datasets: [
@@ -21,7 +21,7 @@ function GraficaConsumo({ ferias, etiqueta }) {
       });
     };
     chart();
-  }, [ferias]);
+  }, [ferias, etiqueta]);
 
   return (
     <Bar

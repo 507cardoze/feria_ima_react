@@ -160,7 +160,7 @@ function Pais() {
         setter(filtered);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     fetchdata(urlPais, header, setRows);
@@ -185,7 +185,7 @@ function Pais() {
         setter(filtered);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
     fetchdata(urlPais, header, setRows);

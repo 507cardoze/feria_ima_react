@@ -94,7 +94,7 @@ function ProvinciaModify(match) {
         setter(filtered);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
 
@@ -112,7 +112,7 @@ function ProvinciaModify(match) {
         setProvincia(dat);
         setisLoading(true);
       } catch (error) {
-        msgError(error);
+        msgError(`No hay conexion... ${error}`);
       }
     };
 

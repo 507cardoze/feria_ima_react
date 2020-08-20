@@ -8,7 +8,7 @@ function GraficaClientes({ clientes, etiqueta }) {
     const chart = () => {
       const label = clientes.map((cliente) => cliente.nombre_feria);
       const data = clientes.map((cliente) => cliente.clientes);
-      const colores = "#3f51b5";
+      const colores = "#626eb5";
       setChartData({
         labels: label,
         datasets: [
@@ -21,7 +21,7 @@ function GraficaClientes({ clientes, etiqueta }) {
       });
     };
     chart();
-  }, [clientes]);
+  }, [clientes, etiqueta]);
 
   return (
     <Bar
