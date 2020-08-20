@@ -229,7 +229,7 @@ function Provincias() {
                     className="inputs"
                     onChange={(e) => onChange(e, setId_pais)}
                     autoWidth
-                    defaultValue={id_pais}
+                    value={id_pais}
                   >
                     {pais.map((pa) => {
                       return (

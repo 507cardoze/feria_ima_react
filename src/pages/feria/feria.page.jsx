@@ -298,7 +298,7 @@ function Feria() {
                     className="inputs"
                     onChange={(e) => onChangeProvincia(e)}
                     autoWidth
-                    defaultValue={id_provincia}
+                    value={id_provincia}
                   >
                     {provincias.map((pa) => {
                       return (
@@ -317,7 +317,7 @@ function Feria() {
                     className="inputs"
                     onChange={(e) => onChangeDistrito(e)}
                     autoWidth
-                    defaultValue={id_distrito}
+                    value={id_distrito}
                     disabled={distritos.length > 0 ? false : true}
                   >
                     {distritos.map((pa) => {
@@ -339,7 +339,7 @@ function Feria() {
                     className="inputs"
                     onChange={(e) => onChange(e, setIdCorregimiento)}
                     autoWidth
-                    defaultValue={id_corregimiento}
+                    value={id_corregimiento}
                     disabled={corregimientos.length > 0 ? false : true}
                   >
                     {corregimientos.map((pa) => {

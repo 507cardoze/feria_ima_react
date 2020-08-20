@@ -349,25 +349,35 @@ function Inventario() {
                     className="inputs"
                     type="number"
                     onChange={(e) => {
-                      onChangeSetter(e, setTotalInicialDisponible);
-                      onChangeSetter(e, setDisponibleReal);
+                      if (parseInt(e.target.value) >= 0) {
+                        onChangeSetter(e, setTotalInicialDisponible);
+                        onChangeSetter(e, setDisponibleReal);
+                      }
                     }}
                   />
                   <TextField
                     label="Total máximo diario"
                     variant="outlined"
-                    defaultValue={total_max_diario}
+                    value={total_max_diario}
                     className="inputs"
                     type="number"
-                    onChange={(e) => onChangeSetter(e, setTotalMaxDiario)}
+                    onChange={(e) => {
+                      if (parseInt(e.target.value) >= 0) {
+                        onChangeSetter(e, setTotalMaxDiario);
+                      }
+                    }}
                   />
                   <TextField
                     label="Frecuencia de compra"
                     variant="outlined"
-                    defaultValue={frecuencia_compra_dias}
+                    value={frecuencia_compra_dias}
                     className="inputs"
                     type="number"
-                    onChange={(e) => onChangeSetter(e, setFrecuenciaCompraDias)}
+                    onChange={(e) => {
+                      if (parseInt(e.target.value) >= 0) {
+                        onChangeSetter(e, setFrecuenciaCompraDias);
+                      }
+                    }}
                   />
                   <div className="select-form">
                     <InputLabel id="inicio-label">Fecha de inicio</InputLabel>

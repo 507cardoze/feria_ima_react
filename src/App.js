@@ -1,8 +1,6 @@
 import React, { memo } from "react";
-import "fontsource-roboto";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Dashboard from "./pages/dashboard/dashboard.page";
-import Transacciones from "./pages/transacciones/transacciones.page";
 import Clientes from "./pages/clientes/clientes.page";
 import ClientesModify from "./pages/clientes/clientes-modify/clientes-modify.page";
 import Productos from "./pages/productos/productos.page";
@@ -26,8 +24,7 @@ import Inventario from "./pages/inventario/inventario.page";
 import InventarioModify from "./pages/inventario/inventario-modify/inventario-modify.page";
 import InventarioAjuste from "./pages/inventario-ajuste/inventario-ajuste.page";
 import InventarioAjusteModify from "./pages/inventario-ajuste/inventario-ajuste-modify/inventario-ajuste-modify.page";
-import "moment/locale/es.js";
-import "react-toastify/dist/ReactToastify.css";
+import NotFoundView from "./pages/notFound/notFound.page";
 import "./App.scss";
 
 function App() {
@@ -37,7 +34,6 @@ function App() {
         {localStorage.token_key === undefined && <Redirect to="/login" />}
         <Switch>
           <Route exact path="/" component={Dashboard} />
-          <Route exact path="/transacciones" component={Transacciones} />
           <Route exact path="/inventario" component={Inventario} />
           <Route path="/inventario/:id" component={InventarioModify} />
           <Route exact path="/inventario-ajuste" component={InventarioAjuste} />
@@ -68,6 +64,7 @@ function App() {
           <Route exact path="/tipo-ajustes" component={TipoAjustes} />
           <Route exact path="/tipo-ajustes/:id" component={TipoModify} />
           <Route exact path="/login" component={Login} />
+          <Route path="*" component={NotFoundView} />
         </Switch>
       </BrowserRouter>
     </div>

@@ -131,6 +131,7 @@ function Login() {
               margin="normal"
               fullWidth
               label="Usuario"
+              value={UserName}
               autoFocus
               onChange={handleOnChangeUserName}
             />
@@ -140,6 +141,7 @@ function Login() {
               fullWidth
               label="Contraseña"
               type="password"
+              value={Password}
               autoComplete="current-password"
               onChange={handleOnChangePassword}
             />

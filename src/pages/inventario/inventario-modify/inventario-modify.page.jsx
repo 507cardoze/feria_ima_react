@@ -257,7 +257,7 @@ function InventarioModify(match) {
                       className="inputs"
                       onChange={(e) => onChangeSetter(e, setIdPais)}
                       autoWidth
-                      defaultValue={id_pais}
+                      value={id_pais}
                     >
                       {pais.map((pa) => {
                         return (
@@ -276,7 +276,7 @@ function InventarioModify(match) {
                       className="inputs"
                       onChange={fetchDataBuscar}
                       autoWidth
-                      defaultValue={id_feria}
+                      value={id_feria}
                     >
                       {ferias.map((pa) => {
                         return (
@@ -297,7 +297,7 @@ function InventarioModify(match) {
                       className="inputs"
                       onChange={(e) => onChangeSetter(e, setIdProducto)}
                       autoWidth
-                      defaultValue={id_producto}
+                      value={id_producto}
                     >
                       {productos.map((pa) => {
                         return (
@@ -314,7 +314,7 @@ function InventarioModify(match) {
                   <TextField
                     label="Observación"
                     variant="outlined"
-                    defaultValue={observacion}
+                    value={observacion}
                     className="inputs"
                     type="text"
                     rows={3}
@@ -326,46 +326,64 @@ function InventarioModify(match) {
                   <TextField
                     label="Total inicial disponible"
                     variant="outlined"
-                    defaultValue={total_inicial_disponible}
+                    value={total_inicial_disponible}
                     className="inputs"
                     type="number"
-                    onChange={(e) =>
-                      onChangeSetter(e, setTotalInicialDisponible)
-                    }
+                    onChange={(e) => {
+                      if (parseInt(e.target.value) >= 0) {
+                        onChangeSetter(e, setTotalInicialDisponible);
+                      }
+                    }}
                   />
                   <TextField
                     label="Disponible real"
                     variant="outlined"
-                    defaultValue={disponible_real}
+                    value={disponible_real}
                     className="inputs"
                     type="number"
-                    onChange={(e) => onChangeSetter(e, setDisponibleReal)}
+                    onChange={(e) => {
+                      if (parseInt(e.target.value) >= 0) {
+                        onChangeSetter(e, setDisponibleReal);
+                      }
+                    }}
                   />
                   <TextField
                     label="Total máximo diario"
                     variant="outlined"
-                    defaultValue={total_max_diario}
+                    value={total_max_diario}
                     className="inputs"
                     type="number"
-                    onChange={(e) => onChangeSetter(e, setTotalMaxDiario)}
+                    onChange={(e) => {
+                      if (parseInt(e.target.value) >= 0) {
+                        onChangeSetter(e, setTotalMaxDiario);
+                      }
+                    }}
                   />
                   <TextField
                     label="Frecuencia de compra"
                     variant="outlined"
-                    defaultValue={frecuencia_compra_dias}
+                    value={frecuencia_compra_dias}
                     className="inputs"
                     type="number"
-                    onChange={(e) => onChangeSetter(e, setFrecuenciaCompraDias)}
+                    onChange={(e) => {
+                      if (parseInt(e.target.value) >= 0) {
+                        onChangeSetter(e, setFrecuenciaCompraDias);
+                      }
+                    }}
                   />
                   <div className="select-form">
                     <InputLabel id="inicio-label">Fecha de inicio</InputLabel>
                     <TextField
                       labelId="inicio-label"
                       variant="outlined"
-                      defaultValue={fecha_inicio}
+                      value={fecha_inicio}
                       className="inputs"
                       type="date"
-                      onChange={(e) => onChangeSetter(e, setFechaInicio)}
+                      onChange={(e) => {
+                        if (parseInt(e.target.value) >= 0) {
+                          onChangeSetter(e, setFechaInicio);
+                        }
+                      }}
                     />
                   </div>
                   <div className="select-form">
@@ -373,7 +391,7 @@ function InventarioModify(match) {
                     <TextField
                       labelId="fin-label"
                       variant="outlined"
-                      defaultValue={fecha_fin}
+                      value={fecha_fin}
                       className="inputs"
                       type="date"
                       onChange={(e) => onChangeSetter(e, setFechaFin)}

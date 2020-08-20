@@ -219,18 +219,21 @@ function Pais() {
                   label="Nomenclatura"
                   variant="outlined"
                   className="inputs"
+                  value={nomesclatura}
                   onChange={(e) => onChange(e, setNomesclatura)}
                 />
                 <TextField
                   label="Pais"
                   variant="outlined"
                   className="inputs"
+                  value={pais}
                   onChange={(e) => onChange(e, setPais)}
                 />
                 <TextField
                   label="Nacionalidad"
                   variant="outlined"
                   className="inputs"
+                  value={nacionalidad}
                   onChange={(e) => onChange(e, setNacionalidad)}
                 />
                 <FormControlLabel

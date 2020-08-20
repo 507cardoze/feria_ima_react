@@ -223,7 +223,7 @@ function InventarioAjusteModify(match) {
                       className="inputs"
                       onChange={fetchDataBuscar}
                       autoWidth
-                      defaultValue={id_inventario}
+                      value={id_inventario}
                     >
                       {inventarios.map((pa) => {
                         return (
@@ -247,7 +247,7 @@ function InventarioAjusteModify(match) {
                       className="inputs"
                       onChange={(e) => onChangeSetter(e, setIdTipoAjuste)}
                       autoWidth
-                      defaultValue={id_tipo_ajuste}
+                      value={id_tipo_ajuste}
                     >
                       {tipo_ajuste.map((pa) => {
                         return (
@@ -266,7 +266,7 @@ function InventarioAjusteModify(match) {
                   <TextField
                     label="Cantidad de ajuste"
                     variant="outlined"
-                    defaultValue={cantidad_ajuste}
+                    value={cantidad_ajuste}
                     className="inputs"
                     type="number"
                     onChange={(e) => onChangeSetter(e, setCantidadAjuste)}
@@ -274,7 +274,7 @@ function InventarioAjusteModify(match) {
                   <TextField
                     label="Observación"
                     variant="outlined"
-                    defaultValue={observacion}
+                    value={observacion}
                     className="inputs"
                     type="text"
                     rows={3}

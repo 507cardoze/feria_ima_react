@@ -285,7 +285,7 @@ function InventarioAjuste() {
                       setCantidadAjuste(0);
                     }}
                     autoWidth
-                    defaultValue={id_tipo_ajuste}
+                    value={id_tipo_ajuste}
                   >
                     {tipo_ajuste.map((pa) => {
                       return (
@@ -325,7 +325,7 @@ function InventarioAjuste() {
                   <TextField
                     label="Observación"
                     variant="outlined"
-                    defaultValue={observacion}
+                    value={observacion}
                     className="inputs"
                     type="text"
                     rows={3}

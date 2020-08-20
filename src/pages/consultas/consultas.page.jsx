@@ -145,7 +145,7 @@ function ConsultasConsumo() {
                   <TextField
                     labelId="desde-label"
                     variant="outlined"
-                    defaultValue={desde}
+                    value={desde}
                     className="inputs"
                     type="date"
                     onChange={(e) => onChangeSetter(e, setDesde)}
@@ -156,7 +156,7 @@ function ConsultasConsumo() {
                   <TextField
                     labelId="hasta-label"
                     variant="outlined"
-                    defaultValue={hasta}
+                    value={hasta}
                     className="inputs"
                     type="date"
                     onChange={(e) => onChangeSetter(e, setHasta)}
@@ -195,7 +195,7 @@ function ConsultasConsumo() {
                       className="inputs"
                       onChange={(e) => onChangeSetter(e, setIdFeria)}
                       autoWidth
-                      defaultValue={id_feria}
+                      value={id_feria}
                     >
                       {feriasSelect.map((pa) => {
                         return (
@@ -210,7 +210,7 @@ function ConsultasConsumo() {
                   <TextField
                     labelId="desde-label"
                     variant="outlined"
-                    defaultValue={desdeFeria}
+                    value={desdeFeria}
                     className="inputs"
                     type="date"
                     onChange={(e) => onChangeSetter(e, setDesdeFeria)}
@@ -221,7 +221,7 @@ function ConsultasConsumo() {
                   <TextField
                     labelId="hasta-label"
                     variant="outlined"
-                    defaultValue={hastaFeria}
+                    value={hastaFeria}
                     className="inputs"
                     type="date"
                     onChange={(e) => onChangeSetter(e, setHastaFeria)}

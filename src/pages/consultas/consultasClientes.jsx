@@ -149,7 +149,7 @@ function ConsultasClientes() {
                 <TextField
                   labelId="desde-label"
                   variant="outlined"
-                  defaultValue={desdeClientesTotales}
+                  value={desdeClientesTotales}
                   className="inputs"
                   type="date"
                   onChange={(e) => onChangeSetter(e, setDesdeClientesTotales)}
@@ -160,7 +160,7 @@ function ConsultasClientes() {
                 <TextField
                   labelId="hasta-label"
                   variant="outlined"
-                  defaultValue={HastaClientesTotales}
+                  value={HastaClientesTotales}
                   className="inputs"
                   type="date"
                   onChange={(e) => onChangeSetter(e, setHastaClientesTotales)}
@@ -201,7 +201,7 @@ function ConsultasClientes() {
                     className="inputs"
                     onChange={(e) => onChangeSetter(e, setIdFeriaCliente)}
                     autoWidth
-                    defaultValue={id_feria_cliente}
+                    value={id_feria_cliente}
                   >
                     {feriasSelect.map((pa) => {
                       return (
@@ -216,7 +216,7 @@ function ConsultasClientes() {
                 <TextField
                   labelId="desde-label"
                   variant="outlined"
-                  defaultValue={desdeClientePorFeria}
+                  value={desdeClientePorFeria}
                   className="inputs"
                   type="date"
                   onChange={(e) => onChangeSetter(e, setDesdeClientePorFeria)}
@@ -227,7 +227,7 @@ function ConsultasClientes() {
                 <TextField
                   labelId="hasta-label"
                   variant="outlined"
-                  defaultValue={hastaClientePorFeria}
+                  value={hastaClientePorFeria}
                   className="inputs"
                   type="date"
                   onChange={(e) => onChangeSetter(e, setHastaClientePorFeria)}

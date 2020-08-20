@@ -276,7 +276,7 @@ function Corregimientos() {
                     className="inputs"
                     onChange={(e) => onChange(e)}
                     autoWidth
-                    defaultValue={id_provincia ? id_provincia : " "}
+                    value={id_provincia ? id_provincia : " "}
                   >
                     {provincias.map((pa) => {
                       return (
@@ -295,7 +295,7 @@ function Corregimientos() {
                     className="inputs"
                     onChange={(e) => onChangeSetter(e, setIdDistrito)}
                     autoWidth
-                    defaultValue={id_distrito ? id_distrito : " "}
+                    value={id_distrito ? id_distrito : " "}
                     disabled={distritos.length > 0 ? false : true}
                   >
                     {distritos.map((pa) => {
@@ -311,7 +311,7 @@ function Corregimientos() {
                 <TextField
                   label="Corregimiento"
                   variant="outlined"
-                  defaultValue={nombre_corregimiento}
+                  value={nombre_corregimiento}
                   className="inputs"
                   type="text"
                   onChange={(e) =>

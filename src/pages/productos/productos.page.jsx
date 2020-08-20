@@ -189,7 +189,7 @@ function Productos() {
               <TextField
                 label="Nombre del producto"
                 variant="outlined"
-                defaultValue={nombre_productos}
+                value={nombre_productos}
                 className="inputs"
                 type="text"
                 onChange={(e) => onChangeSetter(e, setNombreProductos)}
@@ -197,10 +197,14 @@ function Productos() {
               <TextField
                 label="Frecuencia de compra"
                 variant="outlined"
-                defaultValue={frecuencia_compra_dias}
+                value={frecuencia_compra_dias}
                 className="inputs"
                 type="number"
-                onChange={(e) => onChangeSetter(e, setFrecuenciaCompra)}
+                onChange={(e) => {
+                  if (parseInt(e.target.value) >= 0) {
+                    onChangeSetter(e, setFrecuenciaCompra);
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12} md={6} lg={6}>

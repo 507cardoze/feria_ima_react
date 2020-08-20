@@ -229,7 +229,7 @@ function Distritos() {
                     className="inputs"
                     onChange={(e) => onChange(e, setId_provincia)}
                     autoWidth
-                    defaultValue={id_provincia}
+                    value={id_provincia}
                   >
                     {provincias.map((pa) => {
                       return (

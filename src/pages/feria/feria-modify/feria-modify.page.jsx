@@ -222,7 +222,7 @@ function FeriaModify(match) {
                   className="modify-inputs"
                   onChange={(e) => onChangeProvincia(e)}
                   autoWidth
-                  defaultValue={id_provincia}
+                  value={id_provincia}
                 >
                   {provincias.map((pa) => {
                     return (
@@ -241,7 +241,7 @@ function FeriaModify(match) {
                   className="modify-inputs"
                   onChange={(e) => onChangeDistrito(e)}
                   autoWidth
-                  defaultValue={id_distrito}
+                  value={id_distrito}
                 >
                   {distritos.map((pa) => {
                     return (
@@ -262,7 +262,7 @@ function FeriaModify(match) {
                   className="modify-inputs"
                   onChange={(e) => onChange(e, setIdCorregimiento)}
                   autoWidth
-                  defaultValue={id_corregimiento}
+                  value={id_corregimiento}
                 >
                   {corregimientos.map((pa) => {
                     return (

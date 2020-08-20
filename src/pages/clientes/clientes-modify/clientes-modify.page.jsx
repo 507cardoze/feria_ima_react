@@ -141,7 +141,7 @@ function ClientesModify(match) {
                 <TextField
                   label="Cedula"
                   variant="outlined"
-                  defaultValue={num_documento}
+                  value={num_documento}
                   className="inputs"
                   type="text"
                   onChange={(e) => onChangeSetter(e, setNumDocumento)}
@@ -149,7 +149,7 @@ function ClientesModify(match) {
                 <TextField
                   label="Nombre"
                   variant="outlined"
-                  defaultValue={nombre}
+                  value={nombre}
                   className="inputs"
                   type="text"
                   onChange={(e) => onChangeSetter(e, setnombre)}
@@ -157,7 +157,7 @@ function ClientesModify(match) {
                 <TextField
                   label="Apellido"
                   variant="outlined"
-                  defaultValue={apellido}
+                  value={apellido}
                   className="inputs"
                   type="text"
                   onChange={(e) => onChangeSetter(e, setApellido)}
@@ -165,7 +165,7 @@ function ClientesModify(match) {
                 <TextField
                   label="Nacionalidad"
                   variant="outlined"
-                  defaultValue={nacionalidad}
+                  value={nacionalidad}
                   className="inputs"
                   type="text"
                   onChange={(e) => onChangeSetter(e, setNacionalidad)}
@@ -173,7 +173,7 @@ function ClientesModify(match) {
                 <TextField
                   label="Lugar de Nacimiento"
                   variant="outlined"
-                  defaultValue={lugar_nacimiento}
+                  value={lugar_nacimiento}
                   className="inputs"
                   multiline
                   type="text"
@@ -183,7 +183,7 @@ function ClientesModify(match) {
                 <TextField
                   label="Direccion"
                   variant="outlined"
-                  defaultValue={direccion}
+                  value={direccion}
                   className="inputs"
                   multiline
                   type="text"
@@ -201,7 +201,7 @@ function ClientesModify(match) {
                     className="inputs"
                     onChange={(e) => onChangeSetter(e, setTipoSangre)}
                     autoWidth
-                    defaultValue={tipo_sangre}
+                    value={tipo_sangre}
                   >
                     <MenuItem value="O-">O negativo</MenuItem>
                     <MenuItem value="O+">O positivo</MenuItem>
@@ -222,7 +222,7 @@ function ClientesModify(match) {
                     className="inputs"
                     onChange={(e) => onChangeSetter(e, setGenero)}
                     autoWidth
-                    defaultValue={genero}
+                    value={genero}
                   >
                     <MenuItem value="M">Masculino</MenuItem>
                     <MenuItem value="F">Femenino</MenuItem>
@@ -235,7 +235,7 @@ function ClientesModify(match) {
                   <TextField
                     labelId="nacimiento-label"
                     variant="outlined"
-                    defaultValue={fecha_nacimiento}
+                    value={fecha_nacimiento}
                     className="inputs"
                     type="date"
                     onChange={(e) => onChangeSetter(e, setFechaNacimiento)}
@@ -248,7 +248,7 @@ function ClientesModify(match) {
                   <TextField
                     labelId="expiracion-label"
                     variant="outlined"
-                    defaultValue={fecha_expiracion}
+                    value={fecha_expiracion}
                     className="inputs"
                     type="date"
                     onChange={(e) => onChangeSetter(e, setFechaExpiracion)}
