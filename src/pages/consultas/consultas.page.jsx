@@ -35,7 +35,7 @@ function ConsultasConsumo() {
   // input 1
   const [ferias, setFerias] = useState([]);
   const [cantidad, setCantidad] = useState([]);
-  const [desde, setDesde] = useState("");
+  const [desde, setDesde] = useState(`${moment().format("mm/dd/yyyy")}}`);
   const [hasta, setHasta] = useState("");
 
   //input 2

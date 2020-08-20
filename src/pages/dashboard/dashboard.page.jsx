@@ -49,11 +49,17 @@ function Dashboard() {
 
   const [isLoading, setisLoading] = useState(true);
 
+  const [feriasHoy, setFeriasHoy] = useState([]);
+  const [clientesHoy, setClientesHoy] = useState([]);
+
   const url = `${process.env.REACT_APP_BACK_END}/api/consultas/total-ferias`;
   const urlCantidad = `${process.env.REACT_APP_BACK_END}/api/consultas/total-transacciones`;
 
   const urlClientes = `${process.env.REACT_APP_BACK_END}/api/consultas/total-clientes`;
   const urlCantidadClientes = `${process.env.REACT_APP_BACK_END}/api/consultas/cantidad-clientes`;
+
+  const urlFeriasHoy = `${process.env.REACT_APP_BACK_END}/api/consultas/total-ferias-hoy`;
+  const urlClientesHoy = `${process.env.REACT_APP_BACK_END}/api/consultas/total-clientes-hoy`;
 
   useEffect(() => {
     const header = {
@@ -82,31 +88,59 @@ function Dashboard() {
     fetchdata(urlCantidad, header, setCantidad);
     fetchdata(urlClientes, header, setClientes);
     fetchdata(urlCantidadClientes, header, setCantidadClientes);
-  }, [url, urlCantidad, urlClientes, urlCantidadClientes]);
+
+    fetchdata(urlFeriasHoy, header, setFeriasHoy);
+    fetchdata(urlClientesHoy, header, setClientesHoy);
+  }, [
+    url,
+    urlCantidad,
+    urlClientes,
+    urlCantidadClientes,
+    urlFeriasHoy,
+    urlClientesHoy,
+  ]);
 
   return (
     <MainLayout Tittle="Dashboard">
       {!isLoading ? (
         <CircularProgress />
       ) : (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8} lg={9}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={5} lg={5}>
+            <Paper className={fixedHeightPaper}>
+              {feriasHoy.length > 0 && (
+                <GraficaConsumo ferias={feriasHoy} etiqueta="Consumo de hoy" />
+              )}
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={5} lg={5}>
             <Paper className={fixedHeightPaper}>
               {ferias.length > 0 && (
                 <GraficaConsumo ferias={ferias} etiqueta="Total de Consumo" />
               )}
             </Paper>
           </Grid>
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={2} lg={2}>
             <Paper className={fixedHeightPaper}>
               <Totales
-                title={"Total de Consumo por ferias"}
+                title={"Total de Consumo por ferias en el sistema"}
                 amount={cantidad}
                 body={`Hasta hoy`}
               />
             </Paper>
           </Grid>
-          <Grid item xs={12} md={8} lg={9}>
+
+          <Grid item xs={12} md={5} lg={5}>
+            <Paper className={fixedHeightPaper}>
+              {clientesHoy.length > 0 && (
+                <GraficaClientes
+                  clientes={clientesHoy}
+                  etiqueta="Total de clientes hoy"
+                />
+              )}
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={5} lg={5}>
             <Paper className={fixedHeightPaper}>
               {clientes.length > 0 && (
                 <GraficaClientes
@@ -116,10 +150,10 @@ function Dashboard() {
               )}
             </Paper>
           </Grid>
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={2} lg={2}>
             <Paper className={fixedHeightPaper}>
               <Totales
-                title={"Total de clientes por ferias"}
+                title={"Total de clientes en el sistema"}
                 amount={cantidadClientes}
                 body={`Hasta hoy`}
               />
