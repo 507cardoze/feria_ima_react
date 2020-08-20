@@ -40,9 +40,7 @@ function ConsultasConsumo() {
 
   //input 2
   const [feriasUnica, setFeriasUnica] = useState([]);
-  const [id_feria, setIdFeria] = useState("");
-  const [desdeFeria, setDesdeFeria] = useState("");
-  const [hastaFeria, setHastaFeria] = useState("");
+  const [id_feria, setIdFeria] = useState(999);
 
   const url = `${process.env.REACT_APP_BACK_END}/api/consultas/total-ferias`;
   const urlCantidad = `${process.env.REACT_APP_BACK_END}/api/consultas/total-transacciones`;
@@ -62,23 +60,22 @@ function ConsultasConsumo() {
     setter(e.target.value);
   };
 
-  const onClickBuscar = (e) => {
-    e.preventDefault();
-    fetchdata(`${url}?desde=${desde}&hasta=${hasta}`, header, setFerias);
-    fetchdata(
-      `${urlCantidad}?desde=${desde}&hasta=${hasta}`,
-      header,
-      setCantidad
-    );
-  };
-
   const onClickBuscarFeria = (e) => {
     e.preventDefault();
-    fetchdata(
-      `${urlFeriaByFechabyId}${id_feria}?desde=${desdeFeria}&hasta=${hastaFeria}`,
-      header,
-      setFeriasUnica
-    );
+    if (id_feria === 999) {
+      fetchdata(`${url}?desde=${desde}&hasta=${hasta}`, header, setFerias);
+      fetchdata(
+        `${urlCantidad}?desde=${desde}&hasta=${hasta}`,
+        header,
+        setCantidad
+      );
+    } else {
+      fetchdata(
+        `${urlFeriaByFechabyId}${id_feria}?desde=${desde}&hasta=${hasta}`,
+        header,
+        setFeriasUnica
+      );
+    }
   };
 
   const fetchdata = async (url, header, setter) => {
@@ -91,7 +88,6 @@ function ConsultasConsumo() {
       setter(filtered);
       setisLoading(true);
     } catch (error) {
-      setisLoading(true);
       msgError(error);
     }
   };
@@ -130,52 +126,6 @@ function ConsultasConsumo() {
       ) : (
         <>
           <Paper item xs={12} className="grid-principal-inputs">
-            <div className="consultas-por-ferias">
-              <Grid item xs={12} md={12} lg={12}>
-                <Typography
-                  component="h2"
-                  variant="h6"
-                  color="primary"
-                  gutterBottom
-                >
-                  Consumo por todas las ferias
-                </Typography>
-                <div className="select-form">
-                  <InputLabel id="desde-label">Desde</InputLabel>
-                  <TextField
-                    labelId="desde-label"
-                    variant="outlined"
-                    value={desde}
-                    className="inputs"
-                    type="date"
-                    onChange={(e) => onChangeSetter(e, setDesde)}
-                  />
-                </div>
-                <div className="select-form">
-                  <InputLabel id="hasta-label">Hasta</InputLabel>
-                  <TextField
-                    labelId="hasta-label"
-                    variant="outlined"
-                    value={hasta}
-                    className="inputs"
-                    type="date"
-                    onChange={(e) => onChangeSetter(e, setHasta)}
-                  />
-                </div>
-                {desde.length > 0 && hasta.length > 0 ? (
-                  <Button
-                    className="inputs"
-                    variant="contained"
-                    color="primary"
-                    onClick={onClickBuscar}
-                  >
-                    Buscar
-                  </Button>
-                ) : (
-                  ""
-                )}
-              </Grid>
-            </div>
             <div className="consultas-por-feria-select">
               <Grid item xs={12} md={12} lg={12}>
                 <div className="select-form">
@@ -197,6 +147,7 @@ function ConsultasConsumo() {
                       autoWidth
                       value={id_feria}
                     >
+                      <MenuItem value={999}>Todas</MenuItem>
                       {feriasSelect.map((pa) => {
                         return (
                           <MenuItem key={pa.id_feria} value={pa.id_feria}>
@@ -210,10 +161,10 @@ function ConsultasConsumo() {
                   <TextField
                     labelId="desde-label"
                     variant="outlined"
-                    value={desdeFeria}
+                    value={desde}
                     className="inputs"
                     type="date"
-                    onChange={(e) => onChangeSetter(e, setDesdeFeria)}
+                    onChange={(e) => onChangeSetter(e, setDesde)}
                   />
                 </div>
                 <div className="select-form">
@@ -221,13 +172,13 @@ function ConsultasConsumo() {
                   <TextField
                     labelId="hasta-label"
                     variant="outlined"
-                    value={hastaFeria}
+                    value={hasta}
                     className="inputs"
                     type="date"
-                    onChange={(e) => onChangeSetter(e, setHastaFeria)}
+                    onChange={(e) => onChangeSetter(e, setHasta)}
                   />
                 </div>
-                {desdeFeria.length > 0 && hastaFeria.length && id_feria ? (
+                {desde.length > 0 && hasta.length && id_feria ? (
                   <Button
                     className="inputs"
                     variant="contained"
@@ -270,7 +221,7 @@ function ConsultasConsumo() {
                       <Totales
                         title={"Total de consumo"}
                         amount={feriasUnica[0].consumo}
-                        body={`${feriasUnica[0].feria} : desde ${desdeFeria} hasta ${hastaFeria}`}
+                        body={`${feriasUnica[0].feria} : desde ${desde} hasta ${hasta}`}
                       />
                     </Paper>
                   </Grid>

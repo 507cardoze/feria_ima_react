@@ -34,11 +34,9 @@ function ConsultasClientes() {
   //input 3
   const [clientesTotalesPorFeria, setClientesTotalesPorFeria] = useState([]);
   const [cantidadClientesTotales, setClientestotales] = useState([]);
-  const [desdeClientesTotales, setDesdeClientesTotales] = useState("");
-  const [HastaClientesTotales, setHastaClientesTotales] = useState("");
 
   //input 4
-  const [id_feria_cliente, setIdFeriaCliente] = useState("");
+  const [id_feria_cliente, setIdFeriaCliente] = useState(999);
   const [clientesPorFeria, setClientesPorFeria] = useState([]);
   const [desdeClientePorFeria, setDesdeClientePorFeria] = useState("");
   const [hastaClientePorFeria, setHastaClientePorFeria] = useState("");
@@ -64,27 +62,27 @@ function ConsultasClientes() {
     setter(e.target.value);
   };
 
-  const onClickBuscarClientes = (e) => {
-    e.preventDefault();
-    fetchdata(
-      `${urlClientes}?desde=${desdeClientesTotales}&hasta=${HastaClientesTotales}`,
-      header,
-      setClientesTotalesPorFeria
-    );
-    fetchdata(
-      `${urlCantidadClientes}?desde=${desdeClientesTotales}&hasta=${HastaClientesTotales}`,
-      header,
-      setClientestotales
-    );
-  };
-
   const onClickBuscarClientesByFeria = (e) => {
     e.preventDefault();
-    fetchdata(
-      `${urlClientesPorFeria}${id_feria_cliente}?desde=${desdeClientePorFeria}&hasta=${hastaClientePorFeria}`,
-      header,
-      setClientesPorFeria
-    );
+
+    if (id_feria_cliente === 999) {
+      fetchdata(
+        `${urlClientes}?desde=${desdeClientePorFeria}&hasta=${hastaClientePorFeria}`,
+        header,
+        setClientesTotalesPorFeria
+      );
+      fetchdata(
+        `${urlCantidadClientes}?desde=${desdeClientePorFeria}&hasta=${hastaClientePorFeria}`,
+        header,
+        setClientestotales
+      );
+    } else {
+      fetchdata(
+        `${urlClientesPorFeria}${id_feria_cliente}?desde=${desdeClientePorFeria}&hasta=${hastaClientePorFeria}`,
+        header,
+        setClientesPorFeria
+      );
+    }
   };
 
   const fetchdata = async (url, header, setter) => {
@@ -135,54 +133,6 @@ function ConsultasClientes() {
       ) : (
         <>
           <Paper item xs={12} className="grid-principal-inputs">
-            <div className="consultas-por-ferias">
-              <Typography
-                component="h2"
-                variant="h6"
-                color="primary"
-                gutterBottom
-              >
-                Cantidad de clientes por todas las ferias
-              </Typography>
-              <div className="select-form">
-                <InputLabel id="desde-label">Desde</InputLabel>
-                <TextField
-                  labelId="desde-label"
-                  variant="outlined"
-                  value={desdeClientesTotales}
-                  className="inputs"
-                  type="date"
-                  onChange={(e) => onChangeSetter(e, setDesdeClientesTotales)}
-                />
-              </div>
-              <div className="select-form">
-                <InputLabel id="hasta-label">Hasta</InputLabel>
-                <TextField
-                  labelId="hasta-label"
-                  variant="outlined"
-                  value={HastaClientesTotales}
-                  className="inputs"
-                  type="date"
-                  onChange={(e) => onChangeSetter(e, setHastaClientesTotales)}
-                />
-              </div>
-              <Grid item xs={12} md={12} lg={12}>
-                {desdeClientesTotales.length > 0 &&
-                HastaClientesTotales.length > 0 ? (
-                  <Button
-                    className="inputs"
-                    variant="contained"
-                    color="primary"
-                    onClick={onClickBuscarClientes}
-                  >
-                    Buscar
-                  </Button>
-                ) : (
-                  ""
-                )}
-              </Grid>
-            </div>
-
             <div className="consultas-por-feria-select">
               <div className="select-form">
                 <Typography
@@ -203,6 +153,7 @@ function ConsultasClientes() {
                     autoWidth
                     value={id_feria_cliente}
                   >
+                    <MenuItem value={999}>Todas</MenuItem>
                     {feriasSelect.map((pa) => {
                       return (
                         <MenuItem key={pa.id_feria} value={pa.id_feria}>
@@ -265,7 +216,7 @@ function ConsultasClientes() {
                       <Totales
                         title={"Total de clientes por feria"}
                         amount={cantidadClientesTotales}
-                        body={`Desde: ${desdeClientesTotales} / Hasta ${HastaClientesTotales}`}
+                        body={`Desde: ${desdeClientePorFeria} / Hasta ${hastaClientePorFeria}`}
                       />
                     </Paper>
                   </Grid>
