@@ -61,6 +61,9 @@ function ConsultasConsumo() {
   };
 
   const onClickBuscarFeria = (e) => {
+    setFerias([]);
+    setCantidad([]);
+    setFeriasUnica([]);
     e.preventDefault();
     if (id_feria === 999) {
       fetchdata(`${url}?desde=${desde}&hasta=${hasta}`, header, setFerias);
@@ -194,7 +197,7 @@ function ConsultasConsumo() {
             </div>
           </Paper>
           <div className="grafica-consulta" container spacing={3}>
-            <Grid item xs={12} md={8} lg={8}>
+            <Grid item xs={12} md={12} lg={12}>
               {/* consumo */}
               {ferias.length > 0 && (
                 <Paper className="grafica-space">
@@ -213,7 +216,7 @@ function ConsultasConsumo() {
                 </Paper>
               )}
             </Grid>
-            <Grid item xs={12} md={4} lg={4}>
+            <Grid item xs={12} md={12} lg={12}>
               {feriasUnica.length > 0 && (
                 <Paper className="grafica-space">
                   <Grid item xs={12} md={12} lg={12}>

@@ -63,8 +63,10 @@ function ConsultasClientes() {
   };
 
   const onClickBuscarClientesByFeria = (e) => {
+    setClientesTotalesPorFeria([]);
+    setClientestotales([]);
+    setClientesPorFeria([]);
     e.preventDefault();
-
     if (id_feria_cliente === 999) {
       fetchdata(
         `${urlClientes}?desde=${desdeClientePorFeria}&hasta=${hastaClientePorFeria}`,
@@ -203,7 +205,7 @@ function ConsultasClientes() {
             </div>
           </Paper>
           <div className="grafica-consulta" container spacing={3}>
-            <Grid item xs={12} md={8} lg={8}>
+            <Grid item xs={12} md={12} lg={12}>
               {/* clientes */}
               {clientesTotalesPorFeria.length > 0 && (
                 <Paper className="grafica-space">
@@ -223,7 +225,7 @@ function ConsultasClientes() {
                 </Paper>
               )}
             </Grid>
-            <Grid item xs={12} md={4} lg={4}>
+            <Grid item xs={12} md={12} lg={12}>
               {clientesPorFeria.length > 0 && (
                 <Paper className="grafica-space">
                   <Grid item xs={12} md={12} lg={12}>

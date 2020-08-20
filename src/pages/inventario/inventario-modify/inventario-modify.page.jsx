@@ -329,6 +329,7 @@ function InventarioModify(match) {
                     value={total_inicial_disponible}
                     className="inputs"
                     type="number"
+                    disabled
                     onChange={(e) => {
                       if (parseInt(e.target.value) >= 0) {
                         onChangeSetter(e, setTotalInicialDisponible);
@@ -341,6 +342,7 @@ function InventarioModify(match) {
                     value={disponible_real}
                     className="inputs"
                     type="number"
+                    disabled
                     onChange={(e) => {
                       if (parseInt(e.target.value) >= 0) {
                         onChangeSetter(e, setDisponibleReal);
