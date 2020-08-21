@@ -23,12 +23,12 @@ function Dashboard() {
       display: "flex",
       flexDirection: "column",
       alignContent: "center",
-      justifyContent: "center",
-      maxHeight: 450,
+      justifyContent: "space-around",
+      maxHeight: 250,
       width: "100%",
     },
     fixedHeight: {
-      height: "auto",
+      height: "100vw",
     },
   }));
   const classes = useStyles();
@@ -107,57 +107,61 @@ function Dashboard() {
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12} md={5} lg={5}>
-            <Paper className={fixedHeightPaper}>
-              {feriasHoy.length > 0 && (
+            {feriasHoy.length > 0 && (
+              <Paper className={fixedHeightPaper}>
                 <GraficaConsumo ferias={feriasHoy} etiqueta="Consumo de hoy" />
-              )}
-            </Paper>
+              </Paper>
+            )}
           </Grid>
           <Grid item xs={12} md={5} lg={5}>
-            <Paper className={fixedHeightPaper}>
-              {ferias.length > 0 && (
+            {ferias.length > 0 && (
+              <Paper className={fixedHeightPaper}>
                 <GraficaConsumo ferias={ferias} etiqueta="Total de Consumo" />
-              )}
-            </Paper>
+              </Paper>
+            )}
           </Grid>
           <Grid item xs={12} md={2} lg={2}>
-            <Paper className={fixedHeightPaper}>
-              <Totales
-                title={"Total de Consumo por ferias en el sistema"}
-                amount={cantidad}
-                body={`Hasta hoy`}
-              />
-            </Paper>
+            {cantidad.length > 0 && (
+              <Paper className={fixedHeightPaper}>
+                <Totales
+                  title={"Total de Consumo por ferias en el sistema"}
+                  amount={cantidad}
+                  body={`Hasta hoy`}
+                />
+              </Paper>
+            )}
           </Grid>
 
           <Grid item xs={12} md={5} lg={5}>
-            <Paper className={fixedHeightPaper}>
-              {clientesHoy.length > 0 && (
+            {clientesHoy.length > 0 && (
+              <Paper className={fixedHeightPaper}>
                 <GraficaClientes
                   clientes={clientesHoy}
                   etiqueta="Total de clientes hoy"
                 />
-              )}
-            </Paper>
+              </Paper>
+            )}
           </Grid>
           <Grid item xs={12} md={5} lg={5}>
-            <Paper className={fixedHeightPaper}>
-              {clientes.length > 0 && (
+            {clientes.length > 0 && (
+              <Paper className={fixedHeightPaper}>
                 <GraficaClientes
                   clientes={clientes}
                   etiqueta="Total de clientes"
                 />
-              )}
-            </Paper>
+              </Paper>
+            )}
           </Grid>
           <Grid item xs={12} md={2} lg={2}>
-            <Paper className={fixedHeightPaper}>
-              <Totales
-                title={"Total de clientes en el sistema"}
-                amount={cantidadClientes}
-                body={`Hasta hoy`}
-              />
-            </Paper>
+            {cantidadClientes.length > 0 && (
+              <Paper className={fixedHeightPaper}>
+                <Totales
+                  title={"Total de clientes en el sistema"}
+                  amount={cantidadClientes}
+                  body={`Hasta hoy`}
+                />
+              </Paper>
+            )}
           </Grid>
         </Grid>
       )}

@@ -36,7 +36,6 @@ function InventarioModify(match) {
   const [id_producto, setIdProducto] = useState("");
   const [total_inicial_disponible, setTotalInicialDisponible] = useState(0);
   const [disponible_real, setDisponibleReal] = useState(0);
-  const [total_max_diario, setTotalMaxDiario] = useState(0);
   const [frecuencia_compra_dias, setFrecuenciaCompraDias] = useState(0);
   const [fecha_inicio, setFechaInicio] = useState("");
   const [fecha_fin, setFechaFin] = useState("");
@@ -67,7 +66,6 @@ function InventarioModify(match) {
     id_producto: parseInt(id_producto),
     total_inicial_disponible: parseInt(total_inicial_disponible),
     disponible_real: parseInt(disponible_real),
-    total_max_diario: parseInt(total_max_diario),
     frecuencia_compra_dias: parseInt(frecuencia_compra_dias),
     fecha_inicio: fecha_inicio,
     fecha_fin: fecha_fin,
@@ -161,7 +159,6 @@ function InventarioModify(match) {
         setIdProducto(dt.id_producto);
         setTotalInicialDisponible(dt.total_inicial_disponible);
         setDisponibleReal(dt.disponible_real);
-        setTotalMaxDiario(dt.total_max_diario);
         setFrecuenciaCompraDias(dt.frecuencia_compra_dias);
         setFechaInicio(moment(dt.fecha_inicio).format("YYYY-MM-DD"));
         setFechaFin(moment(dt.fecha_fin).format("YYYY-MM-DD"));
@@ -212,7 +209,6 @@ function InventarioModify(match) {
           setIdProducto(dt.id_producto);
           setTotalInicialDisponible(dt.total_inicial_disponible);
           setDisponibleReal(dt.disponible_real);
-          setTotalMaxDiario(dt.total_max_diario);
           setFrecuenciaCompraDias(dt.frecuencia_compra_dias);
           setFechaInicio(moment(dt.fecha_inicio).format("YYYY-MM-DD"));
           setFechaFin(moment(dt.fecha_fin).format("YYYY-MM-DD"));
@@ -346,18 +342,6 @@ function InventarioModify(match) {
                     onChange={(e) => {
                       if (parseInt(e.target.value) >= 0) {
                         onChangeSetter(e, setDisponibleReal);
-                      }
-                    }}
-                  />
-                  <TextField
-                    label="Total máximo diario"
-                    variant="outlined"
-                    value={total_max_diario}
-                    className="inputs"
-                    type="number"
-                    onChange={(e) => {
-                      if (parseInt(e.target.value) >= 0) {
-                        onChangeSetter(e, setTotalMaxDiario);
                       }
                     }}
                   />

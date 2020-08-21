@@ -13,6 +13,7 @@ import Select from "@material-ui/core/Select";
 import GraficaClientes from "../../components/graficaBar/graficaBarClientes.component";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import moment from "moment";
 
 function ConsultasClientes() {
   toast.configure({
@@ -38,8 +39,12 @@ function ConsultasClientes() {
   //input 4
   const [id_feria_cliente, setIdFeriaCliente] = useState(999);
   const [clientesPorFeria, setClientesPorFeria] = useState([]);
-  const [desdeClientePorFeria, setDesdeClientePorFeria] = useState("");
-  const [hastaClientePorFeria, setHastaClientePorFeria] = useState("");
+  const [desdeClientePorFeria, setDesdeClientePorFeria] = useState(
+    moment().format().toString().slice(0, 10)
+  );
+  const [hastaClientePorFeria, setHastaClientePorFeria] = useState(
+    moment().format().toString().slice(0, 10)
+  );
 
   //input 3
   const urlClientes = `${process.env.REACT_APP_BACK_END}/api/consultas/total-clientes`;

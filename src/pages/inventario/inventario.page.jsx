@@ -44,7 +44,6 @@ function Inventario() {
   const [id_producto, setIdProducto] = useState("");
   const [total_inicial_disponible, setTotalInicialDisponible] = useState(0);
   const [disponible_real, setDisponibleReal] = useState(0);
-  const [total_max_diario, setTotalMaxDiario] = useState(0);
   const [frecuencia_compra_dias, setFrecuenciaCompraDias] = useState(0);
   const [fecha_inicio, setFechaInicio] = useState("");
   const [fecha_fin, setFechaFin] = useState("");
@@ -81,7 +80,6 @@ function Inventario() {
     id_producto: parseInt(id_producto),
     total_inicial_disponible: parseInt(total_inicial_disponible),
     disponible_real: parseInt(disponible_real),
-    total_max_diario: parseInt(total_max_diario),
     frecuencia_compra_dias: parseInt(frecuencia_compra_dias),
     fecha_inicio: fecha_inicio,
     fecha_fin: fecha_fin,
@@ -127,17 +125,16 @@ function Inventario() {
     { tittle: "Frecuencia de compra" },
     { tittle: "Total inicial disponible" },
     { tittle: "Disponible real" },
-    { tittle: "Total máximo diario" },
     { tittle: "Inicio" },
     { tittle: "Fin" },
-    { tittle: "Observacion" },
+    { tittle: "Observación" },
     { tittle: "Feria" },
     { tittle: "país" },
     { tittle: "Provincia" },
     { tittle: "Distrito" },
     { tittle: "Corregimiento" },
-    { tittle: "Usuario Creacion" },
-    { tittle: "Fecha Creacion" },
+    { tittle: "Usuario Creación" },
+    { tittle: "Fecha Creación" },
     { tittle: "Tiempo relativo" },
     { tittle: "Estado" },
   ];
@@ -355,18 +352,7 @@ function Inventario() {
                       }
                     }}
                   />
-                  <TextField
-                    label="Total máximo diario"
-                    variant="outlined"
-                    value={total_max_diario}
-                    className="inputs"
-                    type="number"
-                    onChange={(e) => {
-                      if (parseInt(e.target.value) >= 0) {
-                        onChangeSetter(e, setTotalMaxDiario);
-                      }
-                    }}
-                  />
+
                   <TextField
                     label="Frecuencia de compra"
                     variant="outlined"
@@ -468,9 +454,6 @@ function Inventario() {
                         </TableCell>
                         <TableCell align="center">
                           {`${row.disponible_real}`}
-                        </TableCell>
-                        <TableCell align="center">
-                          {`${row.total_max_diario}`}
                         </TableCell>
                         <TableCell align="center">
                           {`${moment(row.fecha_inicio).format("D, MMMM YYYY")}`}
