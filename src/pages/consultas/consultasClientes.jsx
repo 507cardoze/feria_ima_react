@@ -98,7 +98,9 @@ function ConsultasClientes() {
       const data = await fetch(url, header);
       const filtered = await data.json();
       UnauthorizedRedirect(filtered);
-      if (filtered.length === 0) return msgError("No hay registros.");
+      if (filtered.length === 0) {
+        msgError("No hay registros.");
+      }
       setter(filtered);
       setisLoading(true);
     } catch (error) {
@@ -123,7 +125,9 @@ function ConsultasClientes() {
         const data = await fetch(url, header);
         const filtered = await data.json();
         UnauthorizedRedirect(filtered);
-        if (filtered.length === 0) return msgError("No hay registros.");
+        if (filtered.length === 0) {
+          msgError("No hay registros.");
+        }
         setter(filtered);
         setisLoading(true);
       } catch (error) {
