@@ -101,7 +101,7 @@ function Dashboard() {
   ]);
 
   return (
-    <MainLayout Tittle="Dashboard">
+    <MainLayout Tittle="Consola de datos">
       {!isLoading ? (
         <CircularProgress />
       ) : (
@@ -137,7 +137,7 @@ function Dashboard() {
               <Paper className={fixedHeightPaper}>
                 <GraficaClientes
                   clientes={clientesHoy}
-                  etiqueta="Total de clientes hoy"
+                  etiqueta="Total de visitas registradas hoy"
                 />
               </Paper>
             )}
@@ -147,7 +147,7 @@ function Dashboard() {
               <Paper className={fixedHeightPaper}>
                 <GraficaClientes
                   clientes={clientes}
-                  etiqueta="Total de clientes"
+                  etiqueta="Total de visitas"
                 />
               </Paper>
             )}
@@ -156,7 +156,7 @@ function Dashboard() {
             {cantidadClientes.length > 0 && (
               <Paper className={fixedHeightPaper}>
                 <Totales
-                  title={"Total de clientes en el sistema"}
+                  title={"Total de visitas registradas en el sistema"}
                   amount={cantidadClientes}
                   body={`Hasta hoy`}
                 />
