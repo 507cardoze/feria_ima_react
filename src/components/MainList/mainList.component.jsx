@@ -23,7 +23,7 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 import "./mainList.styles.scss";
 
-function MainList() {
+function MainList({ user }) {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -61,7 +61,7 @@ function MainList() {
             <DashboardIcon />
             <Link to="/"></Link>
           </ListItemIcon>
-          <ListItemText primary="Dashboard" />
+          <ListItemText primary="Consola de datos" />
         </ListItem>
       </Link>
       {/* <Link to="/transacciones" className={classes.links}>
@@ -135,13 +135,15 @@ function MainList() {
           <ListItemText primary="Ferias" />
         </ListItem>
       </Link>
-      <ListItem button onClick={handleClick} className="list-fix-padding">
-        <ListItemIcon>
-          <SettingsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Configuración" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
+      {user && user.web === 1 && (
+        <ListItem button onClick={handleClick} className="list-fix-padding">
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText primary="Configuración" />
+          {open ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+      )}
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <Link to="/pais" className={classes.links}>

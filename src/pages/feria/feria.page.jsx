@@ -264,6 +264,40 @@ function Feria() {
     fetchdata(urlFeria, header, setRows);
   }, [page, limit, urlFeria]);
 
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    const urlValidated = `${process.env.REACT_APP_BACK_END}/api/auth/validated`;
+    const UnauthorizedRedirect = (data) => {
+      if (data === "No esta autorizado") {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+      } catch (error) {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    fetchdata(urlValidated, header, setUser);
+  }, []);
+
   return (
     <MainLayout Tittle="Feria">
       {!isLoading ? (
@@ -271,136 +305,143 @@ function Feria() {
       ) : (
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
-            <SearchBox onChangeInput={handleOnChangeSearchField}>
-              {searchResults.length > 0 && (
-                <ul className="list">
-                  {searchResults.map((value) => {
-                    return (
-                      <Link
-                        className="list-item"
-                        key={value.id_feria}
-                        to={`/feria/${value.id_feria}`}
-                      >{`${value.nombre_feria} - ${value.nombre_corregimiento} - ${value.nombre_distrito} - ${value.nombre_provincia}`}</Link>
-                    );
-                  })}
-                </ul>
-              )}
-            </SearchBox>
-            <Paper>
-              <form onSubmit={onClickGuardar} className="inputs-container">
-                <div className="select-form">
-                  <InputLabel id="provincias-select-label">
-                    Provincias
-                  </InputLabel>
-                  <Select
-                    labelId="provincias-select-label"
-                    id="provincias-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChangeProvincia(e)}
-                    autoWidth
-                    value={id_provincia}
-                  >
-                    {provincias.map((pa) => {
+            {user && user.web === 1 && (
+              <SearchBox onChangeInput={handleOnChangeSearchField}>
+                {searchResults.length > 0 && (
+                  <ul className="list">
+                    {searchResults.map((value) => {
                       return (
-                        <MenuItem key={pa.id_provincia} value={pa.id_provincia}>
-                          {pa.nombre_provincia}
-                        </MenuItem>
+                        <Link
+                          className="list-item"
+                          key={value.id_feria}
+                          to={`/feria/${value.id_feria}`}
+                        >{`${value.nombre_feria} - ${value.nombre_corregimiento} - ${value.nombre_distrito} - ${value.nombre_provincia}`}</Link>
                       );
                     })}
-                  </Select>
-                </div>
-                <div className="select-form">
-                  <InputLabel id="distrito-select-label">Distrito</InputLabel>
-                  <Select
-                    labelId="distrito-select-label"
-                    id="distrito-simple-select"
+                  </ul>
+                )}
+              </SearchBox>
+            )}
+            {user && user.web === 1 && (
+              <Paper>
+                <form onSubmit={onClickGuardar} className="inputs-container">
+                  <div className="select-form">
+                    <InputLabel id="provincias-select-label">
+                      Provincias
+                    </InputLabel>
+                    <Select
+                      labelId="provincias-select-label"
+                      id="provincias-simple-select"
+                      className="inputs"
+                      onChange={(e) => onChangeProvincia(e)}
+                      autoWidth
+                      value={id_provincia}
+                    >
+                      {provincias.map((pa) => {
+                        return (
+                          <MenuItem
+                            key={pa.id_provincia}
+                            value={pa.id_provincia}
+                          >
+                            {pa.nombre_provincia}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </div>
+                  <div className="select-form">
+                    <InputLabel id="distrito-select-label">Distrito</InputLabel>
+                    <Select
+                      labelId="distrito-select-label"
+                      id="distrito-simple-select"
+                      className="inputs"
+                      onChange={(e) => onChangeDistrito(e)}
+                      autoWidth
+                      value={id_distrito}
+                      disabled={distritos.length > 0 ? false : true}
+                    >
+                      {distritos.map((pa) => {
+                        return (
+                          <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
+                            {pa.nombre_distrito}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </div>
+                  <div className="select-form">
+                    <InputLabel id="corregimiento-select-label">
+                      Corregimiento
+                    </InputLabel>
+                    <Select
+                      labelId="corregimiento-select-label"
+                      id="corregimiento-simple-select"
+                      className="inputs"
+                      onChange={(e) => onChange(e, setIdCorregimiento)}
+                      autoWidth
+                      value={id_corregimiento}
+                      disabled={corregimientos.length > 0 ? false : true}
+                    >
+                      {corregimientos.map((pa) => {
+                        return (
+                          <MenuItem
+                            key={pa.id_corregimiento}
+                            value={pa.id_corregimiento}
+                          >
+                            {pa.nombre_corregimiento}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </div>
+                  <TextField
+                    label="Feria"
+                    variant="outlined"
+                    value={nombre_feria}
                     className="inputs"
-                    onChange={(e) => onChangeDistrito(e)}
-                    autoWidth
-                    value={id_distrito}
-                    disabled={distritos.length > 0 ? false : true}
-                  >
-                    {distritos.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_distrito} value={pa.id_distrito}>
-                          {pa.nombre_distrito}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
-                <div className="select-form">
-                  <InputLabel id="corregimiento-select-label">
-                    Corregimiento
-                  </InputLabel>
-                  <Select
-                    labelId="corregimiento-select-label"
-                    id="corregimiento-simple-select"
+                    onChange={(e) => onChange(e, setNombreFeria)}
+                  />
+                  <TextField
+                    label="Lugar"
+                    variant="outlined"
+                    value={descripcion_lugar}
+                    multiline
                     className="inputs"
-                    onChange={(e) => onChange(e, setIdCorregimiento)}
-                    autoWidth
-                    value={id_corregimiento}
-                    disabled={corregimientos.length > 0 ? false : true}
-                  >
-                    {corregimientos.map((pa) => {
-                      return (
-                        <MenuItem
-                          key={pa.id_corregimiento}
-                          value={pa.id_corregimiento}
-                        >
-                          {pa.nombre_corregimiento}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
-                <TextField
-                  label="Feria"
-                  variant="outlined"
-                  value={nombre_feria}
-                  className="inputs"
-                  onChange={(e) => onChange(e, setNombreFeria)}
-                />
-                <TextField
-                  label="Lugar"
-                  variant="outlined"
-                  value={descripcion_lugar}
-                  multiline
-                  className="inputs"
-                  onChange={(e) => onChange(e, setDescripcionLugar)}
-                />
-                <TextField
-                  label="Descripcion"
-                  variant="outlined"
-                  value={descripcion_feria}
-                  multiline
-                  className="inputs"
-                  onChange={(e) => onChange(e, setDescripcionFeria)}
-                />
+                    onChange={(e) => onChange(e, setDescripcionLugar)}
+                  />
+                  <TextField
+                    label="Descripcion"
+                    variant="outlined"
+                    value={descripcion_feria}
+                    multiline
+                    className="inputs"
+                    onChange={(e) => onChange(e, setDescripcionFeria)}
+                  />
 
-                <FormControlLabel
-                  label={estado ? "Activo" : "Inactivo"}
-                  className="inputs"
-                  control={
-                    <Switch
-                      checked={estado}
-                      color="primary"
-                      className={`inputs`}
-                      inputProps={{ "aria-label": "primary checkbox" }}
-                      onChange={() => setEstado(!estado)}
-                    />
-                  }
-                />
-                <Button
-                  className="inputs"
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                >
-                  Crear Nueva Feria
-                </Button>
-              </form>
-            </Paper>
+                  <FormControlLabel
+                    label={estado ? "Activo" : "Inactivo"}
+                    className="inputs"
+                    control={
+                      <Switch
+                        checked={estado}
+                        color="primary"
+                        className={`inputs`}
+                        inputProps={{ "aria-label": "primary checkbox" }}
+                        onChange={() => setEstado(!estado)}
+                      />
+                    }
+                  />
+                  <Button
+                    className="inputs"
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                  >
+                    Crear Nueva Feria
+                  </Button>
+                </form>
+              </Paper>
+            )}
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             {results && (
@@ -422,11 +463,13 @@ function Feria() {
                     return (
                       <TableRow key={row.id_feria}>
                         <TableCell component="th" scope="row">
-                          <Link to={`/feria/${row.id_feria}`}>
-                            <IconButton aria-label="edit">
-                              <EditIcon />
-                            </IconButton>
-                          </Link>
+                          {user && user.web === 1 && (
+                            <Link to={`/feria/${row.id_feria}`}>
+                              <IconButton aria-label="edit">
+                                <EditIcon />
+                              </IconButton>
+                            </Link>
+                          )}
                         </TableCell>
                         <TableCell align="center">{row.nombre_feria}</TableCell>
                         <TableCell align="center">

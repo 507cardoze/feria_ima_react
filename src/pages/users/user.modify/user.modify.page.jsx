@@ -9,7 +9,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
-function ProductosModify(match) {
+function UsuarioModify(match) {
   toast.configure({
     autoClose: 6000,
     draggable: true,
@@ -17,15 +17,17 @@ function ProductosModify(match) {
   const msgError = (msj) => toast.error(msj);
   const msgSuccess = (msj) => toast.success(msj);
 
-  const [nombre_productos, setNombreProductos] = useState("");
-  const [frecuencia_compra_dias, setFrecuenciaCompra] = useState(0);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [estado, setEstado] = useState(true);
+  const [web, setWeb] = useState(true);
+  const [terminal, setTerminal] = useState(true);
 
   const { id } = match.match.params;
   const [isLoading, setisLoading] = useState(true);
 
-  const urlBuscar = `${process.env.REACT_APP_BACK_END}/api/productos/buscar/${id}`;
-  const urlUpdate = `${process.env.REACT_APP_BACK_END}/api/productos/update`;
+  const urlBuscar = `${process.env.REACT_APP_BACK_END}/api/auth/buscar/${id}`;
+  const urlUpdate = `${process.env.REACT_APP_BACK_END}/api/auth/update`;
 
   const UnauthorizedRedirect = (data) => {
     if (data === "No esta autorizado") {
@@ -34,15 +36,45 @@ function ProductosModify(match) {
     }
   };
 
+  const header = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.token_key}`,
+    },
+    mode: "cors",
+    cache: "default",
+  };
+  const fetchDataBuscar = async () => {
+    setisLoading(false);
+    try {
+      const data = await fetch(`${urlBuscar}`, header);
+      const dat = await data.json();
+      UnauthorizedRedirect(dat);
+      dat.forEach((dt) => {
+        setName(dt.name);
+        setEmail(dt.email);
+        setEstado(dt.active === "Y" ? true : false);
+        setWeb(dt.web === 1 ? true : false);
+        setTerminal(dt.terminal === 1 ? true : false);
+      });
+      setisLoading(true);
+    } catch (error) {
+      msgError(`No hay conexion... ${error}`);
+    }
+  };
+
   const onChangeSetter = (e, setter) => {
     setter(e.target.value);
   };
 
   const bodyRequest = {
-    nombre_productos: nombre_productos,
-    frecuencia_compra_dias: frecuencia_compra_dias,
-    estado: estado,
-    id_productos: id,
+    login: id,
+    name: name,
+    email: email,
+    active: estado,
+    web: web,
+    terminal: terminal,
   };
 
   const headerPut = {
@@ -61,6 +93,7 @@ function ProductosModify(match) {
       .then((data) => {
         UnauthorizedRedirect(data);
         if (data === "success") {
+          fetchDataBuscar();
           msgSuccess("Registro Exitoso.");
         } else {
           msgError(data);
@@ -85,9 +118,11 @@ function ProductosModify(match) {
         const dat = await data.json();
         UnauthorizedRedirect(dat);
         dat.forEach((dt) => {
-          setNombreProductos(dt.nombre_productos);
-          setFrecuenciaCompra(dt.frecuencia_compra_dias);
-          setEstado(dt.estado === 1 ? true : false);
+          setName(dt.name);
+          setEmail(dt.email);
+          setEstado(dt.active === "Y" ? true : false);
+          setWeb(dt.web === 1 ? true : false);
+          setTerminal(dt.terminal === 1 ? true : false);
         });
         setisLoading(true);
       } catch (error) {
@@ -121,7 +156,7 @@ function ProductosModify(match) {
         const filtered = await data.json();
         UnauthorizedRedirect(filtered);
         if (filtered.web === 0) {
-          window.location.replace("/productos");
+          window.location.replace("/usuarios");
         }
       } catch (error) {
         localStorage.clear();
@@ -132,7 +167,7 @@ function ProductosModify(match) {
   }, []);
 
   return (
-    <MainLayout Tittle={`Modificar ${nombre_productos && nombre_productos}`}>
+    <MainLayout Tittle={`Modificar ${id && id}`}>
       {!isLoading ? (
         <CircularProgress />
       ) : (
@@ -150,24 +185,20 @@ function ProductosModify(match) {
             <form onSubmit={onClickGuardar} className="inputs-container">
               <Grid item xs={12} md={6} lg={6}>
                 <TextField
-                  label="Nombre del producto"
+                  label="Nombre"
                   variant="outlined"
-                  value={nombre_productos}
+                  value={name}
                   className="inputs"
                   type="text"
-                  onChange={(e) => onChangeSetter(e, setNombreProductos)}
+                  onChange={(e) => onChangeSetter(e, setName)}
                 />
                 <TextField
-                  label="Frecuencia de compra"
+                  label="Correo Electronico"
                   variant="outlined"
-                  value={frecuencia_compra_dias}
+                  value={email}
                   className="inputs"
-                  type="number"
-                  onChange={(e) => {
-                    if (parseInt(e.target.value) >= 0) {
-                      onChangeSetter(e, setFrecuenciaCompra);
-                    }
-                  }}
+                  type="email"
+                  onChange={(e) => onChangeSetter(e, setEmail)}
                 />
               </Grid>
               <Grid item xs={12} md={6} lg={6}>
@@ -181,6 +212,32 @@ function ProductosModify(match) {
                       className="inputs"
                       inputProps={{ "aria-label": "primary checkbox" }}
                       onChange={() => setEstado(!estado)}
+                    />
+                  }
+                />
+                <FormControlLabel
+                  label={web ? "Administrador" : "Solo lectura"}
+                  className="inputs"
+                  control={
+                    <Switch
+                      checked={web}
+                      color="primary"
+                      className="inputs"
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                      onChange={() => setWeb(!web)}
+                    />
+                  }
+                />
+                <FormControlLabel
+                  label={"Acceso Terminal"}
+                  className="inputs"
+                  control={
+                    <Switch
+                      checked={terminal}
+                      color="primary"
+                      className="inputs"
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                      onChange={() => setTerminal(!terminal)}
                     />
                   }
                 />
@@ -203,4 +260,4 @@ function ProductosModify(match) {
   );
 }
 
-export default memo(ProductosModify);
+export default memo(UsuarioModify);

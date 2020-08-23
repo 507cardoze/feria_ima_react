@@ -222,6 +222,40 @@ function InventarioAjuste() {
     fetchdata(urlTipoAjuste, header, setTipoAjuste);
   }, [url, urlInventario, urlTipoAjuste]);
 
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    const urlValidated = `${process.env.REACT_APP_BACK_END}/api/auth/validated`;
+    const UnauthorizedRedirect = (data) => {
+      if (data === "No esta autorizado") {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+      } catch (error) {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    fetchdata(urlValidated, header, setUser);
+  }, []);
+
   return (
     <MainLayout Tittle="Inventario Ajuste">
       <Grid item xs={12} md={12} lg={12}>
@@ -232,121 +266,129 @@ function InventarioAjuste() {
         </div>
       </Grid>
       <Grid item xs={12} md={12} lg={12}>
-        <SearchBox onChangeInput={handleOnChangeSearchField}>
-          {searchResults.length > 0 && (
-            <ul className="list">
-              {searchResults.map((value) => {
-                return (
-                  <Link
-                    className="list-item"
-                    key={value.id}
-                    to={`/inventario-ajuste/${value.id}`}
-                  >{`#${value.id} - # inventario ${value.id_inventario} - ${value.observacion} - ${value.nombre_feria}`}</Link>
-                );
-              })}
-            </ul>
-          )}
-        </SearchBox>
-        <Paper>
-          <form onSubmit={onClickGuardar} className="inputs-container">
-            <Grid item xs={12} md={6} lg={6}>
-              <div className="select-form">
-                <InputLabel id="inventarios-select-label">
-                  Inventarios
-                </InputLabel>
-                <Select
-                  labelId="inventario-select-label"
-                  id="inventario-simple-select"
-                  className="inputs"
-                  onChange={fetchDataBuscar}
-                  autoWidth
-                  value={id_inventario}
-                >
-                  {inventarios.map((pa) => {
-                    return (
-                      <MenuItem key={pa.id_inventario} value={pa.id_inventario}>
-                        {`#${pa.id_inventario} - ${pa.nombre_feria} - ${pa.nombre_productos}`}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </div>
-              {id_feria && (
+        {user && user.web === 1 && (
+          <SearchBox onChangeInput={handleOnChangeSearchField}>
+            {searchResults.length > 0 && (
+              <ul className="list">
+                {searchResults.map((value) => {
+                  return (
+                    <Link
+                      className="list-item"
+                      key={value.id}
+                      to={`/inventario-ajuste/${value.id}`}
+                    >{`#${value.id} - # inventario ${value.id_inventario} - ${value.observacion} - ${value.nombre_feria}`}</Link>
+                  );
+                })}
+              </ul>
+            )}
+          </SearchBox>
+        )}
+
+        {user && user.web === 1 && (
+          <Paper>
+            <form onSubmit={onClickGuardar} className="inputs-container">
+              <Grid item xs={12} md={6} lg={6}>
                 <div className="select-form">
-                  <InputLabel id="tipo-ajuste-select-label">
-                    Tipo de Ajustes
+                  <InputLabel id="inventarios-select-label">
+                    Inventarios
                   </InputLabel>
                   <Select
-                    labelId="tipo-ajuste-select-label"
-                    id="tipo-ajuste-simple-select"
+                    labelId="inventario-select-label"
+                    id="inventario-simple-select"
                     className="inputs"
-                    onChange={(e) => {
-                      onChangeSetter(e, setIdTipoAjuste);
-                      setCantidadAjuste(0);
-                    }}
+                    onChange={fetchDataBuscar}
                     autoWidth
-                    value={id_tipo_ajuste}
+                    value={id_inventario}
                   >
-                    {tipo_ajuste.map((pa) => {
+                    {inventarios.map((pa) => {
                       return (
                         <MenuItem
-                          key={pa.id_tipo_ajuste}
-                          value={pa.id_tipo_ajuste}
+                          key={pa.id_inventario}
+                          value={pa.id_inventario}
                         >
-                          {pa.id_tipo_ajuste}
+                          {`#${pa.id_inventario} - ${pa.nombre_feria} - ${pa.nombre_productos}`}
                         </MenuItem>
                       );
                     })}
                   </Select>
                 </div>
-              )}
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <TextField
-                label="Disponible Real"
-                variant="outlined"
-                value={total_disponible_real}
-                className="inputs"
-                type="number"
-                disabled
-              />
-              {id_tipo_ajuste && (
-                <>
-                  <TextField
-                    label="Cantidad de ajuste"
-                    variant="outlined"
-                    value={cantidad_ajuste}
-                    className="inputs"
-                    type="number"
-                    onChange={(e) =>
-                      salidaOEntrada(id_tipo_ajuste, parseInt(e.target.value))
-                    }
-                  />
-                  <TextField
-                    label="Observación"
-                    variant="outlined"
-                    value={observacion}
-                    className="inputs"
-                    type="text"
-                    rows={3}
-                    multiline
-                    onChange={(e) => onChangeSetter(e, setObservacion)}
-                  />
-                  <Button
-                    className="inputs"
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                  >
-                    {`Crear Nuevo Ajuste ${
-                      id_tipo_ajuste === "EN" ? "Entrada" : ""
-                    } ${id_tipo_ajuste === "SA" ? "Salida" : ""}`}
-                  </Button>
-                </>
-              )}
-            </Grid>
-          </form>
-        </Paper>
+                {id_feria && (
+                  <div className="select-form">
+                    <InputLabel id="tipo-ajuste-select-label">
+                      Tipo de Ajustes
+                    </InputLabel>
+                    <Select
+                      labelId="tipo-ajuste-select-label"
+                      id="tipo-ajuste-simple-select"
+                      className="inputs"
+                      onChange={(e) => {
+                        onChangeSetter(e, setIdTipoAjuste);
+                        setCantidadAjuste(0);
+                      }}
+                      autoWidth
+                      value={id_tipo_ajuste}
+                    >
+                      {tipo_ajuste.map((pa) => {
+                        return (
+                          <MenuItem
+                            key={pa.id_tipo_ajuste}
+                            value={pa.id_tipo_ajuste}
+                          >
+                            {pa.id_tipo_ajuste}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </div>
+                )}
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <TextField
+                  label="Disponible Real"
+                  variant="outlined"
+                  value={total_disponible_real}
+                  className="inputs"
+                  type="number"
+                  disabled
+                />
+                {id_tipo_ajuste && (
+                  <>
+                    <TextField
+                      label="Cantidad de ajuste"
+                      variant="outlined"
+                      value={cantidad_ajuste}
+                      className="inputs"
+                      type="number"
+                      onChange={(e) =>
+                        salidaOEntrada(id_tipo_ajuste, parseInt(e.target.value))
+                      }
+                    />
+                    <TextField
+                      label="Observación"
+                      variant="outlined"
+                      value={observacion}
+                      className="inputs"
+                      type="text"
+                      rows={3}
+                      multiline
+                      onChange={(e) => onChangeSetter(e, setObservacion)}
+                    />
+                    <Button
+                      className="inputs"
+                      variant="contained"
+                      color="primary"
+                      type="submit"
+                    >
+                      {`Crear Nuevo Ajuste ${
+                        id_tipo_ajuste === "EN" ? "Entrada" : ""
+                      } ${id_tipo_ajuste === "SA" ? "Salida" : ""}`}
+                    </Button>
+                  </>
+                )}
+              </Grid>
+            </form>
+          </Paper>
+        )}
       </Grid>
       <Grid item xs={12} md={12} lg={12}>
         {!isLoading ? (
@@ -370,13 +412,7 @@ function InventarioAjuste() {
                 {results.map((row) => {
                   return (
                     <TableRow key={row.id}>
-                      <TableCell component="th" scope="row">
-                        {/* <Link to={`/inventario-ajuste/${row.id}`}>
-                          <IconButton aria-label="edit">
-                            <EditIcon />
-                          </IconButton>
-                        </Link> */}
-                      </TableCell>
+                      <TableCell component="th" scope="row"></TableCell>
                       <TableCell align="center">{row.id}</TableCell>
                       <TableCell align="center">{row.id_inventario}</TableCell>
                       <TableCell align="center">

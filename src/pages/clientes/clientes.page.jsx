@@ -38,12 +38,16 @@ function Clientes() {
   const [nombre, setnombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [genero, setGenero] = useState("");
-  const [fecha_nacimiento, setFechaNacimiento] = useState("");
+  const [fecha_nacimiento, setFechaNacimiento] = useState(
+    moment().format().toString().slice(0, 10)
+  );
   const [nacionalidad, setNacionalidad] = useState("");
   const [lugar_nacimiento, setLugarNacimiento] = useState("");
   const [tipo_sangre, setTipoSangre] = useState("NA");
   const [direccion, setDireccion] = useState("");
-  const [fecha_expiracion, setFechaExpiracion] = useState("");
+  const [fecha_expiracion, setFechaExpiracion] = useState(
+    moment().format().toString().slice(0, 10)
+  );
 
   const [rows, setRows] = useState({});
   const [page, setPage] = useState(1);
@@ -187,154 +191,195 @@ function Clientes() {
     fetchdata(url, header, setRows);
   }, [url]);
 
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    const urlValidated = `${process.env.REACT_APP_BACK_END}/api/auth/validated`;
+    const UnauthorizedRedirect = (data) => {
+      if (data === "No esta autorizado") {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+      } catch (error) {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    fetchdata(urlValidated, header, setUser);
+  }, []);
+
   return (
     <MainLayout Tittle="Clientes">
       <Grid item xs={12} md={12} lg={12}>
-        <SearchBox onChangeInput={handleOnChangeSearchField}>
-          {searchResults.length > 0 && (
-            <ul className="list">
-              {searchResults.map((value) => {
-                return (
-                  <Link
-                    className="list-item"
-                    key={value.id_cliente}
-                    to={`/clientes/${value.id_cliente}`}
-                  >{`${value.num_documento} - ${value.nombre} - ${value.apellido}`}</Link>
-                );
-              })}
-            </ul>
-          )}
-        </SearchBox>
-        <Paper>
-          <form onSubmit={onClickGuardar} className="inputs-container">
-            <Grid item xs={12} md={6} lg={6}>
-              <TextField
-                label="Cedula"
-                variant="outlined"
-                value={num_documento}
-                className="inputs"
-                type="text"
-                onChange={(e) => onChangeSetter(e, setNumDocumento)}
-              />
-              <TextField
-                label="Nombre"
-                variant="outlined"
-                value={nombre}
-                className="inputs"
-                type="text"
-                onChange={(e) => onChangeSetter(e, setnombre)}
-              />
-              <TextField
-                label="Apellido"
-                variant="outlined"
-                value={apellido}
-                className="inputs"
-                type="text"
-                onChange={(e) => onChangeSetter(e, setApellido)}
-              />
-              <TextField
-                label="Nacionalidad"
-                variant="outlined"
-                value={nacionalidad}
-                className="inputs"
-                type="text"
-                onChange={(e) => onChangeSetter(e, setNacionalidad)}
-              />
-              <TextField
-                label="Lugar de Nacimiento"
-                variant="outlined"
-                value={lugar_nacimiento}
-                className="inputs"
-                multiline
-                type="text"
-                onChange={(e) => onChangeSetter(e, setLugarNacimiento)}
-              />
+        {user && user.web === 1 && (
+          <SearchBox onChangeInput={handleOnChangeSearchField}>
+            {searchResults.length > 0 && (
+              <ul className="list">
+                {searchResults.map((value) => {
+                  return (
+                    <Link
+                      className="list-item"
+                      key={value.id_cliente}
+                      to={`/clientes/${value.id_cliente}`}
+                    >{`${value.num_documento} - ${value.nombre} - ${value.apellido}`}</Link>
+                  );
+                })}
+              </ul>
+            )}
+          </SearchBox>
+        )}
 
-              <TextField
-                label="Direccion"
-                variant="outlined"
-                value={direccion}
-                className="inputs"
-                multiline
-                type="text"
-                onChange={(e) => onChangeSetter(e, setDireccion)}
-              />
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <div className="select-form">
-                <InputLabel id="sangre-select-label">Tipo de sangre</InputLabel>
-                <Select
-                  labelId="sangre-select-label"
-                  id="sangre-simple-select"
-                  className="inputs"
-                  onChange={(e) => onChangeSetter(e, setTipoSangre)}
-                  autoWidth
-                  value={tipo_sangre}
-                >
-                  <MenuItem value="O-">O negativo</MenuItem>
-                  <MenuItem value="O+">O positivo</MenuItem>
-                  <MenuItem value="A-">A negativo</MenuItem>
-                  <MenuItem value="A+">A positivo</MenuItem>
-                  <MenuItem value="B-">B negativo</MenuItem>
-                  <MenuItem value="B+">B positivo</MenuItem>
-                  <MenuItem value="AB+">AB negativo</MenuItem>
-                  <MenuItem value="AB-">AB positivo</MenuItem>
-                  <MenuItem value="NA">No Sabe</MenuItem>
-                </Select>
-              </div>
-              <div className="select-form">
-                <InputLabel id="genero-select-label">Genero</InputLabel>
-                <Select
-                  labelId="genero-select-label"
-                  id="genero-simple-select"
-                  className="inputs"
-                  onChange={(e) => onChangeSetter(e, setGenero)}
-                  autoWidth
-                  value={genero}
-                >
-                  <MenuItem value="M">Masculino</MenuItem>
-                  <MenuItem value="F">Femenino</MenuItem>
-                </Select>
-              </div>
-              <div className="select-form">
-                <InputLabel id="nacimiento-label">
-                  Fecha de nacimiento
-                </InputLabel>
+        {user && user.web === 1 && (
+          <Paper>
+            <form onSubmit={onClickGuardar} className="inputs-container">
+              <Grid item xs={12} md={6} lg={6}>
                 <TextField
-                  labelId="nacimiento-label"
+                  label="Cedula"
                   variant="outlined"
-                  value={fecha_nacimiento}
+                  value={num_documento}
                   className="inputs"
-                  type="date"
-                  onChange={(e) => onChangeSetter(e, setFechaNacimiento)}
+                  type="text"
+                  onChange={(e) => onChangeSetter(e, setNumDocumento)}
                 />
-              </div>
-              <div className="select-form">
-                <InputLabel id="expiracion-label">
-                  Fecha de expiracion
-                </InputLabel>
                 <TextField
-                  labelId="expiracion-label"
+                  label="Nombre"
                   variant="outlined"
-                  value={fecha_expiracion}
+                  value={nombre}
                   className="inputs"
-                  type="date"
-                  onChange={(e) => onChangeSetter(e, setFechaExpiracion)}
+                  type="text"
+                  onChange={(e) => onChangeSetter(e, setnombre)}
                 />
-              </div>
-            </Grid>
-            <Grid item xs={12} md={12} lg={12}>
-              <Button
-                className="inputs"
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Crear Nuevo Clientes
-              </Button>
-            </Grid>
-          </form>
-        </Paper>
+                <TextField
+                  label="Apellido"
+                  variant="outlined"
+                  value={apellido}
+                  className="inputs"
+                  type="text"
+                  onChange={(e) => onChangeSetter(e, setApellido)}
+                />
+                <TextField
+                  label="Nacionalidad"
+                  variant="outlined"
+                  value={nacionalidad}
+                  className="inputs"
+                  type="text"
+                  onChange={(e) => onChangeSetter(e, setNacionalidad)}
+                />
+                <TextField
+                  label="Lugar de Nacimiento"
+                  variant="outlined"
+                  value={lugar_nacimiento}
+                  className="inputs"
+                  multiline
+                  type="text"
+                  onChange={(e) => onChangeSetter(e, setLugarNacimiento)}
+                />
+
+                <TextField
+                  label="Direccion"
+                  variant="outlined"
+                  value={direccion}
+                  className="inputs"
+                  multiline
+                  type="text"
+                  onChange={(e) => onChangeSetter(e, setDireccion)}
+                />
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <div className="select-form">
+                  <InputLabel id="sangre-select-label">
+                    Tipo de sangre
+                  </InputLabel>
+                  <Select
+                    labelId="sangre-select-label"
+                    id="sangre-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChangeSetter(e, setTipoSangre)}
+                    autoWidth
+                    value={tipo_sangre}
+                  >
+                    <MenuItem value="O-">O negativo</MenuItem>
+                    <MenuItem value="O+">O positivo</MenuItem>
+                    <MenuItem value="A-">A negativo</MenuItem>
+                    <MenuItem value="A+">A positivo</MenuItem>
+                    <MenuItem value="B-">B negativo</MenuItem>
+                    <MenuItem value="B+">B positivo</MenuItem>
+                    <MenuItem value="AB+">AB negativo</MenuItem>
+                    <MenuItem value="AB-">AB positivo</MenuItem>
+                    <MenuItem value="NA">No Sabe</MenuItem>
+                  </Select>
+                </div>
+                <div className="select-form">
+                  <InputLabel id="genero-select-label">Genero</InputLabel>
+                  <Select
+                    labelId="genero-select-label"
+                    id="genero-simple-select"
+                    className="inputs"
+                    onChange={(e) => onChangeSetter(e, setGenero)}
+                    autoWidth
+                    value={genero}
+                  >
+                    <MenuItem value="M">Masculino</MenuItem>
+                    <MenuItem value="F">Femenino</MenuItem>
+                  </Select>
+                </div>
+                <div className="select-form">
+                  <InputLabel id="nacimiento-label">
+                    Fecha de nacimiento
+                  </InputLabel>
+                  <TextField
+                    labelId="nacimiento-label"
+                    variant="outlined"
+                    value={fecha_nacimiento}
+                    className="inputs"
+                    type="date"
+                    onChange={(e) => onChangeSetter(e, setFechaNacimiento)}
+                  />
+                </div>
+                <div className="select-form">
+                  <InputLabel id="expiracion-label">
+                    Fecha de expiracion
+                  </InputLabel>
+                  <TextField
+                    labelId="expiracion-label"
+                    variant="outlined"
+                    value={fecha_expiracion}
+                    className="inputs"
+                    type="date"
+                    onChange={(e) => onChangeSetter(e, setFechaExpiracion)}
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={12} md={12} lg={12}>
+                <Button
+                  className="inputs"
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                >
+                  Crear Nuevo Clientes
+                </Button>
+              </Grid>
+            </form>
+          </Paper>
+        )}
       </Grid>
       <Grid item xs={12} md={12} lg={12}>
         {!isLoading ? (
@@ -359,11 +404,13 @@ function Clientes() {
                   return (
                     <TableRow key={row.id_cliente}>
                       <TableCell component="th" scope="row">
-                        <Link to={`/clientes/${row.id_cliente}`}>
-                          <IconButton aria-label="edit">
-                            <EditIcon />
-                          </IconButton>
-                        </Link>
+                        {user && user.web === 1 && (
+                          <Link to={`/clientes/${row.id_cliente}`}>
+                            <IconButton aria-label="edit">
+                              <EditIcon />
+                            </IconButton>
+                          </Link>
+                        )}
                       </TableCell>
                       <TableCell align="center">{row.num_documento}</TableCell>
                       <TableCell align="center">{row.nombre}</TableCell>

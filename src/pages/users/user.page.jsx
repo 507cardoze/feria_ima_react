@@ -16,9 +16,9 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import TablePagination from "@material-ui/core/TablePagination";
 import SearchBox from "../../components/searchBox/searchBox.compoent";
-import moment from "moment";
+import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
-function Productos() {
+function Usuarios() {
   toast.configure({
     autoClose: 6000,
     draggable: true,
@@ -33,9 +33,13 @@ function Productos() {
     }
   };
 
-  const [nombre_productos, setNombreProductos] = useState("");
-  const [frecuencia_compra_dias, setFrecuenciaCompra] = useState(0);
+  const [login, setLogin] = useState("");
+  const [pswd, setPswd] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [estado, setEstado] = useState(true);
+  const [web, setWeb] = useState(true);
+  const [terminal, setTerminal] = useState(true);
 
   const [rows, setRows] = useState({});
   const [page, setPage] = useState(1);
@@ -46,14 +50,18 @@ function Productos() {
   const { results } = rows;
   const { total } = rows;
 
-  const url = `${process.env.REACT_APP_BACK_END}/api/productos/filtrada?page=${page}&limit=${limit}`;
-  const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/productos/searchField/`;
-  const urlCrear = `${process.env.REACT_APP_BACK_END}/api/productos/crear`;
+  const url = `${process.env.REACT_APP_BACK_END}/api/auth/filtrada?page=${page}&limit=${limit}`;
+  const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/auth/searchField/`;
+  const urlCrear = `${process.env.REACT_APP_BACK_END}/api/auth/register`;
 
   const bodyRequest = {
-    nombre_productos: nombre_productos,
-    frecuencia_compra_dias: frecuencia_compra_dias,
-    estado: estado,
+    login: login,
+    pswd: pswd,
+    name: name,
+    email: email,
+    active: estado,
+    web: web,
+    terminal: terminal,
   };
 
   const header = {
@@ -89,12 +97,12 @@ function Productos() {
   };
 
   const columns = [
-    { tittle: "Producto" },
-    { tittle: "Frecuencia de compra" },
-    { tittle: "Usuario Creacion" },
-    { tittle: "Fecha Creacion" },
-    { tittle: "Tiempo relativo" },
+    { tittle: "Usuario" },
+    { tittle: "Nombre" },
+    { tittle: "Correo" },
     { tittle: "Estado" },
+    { tittle: "Permiso Web" },
+    { tittle: "Permiso Terminal" },
   ];
 
   const onChangeSetter = (e, setter) => {
@@ -200,7 +208,7 @@ function Productos() {
   }, []);
 
   return (
-    <MainLayout Tittle="Productos">
+    <MainLayout Tittle="Usuarios">
       <Grid item xs={12} md={12} lg={12}>
         {user && user.web === 1 && (
           <SearchBox onChangeInput={handleOnChangeSearchField}>
@@ -210,9 +218,9 @@ function Productos() {
                   return (
                     <Link
                       className="list-item"
-                      key={value.id_productos}
-                      to={`/productos/${value.id_productos}`}
-                    >{`${value.nombre_productos} - ${value.frecuencia_compra_dias} Días`}</Link>
+                      key={value.login}
+                      to={`/usuarios/${value.login}`}
+                    >{`${value.login} - ${value.name} - ${value.email}`}</Link>
                   );
                 })}
               </ul>
@@ -224,24 +232,37 @@ function Productos() {
             <form onSubmit={onClickGuardar} className="inputs-container">
               <Grid item xs={12} md={6} lg={6}>
                 <TextField
-                  label="Nombre del producto"
+                  label="Usuario"
                   variant="outlined"
-                  value={nombre_productos}
+                  value={login}
                   className="inputs"
                   type="text"
-                  onChange={(e) => onChangeSetter(e, setNombreProductos)}
+                  onChange={(e) => onChangeSetter(e, setLogin)}
+                />
+
+                <TextField
+                  label="Nombre"
+                  variant="outlined"
+                  value={name}
+                  className="inputs"
+                  type="text"
+                  onChange={(e) => onChangeSetter(e, setName)}
                 />
                 <TextField
-                  label="Frecuencia de compra"
+                  label="Correo Electronico"
                   variant="outlined"
-                  value={frecuencia_compra_dias}
+                  value={email}
                   className="inputs"
-                  type="number"
-                  onChange={(e) => {
-                    if (parseInt(e.target.value) >= 0) {
-                      onChangeSetter(e, setFrecuenciaCompra);
-                    }
-                  }}
+                  type="email"
+                  onChange={(e) => onChangeSetter(e, setEmail)}
+                />
+                <TextField
+                  label="Contraseña"
+                  variant="outlined"
+                  value={pswd}
+                  className="inputs"
+                  type="text"
+                  onChange={(e) => onChangeSetter(e, setPswd)}
                 />
               </Grid>
               <Grid item xs={12} md={6} lg={6}>
@@ -258,13 +279,39 @@ function Productos() {
                     />
                   }
                 />
+                <FormControlLabel
+                  label={web ? "Administrador" : "Solo lectura"}
+                  className="inputs"
+                  control={
+                    <Switch
+                      checked={web}
+                      color="primary"
+                      className="inputs"
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                      onChange={() => setWeb(!web)}
+                    />
+                  }
+                />
+                <FormControlLabel
+                  label={"Acceso Terminal"}
+                  className="inputs"
+                  control={
+                    <Switch
+                      checked={terminal}
+                      color="primary"
+                      className="inputs"
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                      onChange={() => setTerminal(!terminal)}
+                    />
+                  }
+                />
                 <Button
                   className="inputs"
                   variant="contained"
                   color="primary"
                   type="submit"
                 >
-                  Crear Nuevo Producto
+                  Crear Nuevo usuario
                 </Button>
               </Grid>
             </form>
@@ -295,37 +342,40 @@ function Productos() {
                     <TableRow key={row.id_productos}>
                       <TableCell component="th" scope="row">
                         {user && user.web === 1 && (
-                          <Link to={`/productos/${row.id_productos}`}>
-                            <IconButton aria-label="edit">
-                              <EditIcon />
-                            </IconButton>
-                          </Link>
+                          <>
+                            <Link to={`/usuarios/${row.login}`}>
+                              <IconButton aria-label="edit">
+                                <EditIcon />
+                              </IconButton>
+                            </Link>
+                            <Link to={`/password/${row.login}`}>
+                              <IconButton aria-label="edit">
+                                <VpnKeyIcon />
+                              </IconButton>
+                            </Link>
+                          </>
                         )}
                       </TableCell>
-                      <TableCell align="center">
-                        {row.nombre_productos}
-                      </TableCell>
-                      <TableCell align="center">
-                        {`${row.frecuencia_compra_dias} Días`}
-                      </TableCell>
+                      <TableCell align="center">{row.login}</TableCell>
+                      <TableCell align="center">{row.name}</TableCell>
 
+                      <TableCell align="center">{row.email}</TableCell>
                       <TableCell align="center">
-                        {row.usuario_creacion}
-                      </TableCell>
-                      <TableCell align="center">
-                        {moment(row.fecha_creacion).format("D, MMMM YYYY")}
-                      </TableCell>
-                      <TableCell align="center">
-                        {moment(row.fecha_creacion).fromNow()}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        className={`${row.estado === 1 ? "green" : "red"}`}
-                      >
                         <span
-                          className={`${row.estado === 1 ? "green" : "red"}`}
+                          className={`${row.active === "Y" ? "green" : "red"}`}
                         >
-                          {row.estado === 1 ? "Activo" : "Inactivo"}
+                          {row.active === "Y" ? "Activo" : "Inactivo"}
+                        </span>
+                      </TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        {row.web === 1 ? "Administrador" : "Usuario"}
+                      </TableCell>
+                      <TableCell align="center">
+                        <span
+                          className={`${row.terminal === 1 ? "green" : "red"}`}
+                        >
+                          {row.terminal === 1 ? "Activo" : "Inactivo"}
                         </span>
                       </TableCell>
                     </TableRow>
@@ -352,4 +402,4 @@ function Productos() {
   );
 }
 
-export default memo(Productos);
+export default memo(Usuarios);

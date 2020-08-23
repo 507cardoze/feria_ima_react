@@ -197,6 +197,40 @@ function FeriaModify(match) {
     fetchdata(urlProvincia, header, setProvincias);
   }, [urlProvincia]);
 
+  useEffect(() => {
+    const urlValidated = `${process.env.REACT_APP_BACK_END}/api/auth/validated`;
+    const UnauthorizedRedirect = (data) => {
+      if (data === "No esta autorizado") {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header) => {
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        if (filtered.web === 0) {
+          window.location.replace("/feria");
+        }
+      } catch (error) {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    fetchdata(urlValidated, header);
+  }, []);
+
   return (
     <MainLayout Tittle={`Editar`}>
       {!isLoading ? (

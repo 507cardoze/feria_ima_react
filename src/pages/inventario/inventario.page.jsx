@@ -45,8 +45,12 @@ function Inventario() {
   const [total_inicial_disponible, setTotalInicialDisponible] = useState(0);
   const [disponible_real, setDisponibleReal] = useState(0);
   const [frecuencia_compra_dias, setFrecuenciaCompraDias] = useState(0);
-  const [fecha_inicio, setFechaInicio] = useState("");
-  const [fecha_fin, setFechaFin] = useState("");
+  const [fecha_inicio, setFechaInicio] = useState(
+    moment().format().toString().slice(0, 10)
+  );
+  const [fecha_fin, setFechaFin] = useState(
+    moment().format().toString().slice(0, 10)
+  );
   const [observacion, setObservacion] = useState("");
   const [estado, setEstado] = useState(true);
 
@@ -226,6 +230,40 @@ function Inventario() {
     fetchdata(urlPais, header, setPais);
   }, [url, urlFeria, urlProducto, urlPais]);
 
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    const urlValidated = `${process.env.REACT_APP_BACK_END}/api/auth/validated`;
+    const UnauthorizedRedirect = (data) => {
+      if (data === "No esta autorizado") {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    const header = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token_key}`,
+      },
+      mode: "cors",
+      cache: "default",
+    };
+
+    const fetchdata = async (url, header, setter) => {
+      try {
+        const data = await fetch(url, header);
+        const filtered = await data.json();
+        UnauthorizedRedirect(filtered);
+        setter(filtered);
+      } catch (error) {
+        localStorage.clear();
+        window.location.replace("/login");
+      }
+    };
+    fetchdata(urlValidated, header, setUser);
+  }, []);
+
   return (
     <MainLayout Tittle="Inventarios">
       {!isLoading ? (
@@ -246,173 +284,178 @@ function Inventario() {
           </Button> */}
             </div>
           </Grid>
-          <Grid item xs={12} md={12} lg={12}>
-            <SearchBox onChangeInput={handleOnChangeSearchField}>
-              {searchResults.length > 0 && (
-                <ul className="list">
-                  {searchResults.map((value) => {
-                    return (
-                      <Link
-                        className="list-item"
-                        key={value.id_inventario}
-                        to={`/inventario/${value.id_inventario}`}
-                      >{`${value.nombre_productos} - ${value.nombre_feria} - ${value.nombre_provincia}- ${value.nombre_distrito}- ${value.nombre_corregimiento}`}</Link>
-                    );
-                  })}
-                </ul>
-              )}
-            </SearchBox>
-            <Paper>
-              <form onSubmit={onClickGuardar} className="inputs-container">
-                <Grid item xs={12} md={6} lg={6}>
-                  <div className="select-form">
-                    <InputLabel id="pais-select-label">Pais</InputLabel>
-                    <Select
-                      labelId="pais-select-label"
-                      id="pais-simple-select"
-                      className="inputs"
-                      onChange={(e) => onChangeSetter(e, setIdPais)}
-                      autoWidth
-                      defaultValue={id_pais}
-                    >
-                      {pais.map((pa) => {
-                        return (
-                          <MenuItem key={pa.id_pais} value={pa.id_pais}>
-                            {pa.nombre_pais}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </div>
-                  <div className="select-form">
-                    <InputLabel id="feria-select-label">Ferias</InputLabel>
-                    <Select
-                      labelId="feria-select-label"
-                      id="feria-simple-select"
-                      className="inputs"
-                      onChange={fetchDataBuscar}
-                      autoWidth
-                      defaultValue={id_feria}
-                    >
-                      {ferias.map((pa) => {
-                        return (
-                          <MenuItem key={pa.id_feria} value={pa.id_feria}>
-                            {pa.nombre_feria}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </div>
-                  <div className="select-form">
-                    <InputLabel id="producto-select-label">
-                      Productos
-                    </InputLabel>
-                    <Select
-                      labelId="producto-select-label"
-                      id="producto-simple-select"
-                      className="inputs"
-                      onChange={(e) => onChangeSetter(e, setIdProducto)}
-                      autoWidth
-                      defaultValue={id_producto}
-                    >
-                      {productos.map((pa) => {
-                        return (
-                          <MenuItem
-                            key={pa.id_productos}
-                            value={pa.id_productos}
-                          >
-                            {pa.nombre_productos}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </div>
-                  <TextField
-                    label="Observación"
-                    variant="outlined"
-                    defaultValue={observacion}
-                    className="inputs"
-                    type="text"
-                    rows={3}
-                    multiline
-                    onChange={(e) => onChangeSetter(e, setObservacion)}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} lg={6}>
-                  <TextField
-                    label="Total inicial disponible"
-                    variant="outlined"
-                    value={total_inicial_disponible}
-                    className="inputs"
-                    type="number"
-                    onChange={(e) => {
-                      if (parseInt(e.target.value) >= 0) {
-                        onChangeSetter(e, setTotalInicialDisponible);
-                        onChangeSetter(e, setDisponibleReal);
-                      }
-                    }}
-                  />
 
-                  <TextField
-                    label="Frecuencia de compra"
-                    variant="outlined"
-                    value={frecuencia_compra_dias}
-                    className="inputs"
-                    type="number"
-                    onChange={(e) => {
-                      if (parseInt(e.target.value) >= 0) {
-                        onChangeSetter(e, setFrecuenciaCompraDias);
-                      }
-                    }}
-                  />
-                  <div className="select-form">
-                    <InputLabel id="inicio-label">Fecha de inicio</InputLabel>
-                    <TextField
-                      labelId="inicio-label"
-                      variant="outlined"
-                      defaultValue={fecha_inicio}
-                      className="inputs"
-                      type="date"
-                      onChange={(e) => onChangeSetter(e, setFechaInicio)}
-                    />
-                  </div>
-                  <div className="select-form">
-                    <InputLabel id="fin-label">Fecha fin</InputLabel>
-                    <TextField
-                      labelId="fin-label"
-                      variant="outlined"
-                      defaultValue={fecha_fin}
-                      className="inputs"
-                      type="date"
-                      onChange={(e) => onChangeSetter(e, setFechaFin)}
-                    />
-                  </div>
-                  <FormControlLabel
-                    label={estado ? "Activo" : "Inactivo"}
-                    className="inputs"
-                    control={
-                      <Switch
-                        checked={estado}
-                        color="primary"
+          <Grid item xs={12} md={12} lg={12}>
+            {user && user.web === 1 && (
+              <SearchBox onChangeInput={handleOnChangeSearchField}>
+                {searchResults.length > 0 && (
+                  <ul className="list">
+                    {searchResults.map((value) => {
+                      return (
+                        <Link
+                          className="list-item"
+                          key={value.id_inventario}
+                          to={`/inventario/${value.id_inventario}`}
+                        >{`${value.nombre_productos} - ${value.nombre_feria} - ${value.nombre_provincia}- ${value.nombre_distrito}- ${value.nombre_corregimiento}`}</Link>
+                      );
+                    })}
+                  </ul>
+                )}
+              </SearchBox>
+            )}
+            {user && user.web === 1 && (
+              <Paper>
+                <form onSubmit={onClickGuardar} className="inputs-container">
+                  <Grid item xs={12} md={6} lg={6}>
+                    <div className="select-form">
+                      <InputLabel id="pais-select-label">Pais</InputLabel>
+                      <Select
+                        labelId="pais-select-label"
+                        id="pais-simple-select"
                         className="inputs"
-                        inputProps={{ "aria-label": "primary checkbox" }}
-                        onChange={() => setEstado(!estado)}
+                        onChange={(e) => onChangeSetter(e, setIdPais)}
+                        autoWidth
+                        defaultValue={id_pais}
+                      >
+                        {pais.map((pa) => {
+                          return (
+                            <MenuItem key={pa.id_pais} value={pa.id_pais}>
+                              {pa.nombre_pais}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </div>
+                    <div className="select-form">
+                      <InputLabel id="feria-select-label">Ferias</InputLabel>
+                      <Select
+                        labelId="feria-select-label"
+                        id="feria-simple-select"
+                        className="inputs"
+                        onChange={fetchDataBuscar}
+                        autoWidth
+                        defaultValue={id_feria}
+                      >
+                        {ferias.map((pa) => {
+                          return (
+                            <MenuItem key={pa.id_feria} value={pa.id_feria}>
+                              {pa.nombre_feria}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </div>
+                    <div className="select-form">
+                      <InputLabel id="producto-select-label">
+                        Productos
+                      </InputLabel>
+                      <Select
+                        labelId="producto-select-label"
+                        id="producto-simple-select"
+                        className="inputs"
+                        onChange={(e) => onChangeSetter(e, setIdProducto)}
+                        autoWidth
+                        defaultValue={id_producto}
+                      >
+                        {productos.map((pa) => {
+                          return (
+                            <MenuItem
+                              key={pa.id_productos}
+                              value={pa.id_productos}
+                            >
+                              {pa.nombre_productos}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </div>
+                    <TextField
+                      label="Observación"
+                      variant="outlined"
+                      defaultValue={observacion}
+                      className="inputs"
+                      type="text"
+                      rows={3}
+                      multiline
+                      onChange={(e) => onChangeSetter(e, setObservacion)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={6}>
+                    <TextField
+                      label="Total inicial disponible"
+                      variant="outlined"
+                      value={total_inicial_disponible}
+                      className="inputs"
+                      type="number"
+                      onChange={(e) => {
+                        if (parseInt(e.target.value) >= 0) {
+                          onChangeSetter(e, setTotalInicialDisponible);
+                          onChangeSetter(e, setDisponibleReal);
+                        }
+                      }}
+                    />
+
+                    <TextField
+                      label="Frecuencia de compra"
+                      variant="outlined"
+                      value={frecuencia_compra_dias}
+                      className="inputs"
+                      type="number"
+                      onChange={(e) => {
+                        if (parseInt(e.target.value) >= 0) {
+                          onChangeSetter(e, setFrecuenciaCompraDias);
+                        }
+                      }}
+                    />
+                    <div className="select-form">
+                      <InputLabel id="inicio-label">Fecha de inicio</InputLabel>
+                      <TextField
+                        labelId="inicio-label"
+                        variant="outlined"
+                        defaultValue={fecha_inicio}
+                        className="inputs"
+                        type="date"
+                        onChange={(e) => onChangeSetter(e, setFechaInicio)}
                       />
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12} md={12} lg={12}>
-                  <Button
-                    className="inputs"
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                  >
-                    Crear Nuevo Inventario
-                  </Button>
-                </Grid>
-              </form>
-            </Paper>
+                    </div>
+                    <div className="select-form">
+                      <InputLabel id="fin-label">Fecha fin</InputLabel>
+                      <TextField
+                        labelId="fin-label"
+                        variant="outlined"
+                        defaultValue={fecha_fin}
+                        className="inputs"
+                        type="date"
+                        onChange={(e) => onChangeSetter(e, setFechaFin)}
+                      />
+                    </div>
+                    <FormControlLabel
+                      label={estado ? "Activo" : "Inactivo"}
+                      className="inputs"
+                      control={
+                        <Switch
+                          checked={estado}
+                          color="primary"
+                          className="inputs"
+                          inputProps={{ "aria-label": "primary checkbox" }}
+                          onChange={() => setEstado(!estado)}
+                        />
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={12} lg={12}>
+                    <Button
+                      className="inputs"
+                      variant="contained"
+                      color="primary"
+                      type="submit"
+                    >
+                      Crear Nuevo Inventario
+                    </Button>
+                  </Grid>
+                </form>
+              </Paper>
+            )}
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
             {results && (
@@ -434,11 +477,13 @@ function Inventario() {
                     return (
                       <TableRow key={row.id_inventario}>
                         <TableCell component="th" scope="row">
-                          <Link to={`/inventario/${row.id_inventario}`}>
-                            <IconButton aria-label="edit">
-                              <EditIcon />
-                            </IconButton>
-                          </Link>
+                          {user && user.web === 1 && (
+                            <Link to={`/inventario/${row.id_inventario}`}>
+                              <IconButton aria-label="edit">
+                                <EditIcon />
+                              </IconButton>
+                            </Link>
+                          )}
                         </TableCell>
                         <TableCell align="center">
                           {row.id_inventario}

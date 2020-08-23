@@ -23,8 +23,10 @@ import TipoModify from "./pages/tipo-ajustes/tipo-ajuste-modify/tipo-ajuste-modi
 import Inventario from "./pages/inventario/inventario.page";
 import InventarioModify from "./pages/inventario/inventario-modify/inventario-modify.page";
 import InventarioAjuste from "./pages/inventario-ajuste/inventario-ajuste.page";
-import InventarioAjusteModify from "./pages/inventario-ajuste/inventario-ajuste-modify/inventario-ajuste-modify.page";
 import NotFoundView from "./pages/notFound/notFound.page";
+import Usuarios from "./pages/users/user.page";
+import UsuarioModify from "./pages/users/user.modify/user.modify.page";
+import Password from "./pages/users/password/password.page";
 import "./App.scss";
 
 function App() {
@@ -37,10 +39,6 @@ function App() {
           <Route exact path="/inventario" component={Inventario} />
           <Route path="/inventario/:id" component={InventarioModify} />
           <Route exact path="/inventario-ajuste" component={InventarioAjuste} />
-          <Route
-            path="/inventario-ajuste/:id"
-            component={InventarioAjusteModify}
-          />
           <Route exact path="/clientes" component={Clientes} />
           <Route path="/clientes/:id" component={ClientesModify} />
           <Route exact path="/productos" component={Productos} />
@@ -64,6 +62,9 @@ function App() {
           <Route exact path="/tipo-ajustes" component={TipoAjustes} />
           <Route exact path="/tipo-ajustes/:id" component={TipoModify} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/usuarios" component={Usuarios} />
+          <Route path="/usuarios/:id" component={UsuarioModify} />
+          <Route path="/password/:id" component={Password} />
           <Route path="*" component={NotFoundView} />
         </Switch>
       </BrowserRouter>

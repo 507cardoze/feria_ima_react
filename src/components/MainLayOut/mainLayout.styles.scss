@@ -2,3 +2,12 @@
   width: 240px;
   overflow-y: auto;
 }
+
+.link {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  &:active {
+    color: #757575;
+  }
+}
