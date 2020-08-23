@@ -153,7 +153,7 @@ function ConsultasClientes() {
                   color="primary"
                   gutterBottom
                 >
-                  Cantidad de clientes por feria
+                  Cantidad de visitas por feria
                 </Typography>
                 <div className="select-form">
                   <InputLabel id="pais-select-label">Ferias</InputLabel>
@@ -221,12 +221,12 @@ function ConsultasClientes() {
                 <Paper className="grafica-space">
                   <GraficaClientes
                     clientes={clientesTotalesPorFeria}
-                    etiqueta="Total de clientes"
+                    etiqueta="Total de visitas"
                   />
                   <Grid item xs={12} md={12} lg={12}>
                     <Paper className="grafica-space">
                       <Totales
-                        title={"Total de clientes por feria"}
+                        title={"Total de visitas por feria"}
                         amount={cantidadClientesTotales}
                         body={`Desde: ${desdeClientePorFeria} / Hasta ${hastaClientePorFeria}`}
                       />
@@ -241,7 +241,7 @@ function ConsultasClientes() {
                   <Grid item xs={12} md={12} lg={12}>
                     <Paper className="grafica-space">
                       <Totales
-                        title={"Total de clientes"}
+                        title={"Total de visitas"}
                         amount={clientesPorFeria[0].clientes}
                         body={`${clientesPorFeria[0].nombre_feria}: desde ${desdeClientePorFeria} hasta ${hastaClientePorFeria}`}
                       />

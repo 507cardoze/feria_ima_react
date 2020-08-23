@@ -37,7 +37,7 @@ function Inventario() {
     }
   };
 
-  const [id_pais, setIdPais] = useState("");
+  const [id_pais, setIdPais] = useState("PAN");
   const [id_provincia, setIdProvincia] = useState("");
   const [id_distrito, setIdDistrito] = useState("");
   const [id_corregimiento, setIdCorregimiento] = useState("");
@@ -57,6 +57,7 @@ function Inventario() {
 
   const [rows, setRows] = useState({});
   const [ferias, setFerias] = useState([]);
+  const [provincias, setProvincias] = useState([]);
   const [productos, setProductos] = useState([]);
   const [pais, setPais] = useState([]);
   const [page, setPage] = useState(1);
@@ -71,10 +72,12 @@ function Inventario() {
   const urlBusqueda = `${process.env.REACT_APP_BACK_END}/api/inventarios/searchField/`;
   const urlCrear = `${process.env.REACT_APP_BACK_END}/api/inventarios/crear`;
   const urlBuscar = `${process.env.REACT_APP_BACK_END}/api/feria/buscar/`;
+  const urlBuscarFeria = `${process.env.REACT_APP_BACK_END}/api/feria/buscarFeria/`;
 
-  const urlFeria = `${process.env.REACT_APP_BACK_END}/api/feria/filtrada`;
+  //const urlFeria = `${process.env.REACT_APP_BACK_END}/api/feria/filtrada`;
   const urlProducto = `${process.env.REACT_APP_BACK_END}/api/productos/filtrada`;
   const urlPais = `${process.env.REACT_APP_BACK_END}/api/pais/filtrada`;
+  const urlProvincia = `${process.env.REACT_APP_BACK_END}/api/provincias/filtrada`;
 
   const bodyRequest = {
     id_pais: id_pais,
@@ -155,6 +158,16 @@ function Inventario() {
       .then((data) => {
         UnauthorizedRedirect(data);
         if (data === "success") {
+          setIdFeria("");
+          setIdDistrito("");
+          setIdCorregimiento("");
+          setIdProvincia("");
+          setIdProducto("");
+          setObservacion("");
+          setDisponibleReal(0);
+          setFrecuenciaCompraDias(0);
+          setTotalInicialDisponible(0);
+          setFerias([]);
           fetchdata(url, header, setRows);
           msgSuccess("Registro Exitoso.");
         } else {
@@ -183,6 +196,22 @@ function Inventario() {
       }
     } else {
       setSearchResults([]);
+    }
+  };
+
+  const onChangeProvincia = async (e) => {
+    setIdFeria("");
+    setIdDistrito("");
+    setIdCorregimiento("");
+    setIdProvincia("");
+    setFerias([]);
+    try {
+      const data = await fetch(`${urlBuscarFeria}${e.target.value}`, header);
+      const dat = await data.json();
+      UnauthorizedRedirect(dat);
+      setFerias(dat);
+    } catch (error) {
+      msgError(error);
     }
   };
 
@@ -226,10 +255,10 @@ function Inventario() {
       }
     };
     fetchdata(url, header, setRows);
-    fetchdata(urlFeria, header, setFerias);
     fetchdata(urlProducto, header, setProductos);
     fetchdata(urlPais, header, setPais);
-  }, [url, urlFeria, urlProducto, urlPais]);
+    fetchdata(urlProvincia, header, setProvincias);
+  }, [url, urlProducto, urlPais, urlProvincia]);
 
   const [user, setUser] = useState([]);
 
@@ -316,12 +345,37 @@ function Inventario() {
                         className="inputs"
                         onChange={(e) => onChangeSetter(e, setIdPais)}
                         autoWidth
-                        defaultValue={id_pais}
+                        value={id_pais}
+                        disabled
                       >
                         {pais.map((pa) => {
                           return (
                             <MenuItem key={pa.id_pais} value={pa.id_pais}>
                               {pa.nombre_pais}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </div>
+                    <div className="select-form">
+                      <InputLabel id="provincias-select-label">
+                        Provincias
+                      </InputLabel>
+                      <Select
+                        labelId="provincias-select-label"
+                        id="provincias-simple-select"
+                        className="inputs"
+                        onChange={onChangeProvincia}
+                        autoWidth
+                        defaultValue={id_provincia}
+                      >
+                        {provincias.map((pa) => {
+                          return (
+                            <MenuItem
+                              key={pa.id_provincia}
+                              value={pa.id_provincia}
+                            >
+                              {pa.nombre_provincia}
                             </MenuItem>
                           );
                         })}
@@ -335,7 +389,8 @@ function Inventario() {
                         className="inputs"
                         onChange={fetchDataBuscar}
                         autoWidth
-                        defaultValue={id_feria}
+                        value={id_feria ? id_feria : ""}
+                        disabled={ferias.length > 0 ? false : true}
                       >
                         {ferias.map((pa) => {
                           return (
@@ -356,7 +411,7 @@ function Inventario() {
                         className="inputs"
                         onChange={(e) => onChangeSetter(e, setIdProducto)}
                         autoWidth
-                        defaultValue={id_producto}
+                        value={id_producto}
                       >
                         {productos.map((pa) => {
                           return (
@@ -373,7 +428,7 @@ function Inventario() {
                     <TextField
                       label="Observación"
                       variant="outlined"
-                      defaultValue={observacion}
+                      value={observacion}
                       className="inputs"
                       type="text"
                       rows={3}
