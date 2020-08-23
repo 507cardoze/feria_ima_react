@@ -11,6 +11,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
+import "moment/locale/es.js";
 
 function CorregimientoModify(match) {
   toast.configure({

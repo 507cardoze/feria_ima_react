@@ -14,6 +14,7 @@ import GraficaClientes from "../../components/graficaBar/graficaBarClientes.comp
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import moment from "moment";
+import "moment/locale/es.js";
 
 function ConsultasClientes() {
   toast.configure({

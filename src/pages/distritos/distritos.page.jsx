@@ -19,6 +19,7 @@ import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
 import SearchBox from "../../components/searchBox/searchBox.compoent";
 import TablePagination from "@material-ui/core/TablePagination";
+import "moment/locale/es.js";
 
 function Distritos() {
   toast.configure({

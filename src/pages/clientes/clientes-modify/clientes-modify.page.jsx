@@ -10,6 +10,7 @@ import Select from "@material-ui/core/Select";
 import { toast } from "react-toastify";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import moment from "moment";
+import "moment/locale/es.js";
 
 function ClientesModify(match) {
   toast.configure({

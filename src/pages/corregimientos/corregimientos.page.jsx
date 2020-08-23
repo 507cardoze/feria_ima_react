@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import TablePagination from "@material-ui/core/TablePagination";
 import "./corregimientos.styles.scss";
 import SearchBox from "../../components/searchBox/searchBox.compoent";
+import "moment/locale/es.js";
 
 function Corregimientos() {
   toast.configure({

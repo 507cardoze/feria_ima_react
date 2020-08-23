@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import TablePagination from "@material-ui/core/TablePagination";
 import SearchBox from "../../components/searchBox/searchBox.compoent";
 import moment from "moment";
+import "moment/locale/es.js";
 
 function Clientes() {
   toast.configure({

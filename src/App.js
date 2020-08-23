@@ -27,6 +27,7 @@ import NotFoundView from "./pages/notFound/notFound.page";
 import Usuarios from "./pages/users/user.page";
 import UsuarioModify from "./pages/users/user.modify/user.modify.page";
 import Password from "./pages/users/password/password.page";
+import "moment/locale/es.js";
 import "./App.scss";
 
 function App() {

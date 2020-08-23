@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import GraficaConsumo from "../../components/graficaBar/graficaBar.component";
 import GraficaClientes from "../../components/graficaBar/graficaBarClientes.component";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import "moment/locale/es.js";
 
 function Dashboard() {
   toast.configure({

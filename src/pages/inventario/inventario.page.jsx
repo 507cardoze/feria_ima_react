@@ -20,6 +20,7 @@ import moment from "moment";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import "moment/locale/es.js";
 
 function Inventario() {
   toast.configure({

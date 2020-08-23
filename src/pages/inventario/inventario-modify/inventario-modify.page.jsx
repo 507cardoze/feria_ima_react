@@ -12,6 +12,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import moment from "moment";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import "moment/locale/es.js";
 
 function InventarioModify(match) {
   toast.configure({
