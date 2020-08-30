@@ -139,7 +139,7 @@ function ConsultasClientes() {
   }, []);
 
   return (
-    <MainLayout Tittle="Consultas">
+    <MainLayout Tittle="Por Clientes">
       {!isLoading ? (
         <CircularProgress />
       ) : (

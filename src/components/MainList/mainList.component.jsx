@@ -21,6 +21,7 @@ import TerrainIcon from "@material-ui/icons/Terrain";
 import HouseIcon from "@material-ui/icons/House";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import BeachAccessIcon from "@material-ui/icons/BeachAccess";
+import AllInboxIcon from "@material-ui/icons/AllInbox";
 import "./mainList.styles.scss";
 
 function MainList({ user }) {
@@ -99,6 +100,14 @@ function MainList({ user }) {
                 <PersonIcon />
               </ListItemIcon>
               <ListItemText primary="Por clientes" />
+            </ListItem>
+          </Link>
+          <Link to="/consultas-inventario" className={classes.links}>
+            <ListItem button className={`${classes.nested} list-fix-padding`}>
+              <ListItemIcon>
+                <AllInboxIcon />
+              </ListItemIcon>
+              <ListItemText primary="Por Inventarios" />
             </ListItem>
           </Link>
         </List>

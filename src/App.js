@@ -27,6 +27,7 @@ import NotFoundView from "./pages/notFound/notFound.page";
 import Usuarios from "./pages/users/user.page";
 import UsuarioModify from "./pages/users/user.modify/user.modify.page";
 import Password from "./pages/users/password/password.page";
+import ConsultasInventarios from "./pages/consultas/consultasInventarios";
 import "moment/locale/es.js";
 import "./App.scss";
 
@@ -49,6 +50,11 @@ function App() {
             exact
             path="/consultas-clientes"
             component={ConsultasClientes}
+          />
+          <Route
+            exact
+            path="/consultas-inventario"
+            component={ConsultasInventarios}
           />
           <Route exact path="/pais" component={Pais} />
           <Route path="/pais/:id" component={PaisModify} />
