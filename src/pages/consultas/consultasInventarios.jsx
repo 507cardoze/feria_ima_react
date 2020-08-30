@@ -132,55 +132,53 @@ function ConsultasInventarios() {
       ) : (
         <>
           <Paper item xs={12} className="grid-principal-inputs">
-            <div className="consultas-por-feria-select">
+            <Typography
+              component="h2"
+              variant="h6"
+              color="primary"
+              gutterBottom
+            >
+              Inventario actual
+            </Typography>
+            <div className="select-form">
+              <InputLabel id="feria-select-label">Ferias</InputLabel>
+              <Select
+                labelId="feria-select-label"
+                id="feria-simple-select"
+                className="inputs"
+                onChange={(e) => onChangeFeriaBuscarProducto(e)}
+                autoWidth
+                value={id_feria}
+              >
+                {feria.map((pa) => {
+                  return (
+                    <MenuItem key={pa.id_feria} value={pa.id_feria}>
+                      {pa.nombre_feria}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </div>
+            <div className="select-form">
               <div className="select-form">
-                <Typography
-                  component="h2"
-                  variant="h6"
-                  color="primary"
-                  gutterBottom
+                <InputLabel id="productos-select-label">Productos</InputLabel>
+                <Select
+                  labelId="productos-select-label"
+                  id="productos-simple-select"
+                  className="inputs"
+                  onChange={(e) => onChangeProducto(e)}
+                  autoWidth
+                  value={id_producto}
+                  disabled={productos.length === 0 ? true : false}
                 >
-                  Inventario actual
-                </Typography>
-                <div className="select-form">
-                  <InputLabel id="feria-select-label">Ferias</InputLabel>
-                  <Select
-                    labelId="feria-select-label"
-                    id="feria-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChangeFeriaBuscarProducto(e)}
-                    autoWidth
-                    value={id_feria}
-                  >
-                    {feria.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_feria} value={pa.id_feria}>
-                          {pa.nombre_feria}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
-                <div className="select-form">
-                  <InputLabel id="productos-select-label">Productos</InputLabel>
-                  <Select
-                    labelId="productos-select-label"
-                    id="productos-simple-select"
-                    className="inputs"
-                    onChange={(e) => onChangeProducto(e)}
-                    autoWidth
-                    value={id_producto}
-                    disabled={productos.length === 0 ? true : false}
-                  >
-                    {productos.map((pa) => {
-                      return (
-                        <MenuItem key={pa.id_producto} value={pa.id_producto}>
-                          {pa.producto}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </div>
+                  {productos.map((pa) => {
+                    return (
+                      <MenuItem key={pa.id_producto} value={pa.id_producto}>
+                        {pa.producto}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
               </div>
             </div>
           </Paper>
@@ -193,6 +191,8 @@ function ConsultasInventarios() {
                       title={"Disponible Actualmente"}
                       amount={disponibleReal[0].disponible_real}
                       body={`Hoy`}
+                      letraGrande
+                      gigante
                     />
                   </Paper>
                 </Grid>
@@ -204,6 +204,8 @@ function ConsultasInventarios() {
                       title={"Disponible Actualmente"}
                       amount={disponibleReal.length}
                       body={`Hoy`}
+                      letraGrande
+                      gigante
                     />
                   </Paper>
                 </Grid>
