@@ -128,7 +128,7 @@ function ConsultasConsumo() {
   }, []);
 
   return (
-    <MainLayout Tittle="Consultas">
+    <MainLayout Tittle="Por Consumos">
       {!isLoading ? (
         <CircularProgress />
       ) : (
