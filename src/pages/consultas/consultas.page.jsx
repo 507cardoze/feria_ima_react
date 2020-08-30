@@ -62,10 +62,10 @@ function ConsultasConsumo() {
   };
 
   const onClickBuscarFeria = (e) => {
+    e.preventDefault();
     setFerias([]);
     setCantidad([]);
     setFeriasUnica([]);
-    e.preventDefault();
     if (id_feria === 999) {
       fetchdata(`${url}?desde=${desde}&hasta=${hasta}`, header, setFerias);
       fetchdata(
@@ -230,6 +230,7 @@ function ConsultasConsumo() {
                         title={"Total de consumo"}
                         amount={feriasUnica[0].consumo}
                         body={`${feriasUnica[0].feria} : desde ${desde} hasta ${hasta}`}
+                        letraGrande
                       />
                     </Paper>
                   </Grid>

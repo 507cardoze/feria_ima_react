@@ -244,6 +244,7 @@ function ConsultasClientes() {
                         title={"Total de visitas"}
                         amount={clientesPorFeria[0].clientes}
                         body={`${clientesPorFeria[0].nombre_feria}: desde ${desdeClientePorFeria} hasta ${hastaClientePorFeria}`}
+                        letraGrande
                       />
                     </Paper>
                   </Grid>
