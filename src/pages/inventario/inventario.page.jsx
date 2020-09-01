@@ -47,10 +47,10 @@ function Inventario() {
   const [disponible_real, setDisponibleReal] = useState(0);
   const [frecuencia_compra_dias, setFrecuenciaCompraDias] = useState(0);
   const [fecha_inicio, setFechaInicio] = useState(
-    moment().format().toString().slice(0, 10)
+    moment().format().toString().slice(0, 10),
   );
   const [fecha_fin, setFechaFin] = useState(
-    moment().format().toString().slice(0, 10)
+    moment().format().toString().slice(0, 10),
   );
   const [observacion, setObservacion] = useState("");
   const [estado, setEstado] = useState(true);
@@ -560,7 +560,7 @@ function Inventario() {
                           {`${moment(row.fecha_inicio).format("D, MMMM YYYY")}`}
                         </TableCell>
                         <TableCell align="center">{`${moment(
-                          row.fecha_fin
+                          row.fecha_fin,
                         ).format("D, MMMM YYYY")}`}</TableCell>
                         <TableCell align="center">{`${row.observacion}`}</TableCell>
                         <TableCell align="center">{`${row.nombre_feria}`}</TableCell>
